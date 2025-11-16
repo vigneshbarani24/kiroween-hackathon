@@ -1,0 +1,132 @@
+{
+  "name": "abap-analyzer",
+  "version": "1.0.0",
+  "description": "MCP server that extends Kiro with ABAP syntax analysis capabilities",
+  "mcpVersion": "1.0",
+  "capabilities": {
+    "tools": [
+      {
+        "name": "parse_abap",
+        "description": "Parse ABAP code and extract business logic patterns",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "ABAP source code to analyze"
+            },
+            "extractionType": {
+              "type": "string",
+              "enum": ["all", "database", "business_logic", "variables", "functions"],
+              "description": "Type of patterns to extract"
+            }
+          },
+          "required": ["code"]
+        }
+      },
+      {
+        "name": "detect_sap_patterns",
+        "description": "Identify standard SAP patterns and BAPIs in code",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Code to analyze for SAP patterns"
+            }
+          },
+          "required": ["code"]
+        }
+      },
+      {
+        "name": "generate_modern_equivalent",
+        "description": "Generate modern TypeScript/Python equivalent of ABAP code",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "abapCode": {
+              "type": "string",
+              "description": "ABAP code to transform"
+            },
+            "targetLanguage": {
+              "type": "string",
+              "enum": ["typescript", "python", "javascript"],
+              "description": "Target language for transformation"
+            },
+            "preserveComments": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to preserve ABAP comments as documentation"
+            }
+          },
+          "required": ["abapCode", "targetLanguage"]
+        }
+      },
+      {
+        "name": "validate_business_logic",
+        "description": "Compare ABAP and modern code to ensure business logic preservation",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "originalAbap": {
+              "type": "string",
+              "description": "Original ABAP code"
+            },
+            "modernCode": {
+              "type": "string",
+              "description": "Transformed modern code"
+            }
+          },
+          "required": ["originalAbap", "modernCode"]
+        }
+      },
+      {
+        "name": "extract_data_model",
+        "description": "Extract database schema and relationships from ABAP code",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "ABAP code containing database operations"
+            },
+            "outputFormat": {
+              "type": "string",
+              "enum": ["typescript", "prisma", "sql"],
+              "default": "typescript",
+              "description": "Format for data model output"
+            }
+          },
+          "required": ["code"]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "uri": "abap://sap-tables",
+        "name": "SAP Standard Tables Reference",
+        "description": "Reference data for standard SAP table structures",
+        "mimeType": "application/json"
+      },
+      {
+        "uri": "abap://bapi-reference",
+        "name": "SAP BAPI Reference",
+        "description": "Standard SAP Business API (BAPI) documentation",
+        "mimeType": "application/json"
+      }
+    ]
+  },
+  "transport": {
+    "type": "stdio"
+  },
+  "kiro_integration": {
+    "purpose": "Extends Kiro's AI capabilities with ABAP-specific syntax understanding",
+    "hero_story": "Without MCP: Kiro would need extensive prompting to understand ABAP quirks. With MCP: Kiro has instant access to ABAP parsing tools and can analyze legacy code like an SAP expert.",
+    "usage_examples": [
+      "Kiro uses parse_abap to extract business logic from cryptic ABAP code",
+      "Kiro uses detect_sap_patterns to identify standard SAP modules and BAPIs",
+      "Kiro uses generate_modern_equivalent to create TypeScript from ABAP",
+      "Kiro uses validate_business_logic to ensure transformations are correct"
+    ]
+  }
+}
