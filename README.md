@@ -37,6 +37,21 @@ Using Kiro's AI-powered development capabilities (specs, steering, hooks, MCP, v
 
 ---
 
+## 🎬 **See Kiro in Action**
+
+**📺 [LIVE DEMO: Watch Kiro Actually Use These Features →](./DEMO_KIRO_IN_ACTION.md)**
+
+This document shows the **real workflow** of how Kiro:
+- 📋 Uses specs to understand ABAP syntax
+- 🧭 Applies steering docs for SAP expertise
+- 🛡️ Runs hooks to auto-validate transformations
+- 🔧 Executes MCP tools for code analysis
+- 💬 Refines through vibe coding conversations
+
+**Not just documentation - actual usage!**
+
+---
+
 ## 🎃 Hackathon Category: Resurrection
 
 **Perfect fit:** Bringing ABAP (1983) back to life with modern technology.
