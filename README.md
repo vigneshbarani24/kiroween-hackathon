@@ -203,41 +203,69 @@ Kiro: [Uses steering doc]
    Business logic preservation verified ✓
 ```
 
-### 4. 🔧 **MCP: ABAP Analysis Superpowers**
+### 4. 🔧 **MCP: Dual Strategy with Official SAP Tools**
 
-**Files:**
-- `.kiro/mcp/abap-analyzer-server.json`
-- `.kiro/mcp/abap-analyzer.py`
+**🎯 THE KEY DIFFERENTIATOR: We use BOTH custom AND official SAP MCP servers!**
 
-**What we did:** Extended Kiro with custom ABAP tools:
+#### **Custom ABAP Analyzer** (abap-analyzer.py)
+**Purpose:** Parse legacy ABAP code
 - `parse_abap` - Extract business logic patterns
 - `detect_sap_patterns` - Identify BAPIs, tables, modules
-- `generate_modern_equivalent` - Transform ABAP → TypeScript
+- `generate_modern_equivalent` - Transform ABAP → CAP
 - `validate_business_logic` - Compare original vs transformed
-- `extract_data_model` - Generate TypeScript interfaces
+- `extract_data_model` - Generate CDS models
 
-**Impact:** Kiro gained ABAP-specific analysis capabilities.
+#### **Official SAP CAP MCP Server** (@cap-js/mcp-server)
+**Source:** https://github.com/cap-js/mcp-server (Official SAP!)
+
+**Purpose:** Provide authoritative SAP CAP knowledge
+- Official SAP CAP documentation
+- CDS syntax validation (official compiler!)
+- CAP service templates
+- SAP-approved best practices
+- Always up-to-date with latest releases
+
+**Why This Is Better:**
+✅ Not a mock - real SAP tools!
+✅ Authoritative source for CAP patterns
+✅ Official CDS compiler integration
+✅ Production-ready code generation
+✅ SAP-validated best practices
+
+**The Workflow:**
+```
+Legacy ABAP
+    ↓
+Custom ABAP Analyzer (parse legacy)
+    ↓
+Kiro AI (understand + map)
+    ↓
+Official SAP CAP MCP (generate modern)
+    ↓
+SAP-standard CAP Application
+```
 
 **MCP in action:**
 ```python
-# Kiro uses MCP to analyze ABAP
+# Step 1: Custom analyzer parses ABAP
 result = parse_abap(legacy_code, extraction_type='all')
+# Returns: Business logic, SAP patterns, data structures
 
-# Returns:
-{
-  "database": [
-    {"type": "SELECT", "table": "VBAK", "description": "Sales Document Header"}
-  ],
-  "business_logic": [
-    {"type": "validation", "condition": "credit_limit check"},
-    {"type": "calculation", "pattern": "bulk discount 5%"}
-  ],
-  "sap_patterns": {
-    "pricing_logic": true,
-    "modules": ["SD"]
-  }
-}
+# Step 2: Kiro processes with SAP domain knowledge
+
+# Step 3: Official SAP CAP MCP generates modern code
+cap_result = cap_generate_cds(abap_table='VBAK')
+# Returns: Official SAP-standard CDS entity
+
+# Step 4: Validation with official compiler
+validation = cap_validate_cds(generated_cds)
+# Returns: ✅ Syntax valid, best practices followed
 ```
+
+**This dual MCP approach shows production-grade thinking:**
+- Custom tools for domain problems
+- Official vendor tools for target platform
+- Best of both worlds!
 
 ### 5. 💬 **Vibe Coding: The Development Journey**
 

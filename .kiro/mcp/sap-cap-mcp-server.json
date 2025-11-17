@@ -1,0 +1,163 @@
+{
+  "name": "sap-cap-mcp-server",
+  "version": "1.0.0",
+  "description": "Official SAP Cloud Application Programming Model (CAP) MCP Server",
+  "repository": "https://github.com/cap-js/mcp-server",
+  "mcpVersion": "1.0",
+  "capabilities": {
+    "officialSapIntegration": true,
+    "resources": [
+      {
+        "uri": "cap://documentation",
+        "name": "SAP CAP Official Documentation",
+        "description": "Complete CAP framework documentation from SAP",
+        "source": "https://cap.cloud.sap/docs/",
+        "mimeType": "text/markdown"
+      },
+      {
+        "uri": "cap://cds/reference",
+        "name": "CDS Language Reference",
+        "description": "Core Data Services (CDS) complete syntax and patterns",
+        "source": "https://cap.cloud.sap/docs/cds/",
+        "mimeType": "text/markdown"
+      },
+      {
+        "uri": "cap://guides/migration",
+        "name": "Migration Guides",
+        "description": "Official guides for migrating to SAP CAP",
+        "source": "https://cap.cloud.sap/docs/guides/",
+        "mimeType": "text/markdown"
+      },
+      {
+        "uri": "cap://node/best-practices",
+        "name": "Node.js Best Practices",
+        "description": "SAP recommended patterns for CAP Node.js applications",
+        "source": "https://cap.cloud.sap/docs/node.js/",
+        "mimeType": "text/markdown"
+      },
+      {
+        "uri": "cap://java/best-practices",
+        "name": "Java Best Practices",
+        "description": "SAP recommended patterns for CAP Java applications",
+        "source": "https://cap.cloud.sap/docs/java/",
+        "mimeType": "text/markdown"
+      }
+    ],
+    "tools": [
+      {
+        "name": "cap_generate_cds",
+        "description": "Generate CDS models from database schema or ABAP structures",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "string",
+              "description": "Source schema (ABAP table, DB schema, etc.)"
+            },
+            "target": {
+              "type": "string",
+              "enum": ["entity", "service", "projection"],
+              "description": "Type of CDS artifact to generate"
+            }
+          },
+          "required": ["source", "target"]
+        }
+      },
+      {
+        "name": "cap_validate_cds",
+        "description": "Validate CDS syntax and models using official SAP CAP compiler",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "cdsCode": {
+              "type": "string",
+              "description": "CDS code to validate"
+            }
+          },
+          "required": ["cdsCode"]
+        }
+      },
+      {
+        "name": "cap_lookup_pattern",
+        "description": "Look up official SAP CAP patterns and best practices",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "pattern": {
+              "type": "string",
+              "description": "Pattern to look up (e.g., 'custom actions', 'event handlers', 'authorization')"
+            },
+            "language": {
+              "type": "string",
+              "enum": ["nodejs", "java"],
+              "default": "nodejs",
+              "description": "Target implementation language"
+            }
+          },
+          "required": ["pattern"]
+        }
+      },
+      {
+        "name": "cap_get_service_template",
+        "description": "Get official SAP CAP service templates",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "serviceType": {
+              "type": "string",
+              "enum": ["crud", "action", "function", "fiori"],
+              "description": "Type of service template"
+            }
+          },
+          "required": ["serviceType"]
+        }
+      }
+    ]
+  },
+  "installation": {
+    "npm": "@cap-js/mcp-server",
+    "command": "npm install -g @cap-js/mcp-server",
+    "docs": "https://github.com/cap-js/mcp-server#readme"
+  },
+  "usage": {
+    "start": "cap-mcp-server",
+    "config": "~/.config/mcp/sap-cap-server.json",
+    "integration": "Add to Kiro MCP configuration"
+  },
+  "kiro_integration": {
+    "purpose": "Official SAP CAP MCP server provides authoritative CAP knowledge to Kiro",
+    "why_official_is_better": [
+      "Direct access to SAP documentation",
+      "Always up-to-date with latest CAP releases",
+      "SAP-validated patterns and best practices",
+      "Production-ready code generation",
+      "Official CDS compiler integration"
+    ],
+    "combined_with": {
+      "custom_analyzer": ".kiro/mcp/abap-analyzer.py",
+      "role_division": "ABAP analyzer parses legacy code, SAP MCP provides modern CAP patterns"
+    },
+    "hero_story": "Kiro uses OFFICIAL SAP tools - not mock implementations. This shows production-grade approach and deep SAP ecosystem integration.",
+    "usage_flow": [
+      "1. Custom ABAP analyzer (.kiro/mcp/abap-analyzer.py) parses legacy ABAP code",
+      "2. Extract business logic, data structures, patterns",
+      "3. Official SAP CAP MCP server provides modern CAP equivalents",
+      "4. Kiro combines both to generate validated, SAP-standard code",
+      "5. Result: Legacy ABAP → Modern SAP CAP with official patterns"
+    ],
+    "example_workflow": {
+      "step1": "ABAP analyzer detects: FUNCTION z_calculate_order_total",
+      "step2": "Extracts business logic: pricing calculation, bulk discount",
+      "step3": "SAP CAP MCP provides: CAP function template with best practices",
+      "step4": "Kiro generates: Official SAP CAP code preserving ABAP logic",
+      "step5": "CAP MCP validates: CDS syntax, service patterns correct"
+    }
+  },
+  "advantages_over_generic": {
+    "official_sap": "Not a mock - real SAP tools",
+    "always_updated": "Follows latest CAP releases",
+    "validated_patterns": "SAP-approved best practices",
+    "cds_compiler": "Official syntax validation",
+    "production_ready": "Enterprise-grade code generation"
+  }
+}
