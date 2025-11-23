@@ -8,6 +8,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { transformationRouter } from './routes/transformation';
 import { analyzeRouter } from './routes/analyze';
+import { intelligenceRouter } from './routes/intelligence';
 
 dotenv.config();
 
@@ -22,8 +23,15 @@ app.use(express.json({ limit: '10mb' }));
 app.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
-    service: 'Kiro SAP Resurrector',
+    service: 'Kiro SAP Resurrector + Custom Code Intelligence',
     kiro: 'The Hero of Legacy Modernization',
+    features: [
+      'ABAP Transformation',
+      'Custom Code Intelligence',
+      'Documentation Generation',
+      'Q&A Interface',
+      'Semantic Search'
+    ],
     timestamp: new Date().toISOString()
   });
 });
@@ -31,6 +39,7 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/transform', transformationRouter);
 app.use('/api/analyze', analyzeRouter);
+app.use('/api/intelligence', intelligenceRouter);
 
 // Start server
 app.listen(PORT, () => {
