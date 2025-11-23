@@ -1,18 +1,18 @@
-# Design Document: End-to-End User Flow & SAP BTP Deployment
+# Design Document: SAP Nova AI Alternative - Resurrection Platform
 
 ## Overview
 
-This design document outlines the technical architecture for the SAP Nova AI Alternative platform - a complete CAP application running on SAP BTP that enables ABAP code resurrection through intelligent analysis, transformation, and deployment. The platform leverages Model Context Protocol (MCP) servers for AI-powered transformations, Kiro hooks for quality automation, and Kiro specs for complex project planning.
+This design document outlines the technical architecture for the SAP Nova AI Alternative platform - a modern web application that analyzes legacy ABAP code and generates production-ready SAP CAP applications called "resurrections". The platform leverages MCP servers for intelligent transformation, GitHub for version control, and Slack for team collaboration.
 
 ### Key Design Principles
 
-1. **Cloud-Native SAP BTP Architecture** - Full CAP/CDS implementation with HANA Cloud, Fiori UI, and BTP services
-2. **MCP-Powered Intelligence** - Leverage specialized MCP servers for ABAP analysis and CAP generation
-3. **Automation via Hooks** - Use Kiro hooks for quality validation, testing, and CI/CD setup
-4. **Spec-Driven Planning** - Support complex resurrections with Kiro specs for requirements and tasks
-5. **GitHub-First Workflow** - Every resurrection creates a deployable GitHub repository
-6. **SAP BAS Integration** - Seamless "Open in BAS" experience for continued development
-7. **User Experience Excellence** - Guided wizards, real-time feedback, and intuitive dashboards
+1. **Platform is NOT CAP** - Modern web stack (Next.js/Node.js/React) for flexibility and performance
+2. **Resurrections ARE CAP** - Each output is a complete, deployable SAP CAP application
+3. **MCP-Powered Intelligence** - Leverage specialized MCP servers for ABAP analysis and CAP generation
+4. **Enterprise-Class UX** - Stellar user experience with smooth flows and professional design
+5. **GitHub-First Workflow** - Every resurrection creates a GitHub repository (automated or manual)
+6. **Automation via Hooks** - Use Kiro hooks for quality validation and CI/CD setup
+7. **Flexible Deployment** - Platform can run on Vercel, AWS, or any Node.js environment
 
 ## Architecture
 
@@ -20,164 +20,134 @@ This design document outlines the technical architecture for the SAP Nova AI Alt
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        SAP BTP Cloud Foundry                     │
+│                    Resurrection Platform                         │
+│                  (Next.js/Node.js/React)                         │
 │                                                                   │
 │  ┌────────────────────────────────────────────────────────────┐ │
-│  │                    CAP Application                          │ │
+│  │                    Frontend (Next.js/React)                 │ │
 │  │                                                              │ │
 │  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │ │
-│  │  │ Fiori UI     │  │ CAP Service  │  │ Background   │    │ │
-│  │  │ (UI5/Fiori   │◄─┤ (Node.js)    │◄─┤ Jobs         │    │ │
-│  │  │  Elements)   │  │ OData V4     │  │ (Batch)      │    │ │
-│  │  └──────────────┘  └──────┬───────┘  └──────────────┘    │ │
-│  │                            │                                │ │
-│  └────────────────────────────┼────────────────────────────────┘ │
-│                               │                                   │
-│  ┌────────────────────────────┼────────────────────────────────┐ │
-│  │                    SAP HANA Cloud                           │ │
+│  │  │ Landing Page │  │ Intelligence │  │ Resurrection │    │ │
+│  │  │ & Onboarding │  │ Dashboard    │  │ Wizard       │    │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘    │ │
 │  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │ │
-│  │  │ HDI Container│  │ CDS Models   │  │ Vector Store │    │ │
-│  │  │ (Schema Mgmt)│  │ (Entities)   │  │ (Embeddings) │    │ │
+│  │  │ Q&A Chat     │  │ Resurrection │  │ Settings     │    │ │
+│  │  │ Interface    │  │ Dashboard    │  │ & Admin      │    │ │
 │  │  └──────────────┘  └──────────────┘  └──────────────┘    │ │
 │  └────────────────────────────────────────────────────────────┘ │
-│                                                                   │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │                    BTP Services                             │ │
+│                               │                                   │
+│  ┌────────────────────────────┼────────────────────────────────┐ │
+│  │                    Backend (Node.js/Express)                 │ │
 │  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │ │
-│  │  │ XSUAA        │  │ Destination  │  │ Job Scheduler│    │ │
-│  │  │ (Auth)       │  │ (External    │  │ (Batch Jobs) │    │ │
-│  │  │              │  │  APIs)       │  │              │    │ │
+│  │  │ REST/GraphQL │  │ MCP          │  │ Resurrection │    │ │
+│  │  │ API          │  │ Orchestrator │  │ Engine       │    │ │
 │  │  └──────────────┘  └──────────────┘  └──────────────┘    │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │ │
+│  │  │ Vector Search│  │ Hook Manager │  │ Auth Service │    │ │
+│  │  │ (Pinecone)   │  │              │  │              │    │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘    │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                               │                                   │
+│  ┌────────────────────────────┼────────────────────────────────┐ │
+│  │                    Database (PostgreSQL/MongoDB)             │ │
+│  │  - ABAP Objects                                              │ │
+│  │  - Resurrections                                             │ │
+│  │  - Users & Auth                                              │ │
+│  │  - Transformation Logs                                       │ │
 │  └────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
                                │
                                │ MCP Protocol
                                ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    External Services (via Destination)           │
+│                    MCP Servers (External)                        │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
 │  │ ABAP Analyzer│  │ SAP CAP      │  │ SAP UI5      │          │
-│  │ MCP Server   │  │ MCP Server   │  │ MCP Server   │          │
+│  │ MCP Server   │  │ Generator    │  │ Generator    │          │
 │  └──────────────┘  └──────────────┘  └──────────────┘          │
 │  ┌──────────────┐  ┌──────────────┐                            │
-│  │ OpenAI API   │  │ GitHub API   │                            │
-│  │ (Embeddings) │  │ (Repo Mgmt)  │                            │
+│  │ GitHub MCP   │  │ Slack MCP    │                            │
+│  │ (Repo Mgmt)  │  │ (Notifications)                           │
 │  └──────────────┘  └──────────────┘                            │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Resurrection Output                           │
+│                  (Complete CAP Application)                      │
+│                                                                   │
+│  📦 resurrection-sd-pricing-20241123/                           │
+│  ├── db/                    (CDS schema, data)                  │
+│  ├── srv/                   (CAP services, handlers)            │
+│  ├── app/                   (Fiori UI)                          │
+│  ├── mta.yaml               (BTP deployment descriptor)         │
+│  ├── package.json           (Dependencies, scripts)             │
+│  ├── xs-security.json       (XSUAA configuration)               │
+│  ├── README.md              (Setup & deployment guide)          │
+│  └── .github/workflows/     (CI/CD)                             │
+│                                                                   │
+│  🚀 Deployable to SAP BTP                                       │
+│  🔗 GitHub Repository                                            │
+│  💻 Open in SAP BAS                                             │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ### Technology Stack
 
 **Frontend:**
-- SAP Fiori Elements (metadata-driven UI)
-- SAPUI5 (Freestyle components for custom visualizations)
-- D3.js (Dependency graph visualization)
-- SAP Horizon theme
+- Next.js 14+ (App Router) or React 18+ with Vite
+- TypeScript for type safety
+- Tailwind CSS or SAP Horizon theme for styling
+- Shadcn/ui or Material-UI for component library
+- D3.js for dependency graph visualization
+- React Query for data fetching and caching
+- Zustand or Redux for state management
 
 **Backend:**
-- SAP CAP (Cloud Application Programming Model) - Node.js
-- CDS (Core Data Services) for data modeling
-- OData V4 for API exposure
-- Express.js middleware for custom endpoints
+- Node.js 18+ with Express or Next.js API routes
+- TypeScript
+- Prisma or TypeORM for database ORM
+- PostgreSQL or MongoDB for data persistence
+- Pinecone for vector search
+- OpenAI API for embeddings and Q&A
+- Bull or BullMQ for background job processing
 
-**Database:**
-- SAP HANA Cloud (primary data store)
-- HDI (HANA Deployment Infrastructure) for schema management
-- HANA Vector Engine for semantic search
-- CDS views for efficient queries
+**MCP Integration:**
+- Model Context Protocol SDK
+- Custom MCP client wrappers
+- Streaming support for real-time progress
+- Error handling and retry logic
 
-**BTP Services:**
-- XSUAA (Authentication & Authorization)
-- Destination Service (External API connections)
-- Job Scheduler (Batch processing)
-- Cloud Logging (Monitoring)
+**External Services:**
+- GitHub API (via GitHub MCP)
+- Slack API (via Slack MCP)
+- OpenAI API (embeddings, chat completion)
+- Pinecone (vector database)
 
-**External Integrations:**
-- MCP Servers (ABAP Analyzer, CAP Generator, UI5 Generator)
-- GitHub API (Repository management)
-- OpenAI API (Embeddings and Q&A)
-- SAP Business Application Studio (Deep linking)
+**Deployment:**
+- Vercel (recommended for Next.js)
+- AWS (EC2, ECS, Lambda)
+- Docker containers
+- Environment variables for configuration
 
 
 ## Components and Interfaces
 
-### 1. MCP Server Integration Layer
+### 1. MCP Integration Layer
 
-The platform leverages multiple MCP servers for specialized AI capabilities and integrations:
+The platform connects to 5 MCP servers for specialized capabilities:
 
-#### Core MCP Servers
+#### ABAP Analyzer MCP
+**Purpose:** Parse and analyze legacy ABAP code with SAP domain knowledge
 
-**ABAP Analyzer MCP**
-- **Purpose:** Parse and analyze legacy ABAP code with SAP domain knowledge
-- **Capabilities:** 
-  - Syntax parsing and validation
-  - Business logic extraction
-  - Dependency analysis
-  - SAP pattern recognition (pricing, authorization, number ranges)
-- **Configuration:** `.kiro/settings/mcp.json` → `abap-analyzer`
-- **Connection:** Via BTP Destination service with API key authentication
+**Capabilities:**
+- Syntax parsing and validation
+- Business logic extraction
+- Dependency analysis
+- SAP pattern recognition (pricing, authorization, number ranges)
+- Table usage identification
 
-**SAP CAP Generator MCP**
-- **Purpose:** Generate modern CAP applications from ABAP business logic
-- **Capabilities:**
-  - CDS model generation
-  - Service definition creation
-  - Event handler implementation
-  - Clean Core compliance validation
-- **Configuration:** `.kiro/settings/mcp.json` → `sap-cap-generator`
-- **Connection:** Via BTP Destination service
-
-**SAP UI5 Generator MCP**
-- **Purpose:** Generate Fiori Elements and Freestyle UI5 applications
-- **Capabilities:**
-  - Fiori Elements annotations
-  - UI5 component scaffolding
-  - Manifest.json generation
-  - Responsive design patterns
-- **Configuration:** `.kiro/settings/mcp.json` → `sap-ui5-generator`
-- **Connection:** Via BTP Destination service
-
-#### Collaboration MCP Servers
-
-**GitHub MCP**
-- **Purpose:** Automate GitHub repository management and collaboration
-- **Capabilities:**
-  - Repository creation with templates
-  - Branch management and protection rules
-  - Pull request creation and review
-  - Issue tracking and project boards
-  - GitHub Actions workflow setup
-  - Commit and push operations
-  - Repository statistics and insights
-- **Configuration:** `.kiro/settings/mcp.json` → `github`
-- **Connection:** OAuth GitHub App with user consent
-- **Use Cases:**
-  - Auto-create resurrection repos
-  - Set up CI/CD workflows
-  - Create issues for quality failures
-  - Manage resurrection project boards
-  - Track resurrection progress via commits
-
-**Slack MCP**
-- **Purpose:** Send real-time notifications and enable team collaboration
-- **Capabilities:**
-  - Channel message posting
-  - Direct message notifications
-  - Interactive message buttons
-  - File uploads (reports, logs)
-  - Thread conversations
-  - User mentions and @channel alerts
-- **Configuration:** `.kiro/settings/mcp.json` → `slack`
-- **Connection:** Slack Bot Token via BTP Destination service
-- **Use Cases:**
-  - Notify team when resurrection completes
-  - Alert on quality validation failures
-  - Share resurrection metrics in channels
-  - Request code review via Slack
-  - Send daily/weekly resurrection summaries
-
-#### MCP Configuration Example
-
+**Configuration:**
 ```json
 {
   "mcpServers": {
@@ -187,163 +157,231 @@ The platform leverages multiple MCP servers for specialized AI capabilities and 
       "env": {
         "SAP_DOMAIN_KNOWLEDGE": "enabled"
       }
-    },
-    "sap-cap-generator": {
-      "command": "node",
-      "args": ["./mcp-servers/cap-generator/index.js"]
-    },
-    "sap-ui5-generator": {
-      "command": "node",
-      "args": ["./mcp-servers/ui5-generator/index.js"]
-    },
+    }
+  }
+}
+```
+
+**API Methods:**
+- `analyzeCode(abapCode: string, context: object)` → Analysis result
+- `extractBusinessLogic(abapCode: string)` → Business rules
+- `findDependencies(abapCode: string)` → Dependency list
+- `identifySAPPatterns(abapCode: string)` → Pattern matches
+
+#### SAP CAP Generator MCP
+**Purpose:** Generate modern CAP applications from ABAP business logic
+
+**Capabilities:**
+- CDS model generation from ABAP structures
+- Service definition creation
+- Event handler implementation
+- Clean Core compliance validation
+
+**API Methods:**
+- `generateCDSModels(businessLogic: object)` → CDS files
+- `generateServiceDefinitions(models: object)` → Service CDS
+- `generateHandlers(services: object)` → JavaScript/TypeScript handlers
+- `validateCleanCore(capProject: object)` → Validation report
+
+#### SAP UI5 Generator MCP
+**Purpose:** Generate Fiori Elements and Freestyle UI5 applications
+
+**Capabilities:**
+- Fiori Elements annotations
+- UI5 component scaffolding
+- Manifest.json generation
+- Responsive design patterns
+
+**API Methods:**
+- `generateFioriElements(service: object, template: string)` → UI files
+- `generateFreestyleUI5(requirements: object)` → UI5 components
+- `generateManifest(appConfig: object)` → manifest.json
+
+#### GitHub MCP
+**Purpose:** Automate GitHub repository management
+
+**Capabilities:**
+- Repository creation with templates
+- File commits and pushes
+- Branch management
+- Issue and PR creation
+- GitHub Actions workflow setup
+- Repository statistics
+
+**API Methods:**
+- `createRepository(name: string, options: object)` → Repo info
+- `createOrUpdateFiles(repo: string, files: array)` → Commit info
+- `createIssue(repo: string, issue: object)` → Issue info
+- `createWorkflow(repo: string, workflow: object)` → Workflow file
+- `addTopics(repo: string, topics: array)` → Success
+
+**Configuration:**
+```json
+{
+  "mcpServers": {
     "github": {
       "command": "uvx",
       "args": ["mcp-server-github"],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${destination.github-api.token}"
-      }
-    },
-    "slack": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-slack"],
-      "env": {
-        "SLACK_BOT_TOKEN": "${destination.slack-api.token}",
-        "SLACK_TEAM_ID": "${destination.slack-api.team_id}"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
       }
     }
   }
 }
 ```
 
-### 2. Kiro Hooks Configuration
+#### Slack MCP
+**Purpose:** Send team notifications and enable collaboration
 
-Hooks automate quality validation, testing, and notifications throughout the resurrection lifecycle.
+**Capabilities:**
+- Channel message posting
+- Direct messages
+- Interactive message buttons
+- File uploads
+- Thread conversations
+- User mentions
 
-#### Hook Definitions
+**API Methods:**
+- `postMessage(channel: string, text: string, options: object)` → Message info
+- `postMessageWithAttachments(channel: string, message: object)` → Message info
+- `createThread(channel: string, threadTs: string, text: string)` → Reply info
+- `uploadFile(channel: string, file: buffer, filename: string)` → File info
 
-**on-resurrection-start**
-```yaml
-trigger: resurrection.started
-actions:
-  - type: mcp-call
-    server: slack
-    method: postMessage
-    params:
-      channel: "#resurrections"
-      text: "🚀 Resurrection started: {{resurrection.name}}"
-  - type: mcp-call
-    server: github
-    method: createRepository
-    params:
-      name: "resurrection-{{resurrection.name}}"
-      description: "ABAP to CAP resurrection: {{resurrection.description}}"
+**Configuration:**
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      }
+    }
+  }
+}
+```
+
+### 2. MCP Orchestration Service
+
+**Purpose:** Manage MCP server lifecycle and coordinate transformation workflows
+
+```typescript
+// lib/mcp/orchestrator.ts
+import { MCPClient } from './mcp-client';
+
+export class MCPOrchestrator {
+  private clients: Map<string, MCPClient>;
+  
+  constructor(config: MCPConfig) {
+    this.clients = new Map();
+    this.initializeClients(config);
+  }
+  
+  async analyzeABAP(abapCode: string, context: object): Promise<AnalysisResult> {
+    const client = this.clients.get('abap-analyzer');
+    return await client.call('analyzeCode', { code: abapCode, context });
+  }
+  
+  async generateCAP(businessLogic: object): Promise<CAPProject> {
+    const capClient = this.clients.get('sap-cap-generator');
+    const ui5Client = this.clients.get('sap-ui5-generator');
+    
+    // Generate CDS models
+    const cdsModels = await capClient.call('generateCDSModels', { businessLogic });
+    
+    // Generate services
+    const services = await capClient.call('generateServiceDefinitions', { models: cdsModels });
+    
+    // Generate handlers
+    const handlers = await capClient.call('generateHandlers', { services });
+    
+    // Generate UI
+    const ui = await ui5Client.call('generateFioriElements', { 
+      service: services[0],
+      template: 'list-report'
+    });
+    
+    return {
+      db: cdsModels,
+      srv: { services, handlers },
+      app: ui,
+      packageJson: this.generatePackageJson(),
+      mtaYaml: this.generateMTAYaml()
+    };
+  }
+  
+  async createGitHubRepo(resurrection: Resurrection): Promise<RepoInfo> {
+    const githubClient = this.clients.get('github');
+    
+    // Create repository
+    const repo = await githubClient.call('createRepository', {
+      name: `resurrection-${resurrection.name}-${Date.now()}`,
+      description: resurrection.description,
+      auto_init: true,
       private: false
-      auto_init: true
+    });
+    
+    // Commit all files
+    await githubClient.call('createOrUpdateFiles', {
+      repo: repo.name,
+      files: resurrection.files,
+      message: '🔄 Resurrection: ABAP to CAP transformation complete'
+    });
+    
+    // Add topics
+    await githubClient.call('addTopics', {
+      repo: repo.name,
+      topics: ['sap-cap', 'abap-resurrection', 'clean-core', 'sap-btp']
+    });
+    
+    // Setup CI/CD
+    await githubClient.call('createWorkflow', {
+      repo: repo.name,
+      workflow: this.generateCIWorkflow()
+    });
+    
+    return repo;
+  }
+  
+  async notifySlack(channel: string, resurrection: Resurrection, event: string): Promise<void> {
+    const slackClient = this.clients.get('slack');
+    
+    const messages = {
+      'started': `🚀 Resurrection started: ${resurrection.name}`,
+      'completed': `✅ Resurrection completed: ${resurrection.name}\n🔗 GitHub: ${resurrection.githubUrl}\n💻 Open in BAS: ${resurrection.basUrl}`,
+      'failed': `🔴 Resurrection failed: ${resurrection.name}\n❌ Error: ${resurrection.error}`,
+      'deployed': `🎉 Resurrection deployed: ${resurrection.name}\n🌐 Live URL: ${resurrection.deploymentUrl}`
+    };
+    
+    await slackClient.call('postMessage', {
+      channel,
+      text: messages[event],
+      attachments: [{
+        color: event === 'failed' ? 'danger' : 'good',
+        fields: [
+          { title: 'Module', value: resurrection.module },
+          { title: 'LOC Saved', value: resurrection.locSaved.toString() },
+          { title: 'Quality Score', value: `${resurrection.qualityScore}%` }
+        ]
+      }]
+    });
+  }
+}
 ```
 
-**on-resurrection-complete**
-```yaml
-trigger: resurrection.completed
-actions:
-  - type: agent-execution
-    message: |
-      Run quality validation on resurrection {{resurrection.id}}:
-      1. Validate CDS syntax
-      2. Check Clean Core compliance
-      3. Verify business logic preservation
-      4. Generate quality report
-  - type: mcp-call
-    server: github
-    method: createIssue
-    params:
-      repo: "{{resurrection.github_repo}}"
-      title: "Quality Validation Results"
-      body: "{{quality_report}}"
-      labels: ["quality", "automated"]
-```
+### 3. Kiro Hooks Configuration
 
-**on-quality-validation-failed**
-```yaml
-trigger: quality.validation.failed
-actions:
-  - type: mcp-call
-    server: slack
-    method: postMessage
-    params:
-      channel: "#resurrections"
-      text: "⚠️ Quality validation failed for {{resurrection.name}}"
-      attachments:
-        - color: "danger"
-          title: "Validation Errors"
-          text: "{{validation_errors}}"
-          actions:
-            - type: "button"
-              text: "View in GitHub"
-              url: "{{resurrection.github_url}}"
-  - type: mcp-call
-    server: github
-    method: createIssue
-    params:
-      repo: "{{resurrection.github_repo}}"
-      title: "🔴 Quality Validation Failed"
-      body: "{{validation_errors}}"
-      labels: ["bug", "quality-failure"]
-      assignees: ["{{resurrection.owner}}"]
-```
+**Purpose:** Automate quality validation, testing, and notifications
 
-**on-deployment-success**
-```yaml
-trigger: deployment.succeeded
-actions:
-  - type: mcp-call
-    server: slack
-    method: postMessage
-    params:
-      channel: "#resurrections"
-      text: "✅ Resurrection deployed successfully!"
-      attachments:
-        - color: "good"
-          title: "{{resurrection.name}}"
-          fields:
-            - title: "Application URL"
-              value: "{{deployment.url}}"
-            - title: "GitHub Repo"
-              value: "{{resurrection.github_url}}"
-            - title: "Lines of Code Saved"
-              value: "{{metrics.loc_saved}}"
-  - type: mcp-call
-    server: github
-    method: createRelease
-    params:
-      repo: "{{resurrection.github_repo}}"
-      tag_name: "v1.0.0"
-      name: "Production Release"
-      body: "Deployed to SAP BTP: {{deployment.url}}"
-```
-
-**on-save-in-bas**
-```yaml
-trigger: file.saved
-conditions:
-  - file.path matches "*.cds" OR "*.js"
-actions:
-  - type: shell-command
-    command: "npm run lint"
-  - type: shell-command
-    command: "cds compile --to sql"
-  - type: agent-execution
-    message: "Validate CDS syntax and report any errors"
-```
-
-#### Hook Configuration File
-
-Location: `.kiro/hooks/resurrection-hooks.json`
+**Hook Configuration File:** `.kiro/hooks/resurrection-hooks.json`
 
 ```json
 {
   "hooks": [
     {
-      "id": "resurrection-start-notification",
+      "id": "on-resurrection-start",
       "name": "Notify team on resurrection start",
       "trigger": "resurrection.started",
       "enabled": true,
@@ -360,19 +398,106 @@ Location: `.kiro/hooks/resurrection-hooks.json`
       ]
     },
     {
-      "id": "quality-validation",
-      "name": "Run quality checks on completion",
+      "id": "on-resurrection-complete",
+      "name": "Quality validation on completion",
       "trigger": "resurrection.completed",
       "enabled": true,
       "actions": [
         {
           "type": "agent-execution",
-          "message": "Validate quality for resurrection {{resurrection.id}}"
+          "message": "Validate quality for resurrection {{resurrection.id}}: Check CDS syntax, CAP structure, Clean Core compliance"
+        },
+        {
+          "type": "mcp-call",
+          "server": "github",
+          "method": "createIssue",
+          "params": {
+            "repo": "{{resurrection.githubRepo}}",
+            "title": "Quality Validation Results",
+            "body": "{{quality_report}}",
+            "labels": ["quality", "automated"]
+          }
         }
       ]
     },
     {
-      "id": "github-ci-setup",
+      "id": "on-quality-failure",
+      "name": "Alert on quality validation failure",
+      "trigger": "quality.validation.failed",
+      "enabled": true,
+      "actions": [
+        {
+          "type": "mcp-call",
+          "server": "slack",
+          "method": "postMessage",
+          "params": {
+            "channel": "#resurrections",
+            "text": "⚠️ Quality validation failed for {{resurrection.name}}",
+            "attachments": [{
+              "color": "danger",
+              "title": "Validation Errors",
+              "text": "{{validation_errors}}",
+              "actions": [{
+                "type": "button",
+                "text": "View in GitHub",
+                "url": "{{resurrection.githubUrl}}"
+              }]
+            }]
+          }
+        },
+        {
+          "type": "mcp-call",
+          "server": "github",
+          "method": "createIssue",
+          "params": {
+            "repo": "{{resurrection.githubRepo}}",
+            "title": "🔴 Quality Validation Failed",
+            "body": "{{validation_errors}}",
+            "labels": ["bug", "quality-failure"],
+            "assignees": ["{{resurrection.owner}}"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "on-deployment-success",
+      "name": "Celebrate deployment success",
+      "trigger": "deployment.succeeded",
+      "enabled": true,
+      "actions": [
+        {
+          "type": "mcp-call",
+          "server": "slack",
+          "method": "postMessage",
+          "params": {
+            "channel": "#resurrections",
+            "text": "🎉 Resurrection deployed successfully!",
+            "attachments": [{
+              "color": "good",
+              "title": "{{resurrection.name}}",
+              "fields": [
+                { "title": "Application URL", "value": "{{deployment.url}}" },
+                { "title": "GitHub Repo", "value": "{{resurrection.githubUrl}}" },
+                { "title": "Lines of Code Saved", "value": "{{metrics.locSaved}}" }
+              ]
+            }]
+          }
+        },
+        {
+          "type": "mcp-call",
+          "server": "github",
+          "method": "createRelease",
+          "params": {
+            "repo": "{{resurrection.githubRepo}}",
+            "tag_name": "v1.0.0",
+            "name": "Production Release",
+            "body": "Deployed to SAP BTP: {{deployment.url}}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "setup-ci-cd",
       "name": "Configure GitHub Actions CI/CD",
       "trigger": "github.repository.created",
       "enabled": true,
@@ -382,7 +507,7 @@ Location: `.kiro/hooks/resurrection-hooks.json`
           "server": "github",
           "method": "createOrUpdateFile",
           "params": {
-            "repo": "{{resurrection.github_repo}}",
+            "repo": "{{resurrection.githubRepo}}",
             "path": ".github/workflows/ci.yml",
             "content": "{{ci_workflow_template}}"
           }
@@ -393,546 +518,482 @@ Location: `.kiro/hooks/resurrection-hooks.json`
 }
 ```
 
-### 3. Notification Flow with Slack MCP
+### 4. Resurrection CAP App Structure
 
-**Resurrection Lifecycle Notifications:**
+**Complete CAP Project Generated for Each Resurrection:**
 
-1. **Start:** "🚀 Resurrection started: sd-pricing-logic"
-2. **Progress:** "⏳ Parsing ABAP... 50% complete"
-3. **MCP Activity:** "🤖 ABAP Analyzer MCP: Extracted 5 functions, 3 tables"
-4. **Transformation:** "🔄 Generating CAP code... CDS models created"
-5. **GitHub:** "📦 Repository created: resurrection-sd-pricing-logic"
-6. **Quality:** "✅ Quality validation passed - 95% score"
-7. **Deployment:** "🚀 Deployed to BTP: https://app.cfapps.sap.hana.ondemand.com"
-
-**Team Collaboration:**
-
-- **Daily Digest:** Slack message at 9 AM with resurrection summary
-- **Code Review Requests:** "@john Please review resurrection-sd-pricing-logic"
-- **Failure Alerts:** "@channel Quality validation failed - needs attention"
-- **Metrics Sharing:** Weekly report with LOC saved, complexity reduced
-
-### 4. GitHub MCP Integration Details
-
-**Repository Creation Workflow:**
-
-```javascript
-// When resurrection completes
-const repoName = `resurrection-${project.name}-${timestamp}`;
-
-// Use GitHub MCP to create repo
-await mcpClient.call('github', 'createRepository', {
-  name: repoName,
-  description: `ABAP to CAP resurrection: ${project.description}`,
-  private: false,
-  auto_init: true,
-  gitignore_template: 'Node',
-  license_template: 'apache-2.0'
-});
-
-// Add topics
-await mcpClient.call('github', 'replaceAllTopics', {
-  repo: repoName,
-  topics: ['sap-cap', 'abap-resurrection', 'clean-core', 'sap-btp']
-});
-
-// Create initial commit with all files
-await mcpClient.call('github', 'createOrUpdateFiles', {
-  repo: repoName,
-  files: [
-    { path: 'README.md', content: readmeContent },
-    { path: 'package.json', content: packageJson },
-    { path: 'mta.yaml', content: mtaYaml },
-    { path: 'db/schema.cds', content: cdsModels },
-    { path: 'srv/service.cds', content: serviceDefinition },
-    // ... all generated files
-  ],
-  message: '🔄 Resurrection: ABAP to CAP transformation complete'
-});
-
-// Set up branch protection
-await mcpClient.call('github', 'updateBranchProtection', {
-  repo: repoName,
-  branch: 'main',
-  required_status_checks: {
-    strict: true,
-    contexts: ['build', 'test']
-  }
-});
-
-// Create project board
-await mcpClient.call('github', 'createProject', {
-  repo: repoName,
-  name: 'Resurrection Development',
-  body: 'Track resurrection development tasks'
-});
+```
+resurrection-sd-pricing-20241123/
+├── db/
+│   ├── schema.cds                 # CDS data models
+│   ├── data/                      # Sample data (CSV files)
+│   │   ├── SalesOrders.csv
+│   │   └── Customers.csv
+│   └── src/                       # Database procedures (optional)
+├── srv/
+│   ├── service.cds                # Service definitions
+│   ├── service.js                 # Service implementation
+│   └── handlers/                  # Business logic handlers
+│       ├── pricing.js
+│       └── validation.js
+├── app/
+│   ├── orders/                    # Fiori UI app
+│   │   ├── webapp/
+│   │   │   ├── manifest.json
+│   │   │   ├── Component.js
+│   │   │   └── annotations.cds    # Fiori Elements annotations
+│   │   └── package.json
+│   └── index.html                 # Launchpad
+├── .github/
+│   └── workflows/
+│       └── ci.yml                 # GitHub Actions CI/CD
+├── mta.yaml                       # BTP deployment descriptor
+├── package.json                   # Dependencies and scripts
+├── xs-security.json               # XSUAA configuration
+├── .gitignore
+├── README.md                      # Setup and deployment guide
+└── RESURRECTION.md                # Original ABAP context
 ```
 
-**GitHub Actions Setup via MCP:**
+**Key Files Generated:**
 
-```yaml
-# .github/workflows/ci.yml (created by hook)
-name: Resurrection CI/CD
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: npm install
-      - run: npm run build
-      - run: npm test
-      
-  deploy:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy to SAP BTP
-        run: |
-          cf login -a ${{ secrets.CF_API }} -u ${{ secrets.CF_USER }} -p ${{ secrets.CF_PASSWORD }}
-          mbt build
-          cf deploy mta_archives/*.mtar
-```
-
-### 5. MCP Orchestration Service
-
-**CAP Service: `MCPOrchestrationService`**
-
-Manages MCP server lifecycle, request routing, and response handling.
-
-```javascript
-// srv/mcp-orchestration-service.js
-const cds = require('@sap/cds');
-
-class MCPOrchestrationService extends cds.ApplicationService {
-  async init() {
-    // Load MCP configuration
-    this.mcpConfig = await this.loadMCPConfig();
-    
-    // Initialize MCP clients
-    this.mcpClients = {
-      'abap-analyzer': new MCPClient(this.mcpConfig.abapAnalyzer),
-      'sap-cap-generator': new MCPClient(this.mcpConfig.capGenerator),
-      'sap-ui5-generator': new MCPClient(this.mcpConfig.ui5Generator),
-      'github': new MCPClient(this.mcpConfig.github),
-      'slack': new MCPClient(this.mcpConfig.slack)
-    };
-    
-    // Register event handlers
-    this.on('analyzeABAP', this.handleAnalyzeABAP);
-    this.on('generateCAP', this.handleGenerateCAP);
-    this.on('generateUI', this.handleGenerateUI);
-    this.on('createGitHubRepo', this.handleCreateGitHubRepo);
-    this.on('notifySlack', this.handleNotifySlack);
-    
-    await super.init();
-  }
-  
-  async handleAnalyzeABAP(req) {
-    const { abapCode, context } = req.data;
-    
-    // Call ABAP Analyzer MCP with streaming
-    const stream = await this.mcpClients['abap-analyzer'].callStreaming(
-      'analyzeCode',
-      { code: abapCode, context }
-    );
-    
-    // Stream progress to client
-    for await (const chunk of stream) {
-      req.notify({ progress: chunk.progress, message: chunk.message });
+**package.json:**
+```json
+{
+  "name": "resurrection-sd-pricing",
+  "version": "1.0.0",
+  "description": "Resurrected from ABAP: SD Pricing Logic",
+  "scripts": {
+    "start": "cds watch",
+    "build": "cds build",
+    "deploy": "cds deploy",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@sap/cds": "^7.0.0",
+    "@sap/xssec": "^3.0.0",
+    "express": "^4.18.0"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^7.0.0",
+    "jest": "^29.0.0"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana"
+      },
+      "auth": {
+        "kind": "xsuaa"
+      }
     }
-    
-    return stream.result;
-  }
-  
-  async handleCreateGitHubRepo(req) {
-    const { resurrection } = req.data;
-    
-    // Create repository
-    const repo = await this.mcpClients['github'].call('createRepository', {
-      name: `resurrection-${resurrection.name}`,
-      description: resurrection.description,
-      auto_init: true
-    });
-    
-    // Commit all files
-    await this.mcpClients['github'].call('createOrUpdateFiles', {
-      repo: repo.name,
-      files: resurrection.files,
-      message: '🔄 Resurrection complete'
-    });
-    
-    // Notify Slack
-    await this.mcpClients['slack'].call('postMessage', {
-      channel: '#resurrections',
-      text: `✅ Repository created: ${repo.html_url}`
-    });
-    
-    return repo;
   }
 }
+```
 
-module.exports = MCPOrchestrationService;
+**mta.yaml:**
+```yaml
+_schema-version: '3.1'
+ID: resurrection-sd-pricing
+version: 1.0.0
+description: Resurrected CAP application from ABAP
+
+modules:
+  - name: resurrection-sd-pricing-srv
+    type: nodejs
+    path: gen/srv
+    requires:
+      - name: resurrection-sd-pricing-db
+      - name: resurrection-sd-pricing-xsuaa
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+
+  - name: resurrection-sd-pricing-db-deployer
+    type: hdb
+    path: gen/db
+    requires:
+      - name: resurrection-sd-pricing-db
+
+  - name: resurrection-sd-pricing-app
+    type: approuter.nodejs
+    path: app
+    requires:
+      - name: srv-api
+      - name: resurrection-sd-pricing-xsuaa
+
+resources:
+  - name: resurrection-sd-pricing-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+
+  - name: resurrection-sd-pricing-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+```
+
+**xs-security.json:**
+```json
+{
+  "xsappname": "resurrection-sd-pricing",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Administrator"
+    },
+    {
+      "name": "$XSAPPNAME.User",
+      "description": "User"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Admin",
+      "description": "Administrator",
+      "scope-references": ["$XSAPPNAME.Admin"]
+    },
+    {
+      "name": "User",
+      "description": "User",
+      "scope-references": ["$XSAPPNAME.User"]
+    }
+  ]
+}
+```
+
+**README.md (Generated):**
+```markdown
+# Resurrection: SD Pricing Logic
+
+🔄 This CAP application was resurrected from legacy ABAP code.
+
+## Original ABAP Context
+- **Module:** SD (Sales & Distribution)
+- **Functions:** Z_CALCULATE_DISCOUNT, Z_PRICING_PROCEDURE
+- **Tables Used:** VBAK, VBAP, KONV
+- **Transformation Date:** 2024-11-23
+
+## Local Development
+
+### Prerequisites
+- Node.js 18+
+- @sap/cds-dk
+
+### Setup
+\`\`\`bash
+npm install
+cds watch
+\`\`\`
+
+Access at: http://localhost:4004
+
+## Deploy to SAP BTP
+
+### Prerequisites
+- Cloud Foundry CLI
+- MTA Build Tool
+- SAP BTP account
+
+### Deployment
+\`\`\`bash
+# Login to Cloud Foundry
+cf login -a https://api.cf.{region}.hana.ondemand.com
+
+# Build MTA
+mbt build
+
+# Deploy
+cf deploy mta_archives/resurrection-sd-pricing_1.0.0.mtar
+\`\`\`
+
+## Open in SAP Business Application Studio
+
+[Open in BAS](https://bas.{region}.hana.ondemand.com/?gitClone=https://github.com/{org}/resurrection-sd-pricing-20241123)
+
+## Architecture
+
+- **Database:** SAP HANA Cloud (HDI Container)
+- **Backend:** SAP CAP (Node.js)
+- **Frontend:** SAP Fiori Elements
+- **Authentication:** XSUAA
+
+## Business Logic Preserved
+
+All ABAP business logic has been preserved:
+- Pricing calculations
+- Discount rules
+- Validation logic
+- Authorization checks
+
+See RESURRECTION.md for detailed transformation notes.
 ```
 
 
 ## Data Models
 
-### CDS Entity Definitions
+### Database Schema (PostgreSQL/MongoDB)
 
-```cds
-// db/schema.cds
-namespace sap.resurrection;
+```typescript
+// prisma/schema.prisma (if using Prisma)
 
-using { cuid, managed, temporal } from '@sap/cds/common';
-
-/**
- * Resurrection Project - Main entity for tracking ABAP to CAP transformations
- */
-entity Resurrections : cuid, managed {
-  name                : String(100) @title: 'Project Name';
-  description         : String(500);
-  status              : String(20) @assert.range enum {
-    UPLOADED;
-    ANALYZING;
-    ANALYZED;
-    TRANSFORMING;
-    TRANSFORMED;
-    VALIDATING;
-    VALIDATED;
-    DEPLOYING;
-    DEPLOYED;
-    FAILED;
-  };
-  module              : String(10); // SD, MM, FI, etc.
-  githubRepo          : String(200);
-  githubUrl           : String(500);
-  basUrl              : String(500);
-  deploymentUrl       : String(500);
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String
+  githubUsername String?
+  slackUserId   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
-  // Metrics
-  originalLOC         : Integer;
-  transformedLOC      : Integer;
-  locSaved            : Integer;
-  complexityScore     : Decimal(5,2);
-  qualityScore        : Decimal(5,2);
-  
-  // Relationships
-  abapObjects         : Composition of many ABAPObjects on abapObjects.resurrection = $self;
-  transformationLogs  : Composition of many TransformationLogs on transformationLogs.resurrection = $self;
-  qualityReports      : Composition of many QualityReports on qualityReports.resurrection = $self;
-  deployments         : Composition of many Deployments on deployments.resurrection = $self;
+  resurrections Resurrection[]
 }
 
-/**
- * ABAP Objects - Individual ABAP programs, functions, reports
- */
-entity ABAPObjects : cuid, managed {
-  resurrection        : Association to Resurrections;
-  name                : String(100) @title: 'Object Name';
-  type                : String(20) @assert.range enum {
-    FUNCTION;
-    REPORT;
-    CLASS;
-    INTERFACE;
-    TABLE;
-    VIEW;
-  };
-  module              : String(10);
-  content             : LargeString; // Original ABAP code
-  linesOfCode         : Integer;
-  complexity          : Integer;
+model ABAPObject {
+  id              String   @id @default(uuid())
+  name            String
+  type            String   // FUNCTION, REPORT, CLASS, etc.
+  module          String   // SD, MM, FI, etc.
+  content         String   @db.Text
+  linesOfCode     Int
+  complexity      Int?
   
   // Analysis results
-  documentation       : LargeString; // AI-generated markdown
-  businessLogic       : LargeString; // Extracted business rules (JSON)
-  dependencies        : LargeString; // Dependency list (JSON)
-  tables              : LargeString; // SAP tables used (JSON)
+  documentation   String?  @db.Text
+  businessLogic   Json?
+  dependencies    Json?
+  tables          Json?
   
-  // Vector embeddings for semantic search
-  embedding           : Vector(1536); // OpenAI ada-002 dimensions
-  
-  // Transformation
-  selected            : Boolean default false;
-  transformed         : Boolean default false;
-  transformedCode     : LargeString; // Generated CAP/CDS code
+  // Vector embedding for semantic search
+  embeddingId     String?  // Reference to Pinecone vector
   
   // Relationships
-  redundancies        : Association to many Redundancies on redundancies.object1 = $self or redundancies.object2 = $self;
+  resurrectionId  String?
+  resurrection    Resurrection? @relation(fields: [resurrectionId], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([module])
+  @@index([type])
 }
 
-/**
- * Redundancies - Detected similar/duplicate code
- */
-entity Redundancies : cuid, managed {
-  object1             : Association to ABAPObjects;
-  object2             : Association to ABAPObjects;
-  similarity          : Decimal(5,4); // 0.0 to 1.0
-  recommendation      : String(500);
-  potentialSavings    : Integer; // Lines of code
-  status              : String(20) @assert.range enum {
-    DETECTED;
-    REVIEWED;
-    CONSOLIDATED;
-    IGNORED;
-  };
+model Resurrection {
+  id                String   @id @default(uuid())
+  name              String
+  description       String?
+  status            String   // UPLOADED, ANALYZING, ANALYZED, TRANSFORMING, TRANSFORMED, DEPLOYED, FAILED
+  module            String
+  
+  // GitHub integration
+  githubRepo        String?
+  githubUrl         String?
+  githubMethod      String?  // MCP_AUTO, MANUAL_PUSH, USER_PROVIDED
+  basUrl            String?
+  
+  // Deployment
+  deploymentUrl     String?
+  deploymentStatus  String?
+  
+  // Metrics
+  originalLOC       Int?
+  transformedLOC    Int?
+  locSaved          Int?
+  complexityScore   Float?
+  qualityScore      Float?
+  
+  // Relationships
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  abapObjects       ABAPObject[]
+  transformationLogs TransformationLog[]
+  qualityReports    QualityReport[]
+  hookExecutions    HookExecution[]
+  slackNotifications SlackNotification[]
+  githubActivities  GitHubActivity[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([status])
+  @@index([userId])
+  @@index([module])
 }
 
-/**
- * Dependencies - Object relationships
- */
-entity Dependencies : cuid {
-  source              : Association to ABAPObjects;
-  target              : Association to ABAPObjects;
-  type                : String(20) @assert.range enum {
-    CALLS;
-    USES_TABLE;
-    INHERITS;
-    IMPLEMENTS;
-  };
-  critical            : Boolean default false;
+model TransformationLog {
+  id              String   @id @default(uuid())
+  resurrectionId  String
+  resurrection    Resurrection @relation(fields: [resurrectionId], references: [id])
+  
+  step            String   // PARSE_ABAP, GENERATE_CDS, GENERATE_UI, etc.
+  mcpServer       String?
+  request         Json?
+  response        Json?
+  duration        Int?     // milliseconds
+  status          String   // STARTED, IN_PROGRESS, COMPLETED, FAILED
+  errorMessage    String?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([resurrectionId])
 }
 
-/**
- * Fit-to-Standard Recommendations
- */
-entity FitToStandardRecommendations : cuid, managed {
-  abapObject          : Association to ABAPObjects;
-  standardAlternative : String(100); // BAPI name, transaction code
-  confidence          : Decimal(5,2);
-  description         : String(1000);
-  implementationGuide : LargeString;
-  potentialSavings    : Integer;
-  status              : String(20) @assert.range enum {
-    RECOMMENDED;
-    ACCEPTED;
-    REJECTED;
-    IMPLEMENTED;
-  };
+model QualityReport {
+  id                      String   @id @default(uuid())
+  resurrectionId          String
+  resurrection            Resurrection @relation(fields: [resurrectionId], references: [id])
+  
+  overallScore            Float
+  syntaxValid             Boolean
+  cleanCoreCompliant      Boolean
+  businessLogicPreserved  Boolean
+  testCoverage            Float?
+  issues                  Json?
+  recommendations         Json?
+  
+  createdAt               DateTime @default(now())
+  
+  @@index([resurrectionId])
 }
 
-/**
- * Transformation Logs - Audit trail of MCP calls and transformations
- */
-entity TransformationLogs : cuid, managed {
-  resurrection        : Association to Resurrections;
-  step                : String(50);
-  mcpServer           : String(50);
-  request             : LargeString; // JSON
-  response            : LargeString; // JSON
-  duration            : Integer; // milliseconds
-  status              : String(20) @assert.range enum {
-    STARTED;
-    IN_PROGRESS;
-    COMPLETED;
-    FAILED;
-  };
-  errorMessage        : String(1000);
+model HookExecution {
+  id              String   @id @default(uuid())
+  resurrectionId  String?
+  resurrection    Resurrection? @relation(fields: [resurrectionId], references: [id])
+  
+  hookId          String
+  hookName        String
+  trigger         String
+  status          String   // TRIGGERED, RUNNING, COMPLETED, FAILED
+  executionLog    Json?
+  duration        Int?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([resurrectionId])
+  @@index([hookId])
 }
 
-/**
- * Quality Reports - Validation results
- */
-entity QualityReports : cuid, managed {
-  resurrection        : Association to Resurrections;
-  overallScore        : Decimal(5,2);
-  syntaxValid         : Boolean;
-  cleanCoreCompliant  : Boolean;
-  businessLogicPreserved : Boolean;
-  testCoverage        : Decimal(5,2);
-  issues              : LargeString; // JSON array of issues
-  recommendations     : LargeString; // JSON array
+model SlackNotification {
+  id              String   @id @default(uuid())
+  resurrectionId  String?
+  resurrection    Resurrection? @relation(fields: [resurrectionId], references: [id])
+  
+  channel         String
+  message         String   @db.Text
+  messageTs       String?  // Slack message timestamp
+  threadTs        String?  // For threaded replies
+  status          String
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([resurrectionId])
 }
 
-/**
- * Deployments - BTP deployment history
- */
-entity Deployments : cuid, managed {
-  resurrection        : Association to Resurrections;
-  environment         : String(20) @assert.range enum {
-    DEV;
-    TEST;
-    PROD;
-  };
-  url                 : String(500);
-  status              : String(20) @assert.range enum {
-    DEPLOYING;
-    DEPLOYED;
-    FAILED;
-    ROLLED_BACK;
-  };
-  deploymentLog       : LargeString;
-  healthStatus        : String(20);
+model GitHubActivity {
+  id              String   @id @default(uuid())
+  resurrectionId  String?
+  resurrection    Resurrection? @relation(fields: [resurrectionId], references: [id])
+  
+  activity        String   // REPO_CREATED, COMMIT_PUSHED, ISSUE_CREATED, etc.
+  details         Json?
+  githubUrl       String?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([resurrectionId])
 }
 
-/**
- * Kiro Specs - Spec-driven resurrection planning
- */
-entity ResurrectionSpecs : cuid, managed {
-  resurrection        : Association to Resurrections;
-  requirementsDoc     : LargeString; // Markdown
-  designDoc           : LargeString; // Markdown
-  tasksDoc            : LargeString; // Markdown with checkboxes
-  status              : String(20) @assert.range enum {
-    DRAFT;
-    REQUIREMENTS_REVIEW;
-    DESIGN_REVIEW;
-    TASKS_REVIEW;
-    APPROVED;
-    IN_PROGRESS;
-    COMPLETED;
-  };
+model Redundancy {
+  id                  String   @id @default(uuid())
+  object1Id           String
+  object2Id           String
+  similarity          Float
+  recommendation      String?
+  potentialSavings    Int?
+  status              String   // DETECTED, REVIEWED, CONSOLIDATED, IGNORED
+  
+  createdAt           DateTime @default(now())
+  
+  @@index([object1Id])
+  @@index([object2Id])
 }
 
-/**
- * Hook Executions - Track hook activity
- */
-entity HookExecutions : cuid, managed {
-  resurrection        : Association to Resurrections;
-  hookId              : String(100);
-  hookName            : String(200);
-  trigger             : String(100);
-  status              : String(20) @assert.range enum {
-    TRIGGERED;
-    RUNNING;
-    COMPLETED;
-    FAILED;
-  };
-  executionLog        : LargeString;
-  duration            : Integer;
-}
-
-/**
- * Slack Notifications - Track sent notifications
- */
-entity SlackNotifications : cuid, managed {
-  resurrection        : Association to Resurrections;
-  channel             : String(100);
-  message             : String(1000);
-  messageTs           : String(50); // Slack message timestamp
-  threadTs            : String(50); // For threaded replies
-  status              : String(20);
-}
-
-/**
- * GitHub Activities - Track GitHub operations
- */
-entity GitHubActivities : cuid, managed {
-  resurrection        : Association to Resurrections;
-  activity            : String(50) @assert.range enum {
-    REPO_CREATED;
-    COMMIT_PUSHED;
-    ISSUE_CREATED;
-    PR_CREATED;
-    RELEASE_CREATED;
-    WORKFLOW_TRIGGERED;
-  };
-  details             : LargeString; // JSON
-  githubUrl           : String(500);
+model FitToStandardRecommendation {
+  id                    String   @id @default(uuid())
+  abapObjectId          String
+  standardAlternative   String   // BAPI name, transaction code
+  confidence            Float
+  description           String   @db.Text
+  implementationGuide   String?  @db.Text
+  potentialSavings      Int?
+  status                String   // RECOMMENDED, ACCEPTED, REJECTED, IMPLEMENTED
+  
+  createdAt             DateTime @default(now())
+  
+  @@index([abapObjectId])
 }
 ```
 
-### CDS Service Definitions
+### API Endpoints
 
-```cds
-// srv/resurrection-service.cds
-using { sap.resurrection as db } from '../db/schema';
+**REST API Structure:**
 
-/**
- * Main Resurrection Service - OData V4 API
- */
-service ResurrectionService @(path: '/api/resurrection') {
-  
-  // Main entities
-  entity Resurrections as projection on db.Resurrections actions {
-    action startAnalysis() returns Resurrections;
-    action startTransformation() returns Resurrections;
-    action deployToBTP(environment: String) returns Resurrections;
-    action createGitHubRepo() returns Resurrections;
-  };
-  
-  entity ABAPObjects as projection on db.ABAPObjects actions {
-    action generateDocumentation() returns ABAPObjects;
-    action selectForTransformation() returns ABAPObjects;
-  };
-  
-  entity Redundancies as projection on db.Redundancies;
-  entity Dependencies as projection on db.Dependencies;
-  entity FitToStandardRecommendations as projection on db.FitToStandardRecommendations;
-  
-  // Read-only projections
-  @readonly entity TransformationLogs as projection on db.TransformationLogs;
-  @readonly entity QualityReports as projection on db.QualityReports;
-  @readonly entity Deployments as projection on db.Deployments;
-  @readonly entity HookExecutions as projection on db.HookExecutions;
-  @readonly entity SlackNotifications as projection on db.SlackNotifications;
-  @readonly entity GitHubActivities as projection on db.GitHubActivities;
-  
-  // Custom functions
-  function searchCode(query: String) returns array of ABAPObjects;
-  function getDependencyGraph(resurrectionId: UUID) returns LargeString; // JSON
-  function getResurrectionMetrics(resurrectionId: UUID) returns {
-    totalObjects: Integer;
-    locSaved: Integer;
-    complexityReduction: Decimal;
-    qualityScore: Decimal;
-  };
-  
-  // Q&A Interface
-  action askQuestion(question: String) returns {
-    answer: String;
-    confidence: String;
-    sources: array of {
-      objectId: UUID;
-      name: String;
-      relevance: Decimal;
-    };
-  };
-}
+```typescript
+// API Routes
 
-/**
- * MCP Orchestration Service - Internal service for MCP management
- */
-service MCPService @(path: '/api/mcp') {
-  action analyzeABAP(abapCode: LargeString, context: LargeString) returns LargeString;
-  action generateCAP(businessLogic: LargeString, context: LargeString) returns LargeString;
-  action generateUI(capService: LargeString, context: LargeString) returns LargeString;
-  action createGitHubRepo(resurrection: LargeString) returns LargeString;
-  action notifySlack(channel: String, message: String) returns LargeString;
-  
-  function getMCPStatus() returns array of {
-    server: String;
-    status: String;
-    lastCall: DateTime;
-    avgResponseTime: Integer;
-  };
-}
+// Authentication
+POST   /api/auth/login
+POST   /api/auth/logout
+GET    /api/auth/me
 
-/**
- * Hook Management Service
- */
-service HookService @(path: '/api/hooks') {
-  entity HookExecutions as projection on db.HookExecutions;
-  
-  action triggerHook(hookId: String, context: LargeString) returns HookExecutions;
-  function listAvailableHooks() returns array of {
-    id: String;
-    name: String;
-    trigger: String;
-    enabled: Boolean;
-  };
-}
+// ABAP Upload & Analysis
+POST   /api/abap/upload              // Upload ABAP files
+POST   /api/abap/analyze             // Trigger analysis
+GET    /api/abap/objects             // List ABAP objects
+GET    /api/abap/objects/:id         // Get object details
+POST   /api/abap/search              // Semantic search
+
+// Intelligence Dashboard
+GET    /api/dashboard/metrics        // Get dashboard metrics
+GET    /api/dashboard/dependencies   // Get dependency graph
+GET    /api/dashboard/redundancies   // Get redundancy analysis
+GET    /api/dashboard/fit-to-standard // Get fit-to-standard recommendations
+
+// Q&A
+POST   /api/qa/ask                   // Ask question
+GET    /api/qa/suggestions           // Get suggested questions
+GET    /api/qa/history               // Get Q&A history
+
+// Resurrections
+POST   /api/resurrections            // Create resurrection
+GET    /api/resurrections            // List resurrections
+GET    /api/resurrections/:id        // Get resurrection details
+POST   /api/resurrections/:id/start  // Start transformation
+POST   /api/resurrections/:id/github // Create GitHub repo
+POST   /api/resurrections/:id/export // Export for manual push
+GET    /api/resurrections/:id/status // Get transformation status
+
+// MCP Management
+GET    /api/mcp/servers              // List MCP servers
+GET    /api/mcp/servers/:id/health   // Check MCP server health
+POST   /api/mcp/servers/:id/test     // Test MCP server
+
+// Hooks
+GET    /api/hooks                    // List hooks
+POST   /api/hooks/:id/trigger        // Manually trigger hook
+GET    /api/hooks/executions         // Get hook execution history
+
+// Admin
+GET    /api/admin/stats              // Platform statistics
+GET    /api/admin/users              // List users
+POST   /api/admin/config             // Update configuration
 ```
 
 
@@ -940,361 +1001,266 @@ service HookService @(path: '/api/hooks') {
 
 *A property is a characteristic or behavior that should hold true across all valid executions of a system-essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
 
-### Property 1: ABAP File Validation Consistency
-*For any* uploaded file, the validation function should return a consistent result (valid/invalid) based on ABAP syntax rules, regardless of file size or complexity.
-**Validates: Requirements 3.1**
+### Property 1: MCP Invocation for ABAP Parsing
+*For any* ABAP code upload, the ABAP Analyzer MCP server must be invoked and return a parseable response or clear error.
+**Validates: Requirements 3.3**
 
-### Property 2: Dashboard Metrics Accuracy
-*For any* set of ABAP objects in a resurrection project, the dashboard statistics (total objects, LOC, complexity) should equal the sum of individual object metrics.
-**Validates: Requirements 4.1**
+### Property 2: Documentation and Embedding Generation
+*For any* successfully parsed ABAP object, the system must generate both AI documentation (non-empty string) and vector embedding (1536 dimensions).
+**Validates: Requirements 3.4**
 
-### Property 3: Q&A Response Completeness
-*For any* user question submitted to the Q&A interface, the response must include all required fields: answer text, confidence level (high/medium/low), and source references array.
-**Validates: Requirements 5.2**
+### Property 3: Semantic Search Ranking
+*For any* search query, results must be ranked by relevance score in descending order (highest relevance first).
+**Validates: Requirements 4.5**
 
-### Property 4: MCP Invocation Reliability
-*For any* ABAP code transformation request, the system must successfully invoke the ABAP Analyzer MCP server and receive a parseable response or return a clear error.
-**Validates: Requirements 7.1**
+### Property 4: Q&A Response Structure
+*For any* Q&A answer, the response must include a confidence level field (high/medium/low) and a sources array with at least one element when confidence is not low.
+**Validates: Requirements 5.3**
 
-### Property 5: Transformation Output Completeness
-*For any* completed CAP transformation, the generated project must contain all required files: package.json, mta.yaml, at least one CDS file, and at least one service definition.
+### Property 5: CAP Package.json Completeness
+*For any* generated CAP project, the package.json must include all required dependencies: @sap/cds, @sap/xssec, and express.
 **Validates: Requirements 7.5**
 
-### Property 6: Hook Execution Guarantee
-*For any* resurrection that reaches "completed" status, the "on-resurrection-complete" hook must be triggered and logged in the HookExecutions table.
-**Validates: Requirements 8.1**
+### Property 6: Transformation Output Validation
+*For any* completed transformation, validation must run and return a report with fields: syntaxValid, cleanCoreCompliant, businessLogicPreserved.
+**Validates: Requirements 7.9**
 
-### Property 7: GitHub Repository Creation
-*For any* successful transformation, a GitHub repository must be created with naming pattern `resurrection-{project-name}-{timestamp}` and return a valid repository URL.
-**Validates: Requirements 15.1**
+### Property 7: GitHub Repository File Completeness
+*For any* GitHub repository created via MCP, the repo must contain all required files: README.md, .gitignore, LICENSE, package.json, mta.yaml, and at least one CDS file.
+**Validates: Requirements 8.2**
 
 ### Property 8: Git Commit Message Consistency
-*For any* GitHub repository initialization, the first commit message must exactly match "🔄 Resurrection: ABAP to CAP transformation complete".
-**Validates: Requirements 15.3**
+*For any* initial commit to a resurrection repository, the commit message must exactly match: "🔄 Resurrection: ABAP to CAP transformation complete".
+**Validates: Requirements 8.3**
 
-### Property 9: BAS Deep Link Generation
+### Property 9: Hook Execution Guarantee
+*For any* resurrection that reaches "TRANSFORMED" status, the "on-resurrection-complete" hook must be triggered and logged in HookExecutions table.
+**Validates: Requirements 9.2**
+
+### Property 10: CAP Folder Structure Completeness
+*For any* generated resurrection CAP application, the folder structure must include: db/, srv/, app/, and files: mta.yaml, package.json, xs-security.json.
+**Validates: Requirements 10.1**
+
+### Property 11: CAP Build Validation
+*For any* generated CAP application, running `npm install && cds build` must complete without errors (exit code 0).
+**Validates: Requirements 10.10**
+
+### Property 12: BAS Deep Link Format
 *For any* resurrection with a GitHub repository, the generated BAS deep link must follow the format: `https://bas.{region}.hana.ondemand.com/?gitClone={repo_url}` and be a valid URL.
-**Validates: Requirements 16.1**
+**Validates: Requirements 11.1**
 
-### Property 10: Dependency Graph Completeness
-*For any* set of ABAP objects with dependencies, the generated dependency graph must include all objects as nodes and all declared dependencies as edges, with no orphaned nodes.
-**Validates: Requirements 4.3**
-
-### Property 11: Slack Notification Delivery
-*For any* triggered Slack notification hook, a record must be created in the SlackNotifications table with a valid message_ts (Slack timestamp) indicating successful delivery.
-**Validates: Requirements 8 (Slack MCP integration)**
-
-### Property 12: Vector Embedding Consistency
-*For any* ABAP object with documentation, the generated vector embedding must have exactly 1536 dimensions (OpenAI ada-002 format) and be stored in HANA Cloud.
-**Validates: Requirements 3 (Data Persistence)**
+### Property 13: Dashboard Data Completeness
+*For any* dashboard load request, the response must include all resurrections for the authenticated user with fields: id, name, status, githubUrl, createdAt.
+**Validates: Requirements 12.1**
 
 ## Error Handling
 
-### Error Categories
+### Error Categories and Strategies
 
 **1. MCP Server Errors**
-- **Connection Failures:** MCP server unreachable
-- **Timeout Errors:** MCP call exceeds 60 second timeout
-- **Invalid Response:** MCP returns malformed data
-- **Rate Limiting:** MCP server rate limit exceeded
+- Connection failures
+- Timeout errors
+- Invalid responses
+- Rate limiting
 
-**Handling Strategy:**
-```javascript
-try {
-  const result = await mcpClient.call('abap-analyzer', 'analyzeCode', { code });
-} catch (error) {
-  if (error.code === 'ECONNREFUSED') {
-    // Log error, notify admin via Slack
-    await slackMCP.postMessage({
-      channel: '#platform-alerts',
-      text: `🔴 ABAP Analyzer MCP is offline`
-    });
-    // Return user-friendly error
-    throw new Error('Analysis service temporarily unavailable. Please try again in a few minutes.');
-  } else if (error.code === 'TIMEOUT') {
-    // Retry with exponential backoff
-    return await retryWithBackoff(() => mcpClient.call(...), 3);
+**Strategy:**
+```typescript
+async function callMCPWithRetry(server: string, method: string, params: any, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await mcpClient.call(server, method, params);
+    } catch (error) {
+      if (error.code === 'ECONNREFUSED') {
+        await notifySlack('#platform-alerts', `🔴 ${server} MCP is offline`);
+        throw new Error(`${server} service temporarily unavailable`);
+      } else if (error.code === 'TIMEOUT' && attempt < maxRetries) {
+        await sleep(1000 * attempt); // Exponential backoff
+        continue;
+      }
+      throw error;
+    }
   }
 }
 ```
 
 **2. GitHub API Errors**
-- **Authentication Failures:** Invalid or expired GitHub token
-- **Repository Conflicts:** Repository name already exists
-- **Rate Limiting:** GitHub API rate limit exceeded
-- **Permission Errors:** Insufficient permissions to create repo
+- Authentication failures
+- Repository name conflicts
+- Rate limiting
+- Permission errors
 
-**Handling Strategy:**
-```javascript
-try {
-  const repo = await githubMCP.createRepository({ name: repoName });
-} catch (error) {
-  if (error.status === 422 && error.message.includes('already exists')) {
-    // Append timestamp to make unique
-    const uniqueName = `${repoName}-${Date.now()}`;
-    return await githubMCP.createRepository({ name: uniqueName });
-  } else if (error.status === 403) {
-    // Rate limit - wait and retry
-    const resetTime = error.headers['x-ratelimit-reset'];
-    await sleep(resetTime - Date.now());
-    return await githubMCP.createRepository({ name: repoName });
+**Strategy:**
+```typescript
+async function createGitHubRepoWithFallback(name: string) {
+  try {
+    return await githubMCP.createRepository({ name });
+  } catch (error) {
+    if (error.status === 422 && error.message.includes('already exists')) {
+      const uniqueName = `${name}-${Date.now()}`;
+      return await githubMCP.createRepository({ name: uniqueName });
+    } else if (error.status === 403) {
+      // Rate limit - wait and retry
+      const resetTime = error.headers['x-ratelimit-reset'];
+      await sleep(resetTime - Date.now());
+      return await githubMCP.createRepository({ name });
+    }
+    throw error;
   }
 }
 ```
 
-**3. HANA Cloud Errors**
-- **Connection Failures:** Database unreachable
-- **HDI Deployment Failures:** Schema deployment errors
-- **Vector Storage Errors:** Invalid embedding dimensions
-- **Transaction Conflicts:** Concurrent update conflicts
+**3. Database Errors**
+- Connection failures
+- Unique constraint violations
+- Transaction conflicts
 
-**Handling Strategy:**
-```javascript
-try {
-  await INSERT.into(ABAPObjects).entries(object);
-} catch (error) {
-  if (error.code === 'UNIQUE_CONSTRAINT_VIOLATION') {
-    // Update existing record instead
-    await UPDATE(ABAPObjects).set(object).where({ ID: object.ID });
-  } else if (error.code === 'CONNECTION_LOST') {
-    // Retry with connection pool refresh
-    await cds.db.disconnect();
-    await cds.db.connect();
-    return await INSERT.into(ABAPObjects).entries(object);
+**Strategy:**
+```typescript
+async function saveResurrectionWithRetry(data: ResurrectionData) {
+  try {
+    return await prisma.resurrection.create({ data });
+  } catch (error) {
+    if (error.code === 'P2002') { // Unique constraint
+      data.name = `${data.name}-${Date.now()}`;
+      return await prisma.resurrection.create({ data });
+    } else if (error.code === 'P1001') { // Connection error
+      await prisma.$disconnect();
+      await prisma.$connect();
+      return await prisma.resurrection.create({ data });
+    }
+    throw error;
   }
 }
 ```
 
 **4. Hook Execution Errors**
-- **Hook Not Found:** Referenced hook doesn't exist
-- **Hook Timeout:** Hook execution exceeds time limit
-- **Hook Failure:** Hook action fails
-- **Circular Dependencies:** Hook triggers itself
+- Hook not found
+- Hook timeout
+- Action failures
 
-**Handling Strategy:**
-```javascript
-async function executeHook(hookId, context) {
-  const execution = await INSERT.into(HookExecutions).entries({
-    hookId,
-    status: 'TRIGGERED',
-    executionLog: JSON.stringify({ context })
+**Strategy:**
+```typescript
+async function executeHookSafely(hookId: string, context: any) {
+  const execution = await prisma.hookExecution.create({
+    data: { hookId, status: 'TRIGGERED', executionLog: context }
   });
   
   try {
     const hook = await getHook(hookId);
-    if (!hook) {
-      throw new Error(`Hook ${hookId} not found`);
-    }
+    if (!hook) throw new Error(`Hook ${hookId} not found`);
     
-    // Execute with timeout
     const result = await Promise.race([
       executeHookActions(hook.actions, context),
       timeout(30000) // 30 second timeout
     ]);
     
-    await UPDATE(HookExecutions).set({
-      status: 'COMPLETED',
-      executionLog: JSON.stringify({ context, result })
-    }).where({ ID: execution.ID });
-    
+    await prisma.hookExecution.update({
+      where: { id: execution.id },
+      data: { status: 'COMPLETED', executionLog: { ...context, result } }
+    });
   } catch (error) {
-    await UPDATE(HookExecutions).set({
-      status: 'FAILED',
-      executionLog: JSON.stringify({ context, error: error.message })
-    }).where({ ID: execution.ID });
-    
+    await prisma.hookExecution.update({
+      where: { id: execution.id },
+      data: { status: 'FAILED', executionLog: { ...context, error: error.message } }
+    });
     // Don't throw - log and continue
     console.error(`Hook ${hookId} failed:`, error);
   }
 }
 ```
 
-### Global Error Handling Middleware
-
-```javascript
-// srv/middleware/error-handler.js
-module.exports = (err, req, res, next) => {
-  // Log to Cloud Logging
-  console.error('Error:', {
-    message: err.message,
-    stack: err.stack,
-    user: req.user?.id,
-    resurrection: req.data?.resurrectionId
-  });
-  
-  // Notify Slack for critical errors
-  if (err.severity === 'CRITICAL') {
-    slackMCP.postMessage({
-      channel: '#platform-alerts',
-      text: `🔴 Critical Error: ${err.message}`,
-      attachments: [{
-        color: 'danger',
-        fields: [
-          { title: 'User', value: req.user?.email },
-          { title: 'Resurrection', value: req.data?.resurrectionId },
-          { title: 'Stack', value: err.stack.substring(0, 500) }
-        ]
-      }]
-    });
-  }
-  
-  // Return user-friendly error
-  res.status(err.status || 500).json({
-    error: {
-      message: err.userMessage || 'An unexpected error occurred',
-      code: err.code,
-      details: process.env.NODE_ENV === 'development' ? err.stack : undefined
-    }
-  });
-};
-```
-
 ## Testing Strategy
 
 ### Unit Testing
+**Framework:** Jest with TypeScript
 
-**Framework:** Jest with @sap/cds-dk testing utilities
+**Coverage:**
+- MCP client wrappers
+- Resurrection engine logic
+- Hook execution
+- Data validation
+- API endpoints
 
-**Test Coverage:**
-- CDS service handlers (CRUD operations, custom actions)
-- MCP client wrapper functions
-- Hook execution logic
-- Data validation functions
-- Error handling middleware
-
-**Example Unit Test:**
-```javascript
-// test/resurrection-service.test.js
-const cds = require('@sap/cds/lib');
-const { expect } = require('chai');
-
-describe('ResurrectionService', () => {
-  let service;
-  
-  beforeAll(async () => {
-    service = await cds.connect.to('ResurrectionService');
-  });
-  
-  it('should create resurrection with valid data', async () => {
-    const resurrection = await service.create('Resurrections', {
-      name: 'test-resurrection',
-      description: 'Test project',
-      module: 'SD',
-      status: 'UPLOADED'
-    });
+**Example:**
+```typescript
+describe('MCPOrchestrator', () => {
+  it('should call ABAP Analyzer MCP for code analysis', async () => {
+    const orchestrator = new MCPOrchestrator(mockConfig);
+    const result = await orchestrator.analyzeABAP(sampleABAPCode, {});
     
-    expect(resurrection).to.have.property('ID');
-    expect(resurrection.name).to.equal('test-resurrection');
-  });
-  
-  it('should trigger hook on resurrection completion', async () => {
-    const resurrection = await service.create('Resurrections', {
-      name: 'test-hook',
-      status: 'TRANSFORMING'
-    });
-    
-    await service.update('Resurrections', resurrection.ID, {
-      status: 'TRANSFORMED'
-    });
-    
-    const hookExecutions = await service.read('HookExecutions', {
-      where: { resurrection_ID: resurrection.ID }
-    });
-    
-    expect(hookExecutions).to.have.lengthOf.at.least(1);
-    expect(hookExecutions[0].hookId).to.equal('on-resurrection-complete');
+    expect(result).toHaveProperty('businessLogic');
+    expect(result).toHaveProperty('dependencies');
+    expect(mockMCPClient.call).toHaveBeenCalledWith('analyzeCode', expect.any(Object));
   });
 });
 ```
 
 ### Integration Testing
+**Scenarios:**
+- End-to-end resurrection flow
+- MCP server integration
+- GitHub repo creation
+- Slack notifications
+- Hook execution
 
-**Test Scenarios:**
-1. End-to-end resurrection flow (upload → analyze → transform → GitHub → BAS)
-2. MCP server integration (ABAP Analyzer, CAP Generator, UI5 Generator)
-3. GitHub MCP integration (repo creation, commits, issues)
-4. Slack MCP integration (notifications, threading)
-5. HANA Cloud vector search
-6. Hook execution and chaining
-
-**Example Integration Test:**
-```javascript
-// test/integration/resurrection-flow.test.js
-describe('Complete Resurrection Flow', () => {
+**Example:**
+```typescript
+describe('Resurrection Flow', () => {
   it('should complete full resurrection lifecycle', async () => {
-    // 1. Upload ABAP
-    const upload = await service.call('uploadABAP', {
-      files: [{ name: 'Z_TEST.abap', content: abapCode }]
+    // Upload ABAP
+    const upload = await request(app).post('/api/abap/upload').attach('file', abapFile);
+    expect(upload.status).toBe(200);
+    
+    // Start resurrection
+    const resurrection = await request(app).post('/api/resurrections').send({
+      name: 'test-resurrection',
+      abapObjectIds: [upload.body.objectId]
     });
-    expect(upload.resurrection.status).to.equal('UPLOADED');
     
-    // 2. Analyze
-    await service.call('startAnalysis', { resurrectionId: upload.resurrection.ID });
-    const analyzed = await service.read('Resurrections', upload.resurrection.ID);
-    expect(analyzed.status).to.equal('ANALYZED');
+    // Wait for completion
+    await waitFor(() => resurrection.status === 'TRANSFORMED');
     
-    // 3. Transform
-    await service.call('startTransformation', { resurrectionId: upload.resurrection.ID });
-    const transformed = await service.read('Resurrections', upload.resurrection.ID);
-    expect(transformed.status).to.equal('TRANSFORMED');
-    expect(transformed.githubRepo).to.match(/^resurrection-/);
+    // Verify GitHub repo created
+    expect(resurrection.githubUrl).toMatch(/github.com/);
     
-    // 4. Verify GitHub repo created
-    const githubActivities = await service.read('GitHubActivities', {
-      where: { resurrection_ID: upload.resurrection.ID }
+    // Verify Slack notification sent
+    const notifications = await prisma.slackNotification.findMany({
+      where: { resurrectionId: resurrection.id }
     });
-    expect(githubActivities).to.have.lengthOf.at.least(1);
-    
-    // 5. Verify Slack notification sent
-    const slackNotifications = await service.read('SlackNotifications', {
-      where: { resurrection_ID: upload.resurrection.ID }
-    });
-    expect(slackNotifications).to.have.lengthOf.at.least(1);
+    expect(notifications.length).toBeGreaterThan(0);
   });
 });
 ```
 
 ### Property-Based Testing
+**Framework:** fast-check
 
-**Framework:** fast-check (JavaScript property testing library)
+**Properties to Test:**
+- Dashboard metrics accuracy (Property 13)
+- Search result ranking (Property 3)
+- Q&A response structure (Property 4)
+- CAP file completeness (Properties 7, 10)
+- BAS link format (Property 12)
 
-**Test Properties:**
-- Dashboard metrics calculation (Property 2)
-- Q&A response structure (Property 3)
-- Transformation output completeness (Property 5)
-- GitHub naming conventions (Property 7)
-- Vector embedding dimensions (Property 12)
+**Example:**
+```typescript
+import fc from 'fast-check';
 
-**Example Property Test:**
-```javascript
-// test/properties/dashboard-metrics.test.js
-const fc = require('fast-check');
-
-describe('Property: Dashboard Metrics Accuracy', () => {
-  it('should calculate correct totals for any set of ABAP objects', () => {
+describe('Property: CAP Package.json Completeness', () => {
+  it('should include all required dependencies for any CAP project', () => {
     fc.assert(
       fc.property(
-        fc.array(fc.record({
+        fc.record({
           name: fc.string(),
-          linesOfCode: fc.integer({ min: 1, max: 10000 }),
-          complexity: fc.integer({ min: 1, max: 100 })
-        })),
-        async (abapObjects) => {
-          // Create resurrection with objects
-          const resurrection = await createResurrectionWithObjects(abapObjects);
+          businessLogic: fc.object()
+        }),
+        async (resurrectionData) => {
+          const capProject = await generateCAPProject(resurrectionData);
+          const packageJson = JSON.parse(capProject.files['package.json']);
           
-          // Get dashboard metrics
-          const metrics = await service.call('getResurrectionMetrics', {
-            resurrectionId: resurrection.ID
-          });
-          
-          // Verify totals match sum of individual objects
-          const expectedLOC = abapObjects.reduce((sum, obj) => sum + obj.linesOfCode, 0);
-          const expectedComplexity = abapObjects.reduce((sum, obj) => sum + obj.complexity, 0) / abapObjects.length;
-          
-          expect(metrics.totalObjects).to.equal(abapObjects.length);
-          expect(metrics.locSaved).to.be.at.least(0);
-          expect(Math.abs(metrics.complexityReduction - expectedComplexity)).to.be.lessThan(0.01);
+          expect(packageJson.dependencies).toHaveProperty('@sap/cds');
+          expect(packageJson.dependencies).toHaveProperty('@sap/xssec');
+          expect(packageJson.dependencies).toHaveProperty('express');
         }
       ),
       { numRuns: 100 }
@@ -1304,61 +1270,41 @@ describe('Property: Dashboard Metrics Accuracy', () => {
 ```
 
 ### End-to-End Testing
+**Framework:** Playwright
 
-**Framework:** Playwright for UI testing
+**Scenarios:**
+- User onboarding flow
+- ABAP upload and analysis
+- Resurrection wizard
+- GitHub repo creation
+- Dashboard interactions
 
-**Test Scenarios:**
-1. User onboarding wizard
-2. ABAP upload and progress tracking
-3. Intelligence Dashboard interactions
-4. Q&A conversational interface
-5. Resurrection wizard flow
-6. GitHub repo creation and BAS link
-
-**Example E2E Test:**
-```javascript
-// test/e2e/resurrection-wizard.spec.js
-const { test, expect } = require('@playwright/test');
-
+**Example:**
+```typescript
 test('complete resurrection wizard', async ({ page }) => {
-  // Navigate to platform
-  await page.goto('https://resurrection-platform.cfapps.sap.hana.ondemand.com');
+  await page.goto('http://localhost:3000');
   
-  // Login
-  await page.fill('#username', 'test@example.com');
-  await page.fill('#password', 'password');
-  await page.click('button[type="submit"]');
+  // Upload ABAP
+  await page.click('text=Upload ABAP');
+  await page.setInputFiles('input[type="file"]', 'test-data/Z_PRICING.abap');
+  await page.click('text=Analyze');
+  
+  // Wait for analysis
+  await page.waitForSelector('text=Analysis Complete');
   
   // Start resurrection
   await page.click('text=Start Resurrection');
-  
-  // Select objects
-  await page.check('input[data-object="Z_PRICING"]');
-  await page.check('input[data-object="Z_DISCOUNT"]');
+  await page.check('input[value="Z_PRICING"]');
   await page.click('text=Next');
-  
-  // Review dependencies
-  await expect(page.locator('text=Auto-included: 1 dependency')).toBeVisible();
-  await page.click('text=Next');
-  
-  // Configure output
-  await page.selectOption('select[name="template"]', 'Fiori Elements List Report');
-  await page.click('text=Next');
-  
-  // Name project
   await page.fill('input[name="projectName"]', 'sd-pricing-logic');
-  await page.click('text=Start Resurrection');
+  await page.click('text=Create Resurrection');
   
   // Wait for completion
-  await expect(page.locator('text=Resurrection Complete')).toBeVisible({ timeout: 60000 });
+  await page.waitForSelector('text=Resurrection Complete', { timeout: 60000 });
   
   // Verify GitHub link
   const githubLink = await page.locator('a[href*="github.com"]').getAttribute('href');
-  expect(githubLink).toMatch(/resurrection-sd-pricing-logic/);
-  
-  // Verify BAS link
-  const basLink = await page.locator('text=Open in BAS').getAttribute('href');
-  expect(basLink).toContain('bas.hana.ondemand.com');
+  expect(githubLink).toContain('resurrection-sd-pricing-logic');
 });
 ```
 

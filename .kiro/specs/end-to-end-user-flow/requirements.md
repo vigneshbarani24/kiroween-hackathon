@@ -1,351 +1,313 @@
-# Requirements Document: End-to-End User Flow & SAP BTP Deployment
+# Requirements Document: SAP Nova AI Alternative - Resurrection Platform
 
 ## Introduction
 
-This document defines the complete user journey for the SAP Nova AI Alternative platform, from uploading legacy ABAP code through analysis, modernization, and deployment to SAP BTP. The platform itself is built as a modern SAP CAP (Cloud Application Programming Model) application with SAP Fiori UI, deployed and running on SAP BTP. The system must provide a seamless experience that guides users through the entire modernization lifecycle with clear feedback and actionable outputs.
+This document defines the SAP Nova AI Alternative platform - an intelligent web application that analyzes legacy ABAP code and generates production-ready SAP CAP applications called "resurrections". Each resurrection is a complete, deployable CAP project with its own GitHub repository.
+
+**Architecture:**
+- **The Platform**: Modern web application (Next.js/Node.js/React) with intelligence capabilities
+- **Resurrections**: Complete SAP CAP applications (output) - each with CDS models, services, Fiori UI, MTA packaging
+- **Integration**: MCP servers for ABAP analysis, CAP generation, GitHub automation, and Slack notifications
 
 ## Glossary
 
-- **Platform**: The SAP Nova AI Alternative - a CAP application running on SAP BTP
-- **User**: SAP developer or architect using the platform
-- **ABAP Code**: Legacy SAP ABAP custom code to be analyzed and modernized
-- **Intelligence Dashboard**: The Custom Code Intelligence interface for analysis and Q&A (Fiori UI)
-- **Transformation Engine**: The AI Build component that converts ABAP to modern code
-- **CAP Service**: SAP Cloud Application Programming model backend service (Node.js/Java)
-- **CDS**: Core Data Services - SAP's modeling language for defining data models and services
-- **SAP BTP**: SAP Business Technology Platform (where the platform runs and deploys to)
-- **SAP HANA Cloud**: Cloud database service for storing analysis data, vectors, and metadata
-- **MTA**: Multi-Target Application (SAP BTP deployment package format)
-- **Fiori Elements**: SAP's metadata-driven UI framework for building enterprise applications
-- **SAP AI Core**: Optional SAP BTP service for running AI/ML workloads
-- **Destination Service**: SAP BTP service for managing external connections (OpenAI, Pinecone, etc.)
-- **XSUAA**: SAP Authorization and Trust Management service for authentication
-- **Fit-to-Standard**: AI analysis that recommends SAP standard alternatives to custom code
-- **Resurrection**: A complete ABAP-to-CAP transformation project with its own GitHub repository
-- **SAP Business Application Studio (BAS)**: SAP's cloud-based IDE for developing CAP applications
-- **GitHub Integration**: Automated repository creation and management for each resurrection project
+- **Platform**: The SAP Nova AI Alternative web application - the intelligence engine
+- **Resurrection**: A complete ABAP-to-CAP transformation resulting in a deployable CAP application
+- **Resurrection CAP App**: The generated SAP CAP project (CDS, services, UI, MTA) stored in GitHub
+- **Intelligence Dashboard**: Web UI for analyzing ABAP code, viewing dependencies, and Q&A
+- **MCP (Model Context Protocol)**: Protocol for connecting to specialized AI servers
+- **ABAP Analyzer MCP**: MCP server that parses and analyzes ABAP code
+- **SAP CAP Generator MCP**: MCP server that generates CAP applications from business logic
+- **SAP UI5 Generator MCP**: MCP server that generates Fiori UIs
+- **GitHub MCP**: MCP server for automating GitHub repository operations
+- **Slack MCP**: MCP server for team notifications and collaboration
+- **CAP**: SAP Cloud Application Programming Model - target framework for resurrections
+- **CDS**: Core Data Services - SAP's data modeling language
+- **MTA**: Multi-Target Application - SAP BTP deployment package format
+- **SAP BTP**: SAP Business Technology Platform - where resurrection apps deploy
+- **SAP BAS**: SAP Business Application Studio - cloud IDE for CAP development
+- **Kiro Hooks**: Automated workflows triggered by resurrection lifecycle events
+- **Kiro Specs**: Spec-driven planning for complex resurrection projects
 
 ## Requirements
 
-### Requirement 1: SAP BTP Platform Architecture
+### Requirement 1: Enterprise-Class Platform UX
 
-**User Story:** As a platform administrator, I want the entire SAP Nova AI Alternative to run as a native CAP application on SAP BTP, so that it leverages SAP's cloud-native services and integrates seamlessly with the SAP ecosystem.
-
-#### Acceptance Criteria
-
-1. WHEN the platform is deployed THEN the system SHALL run as a CAP Node.js service with CDS data models on SAP BTP Cloud Foundry
-2. WHEN data persistence is required THEN the system SHALL use SAP HANA Cloud with HDI (HANA Deployment Infrastructure) containers for schema management
-3. WHEN the UI is accessed THEN the system SHALL serve SAP Fiori Elements or Freestyle UI5 applications from the CAP service
-4. WHEN external AI services are needed THEN the system SHALL use SAP BTP Destination service to securely connect to OpenAI, Pinecone, or SAP AI Core
-5. WHEN users authenticate THEN the system SHALL use XSUAA (SAP Authorization and Trust Management) with role-based access control
-6. WHEN vector search is required THEN the system SHALL use either SAP HANA Cloud Vector Engine or external Pinecone via Destination service
-7. WHEN the platform scales THEN the system SHALL support horizontal scaling via Cloud Foundry application instances
-8. WHEN monitoring is needed THEN the system SHALL integrate with SAP Cloud ALM or BTP monitoring services
-9. WHEN the platform is packaged THEN the system SHALL use MTA (Multi-Target Application) format with mta.yaml descriptor
-10. WHEN APIs are exposed THEN the system SHALL use OData V4 protocol for CAP service endpoints
-
-### Requirement 1.5: MCP Server Configuration and Management
-
-**User Story:** As a platform administrator, I want to configure and manage MCP servers for ABAP analysis and CAP generation, so that the resurrection engine has access to specialized AI capabilities.
+**User Story:** As a platform user, I want a stellar, enterprise-grade user experience with smooth flows and professional design, so that the platform feels polished and trustworthy.
 
 #### Acceptance Criteria
 
-1. WHEN the platform initializes THEN the system SHALL load MCP configuration from `.kiro/settings/mcp.json` with servers: `abap-analyzer`, `sap-cap-generator`, `sap-ui5-generator`
-2. WHEN MCP servers are configured THEN the system SHALL use SAP BTP Destination service to securely store API keys and connection details
-3. WHEN an MCP server is called THEN the system SHALL use the Model Context Protocol to send requests with full context (ABAP code, SAP domain knowledge, transformation requirements)
+1. WHEN the platform loads THEN the system SHALL display a professional landing page with clear value proposition and call-to-action
+2. WHEN users navigate THEN the system SHALL provide smooth transitions, loading states, and progress indicators
+3. WHEN forms are used THEN the system SHALL provide real-time validation, helpful error messages, and success feedback
+4. WHEN data is loading THEN the system SHALL show skeleton screens or elegant loading animations (not spinners)
+5. WHEN actions complete THEN the system SHALL provide toast notifications with appropriate icons and colors
+6. WHEN errors occur THEN the system SHALL display user-friendly messages with actionable next steps
+7. WHEN the UI is designed THEN the system SHALL use a consistent design system (Tailwind, Material-UI, or SAP Horizon theme)
+8. WHEN interactions happen THEN the system SHALL provide micro-animations and hover states for better feedback
+9. WHEN the platform is accessed THEN the system SHALL be fully responsive (mobile, tablet, desktop)
+10. WHEN accessibility is needed THEN the system SHALL support keyboard navigation, screen readers, and WCAG 2.1 AA compliance
+11. WHEN onboarding occurs THEN the system SHALL provide guided tours, tooltips, and contextual help
+12. WHEN the platform is used THEN the system SHALL feel fast with optimistic UI updates and background processing
+13. WHEN dashboards are shown THEN the system SHALL use data visualization best practices (charts, graphs, metrics cards)
+14. WHEN wizards are used THEN the system SHALL show clear progress steps, back/next navigation, and summary screens
+15. WHEN the platform is branded THEN the system SHALL support custom logos, colors, and themes for enterprise deployments
+
+### Requirement 2: Platform Architecture
+
+**User Story:** As a platform administrator, I want the platform to run as a modern, scalable web application with MCP connectivity, so that it can intelligently analyze ABAP and generate resurrection CAP applications.
+
+#### Acceptance Criteria
+
+1. WHEN the platform is deployed THEN the system SHALL run as a modern web application using Next.js, Node.js/Express, or similar stack
+2. WHEN data persistence is required THEN the system SHALL use a database (PostgreSQL, MongoDB, Supabase) for storing analysis data and resurrection metadata
+3. WHEN the UI is accessed THEN the system SHALL serve a responsive web interface with modern UX
+4. WHEN MCP servers are needed THEN the system SHALL connect to ABAP Analyzer, CAP Generator, UI5 Generator, GitHub, and Slack MCP servers
+5. WHEN users authenticate THEN the system SHALL use modern authentication (OAuth, JWT, NextAuth, Auth0)
+6. WHEN vector search is required THEN the system SHALL use Pinecone or similar vector database for semantic code search
+7. WHEN the platform scales THEN the system SHALL support deployment to Vercel, AWS, or containerized environments
+8. WHEN APIs are exposed THEN the system SHALL use REST or GraphQL APIs
+9. WHEN resurrection CAP apps are generated THEN the system SHALL create complete CAP projects with all required files (CDS, services, UI, mta.yaml, package.json)
+10. WHEN resurrection repos are created THEN the system SHALL use GitHub MCP to automate repository creation, commits, and CI/CD setup
+
+### Requirement 2: MCP Server Integration
+
+**User Story:** As a platform administrator, I want to configure and manage MCP servers, so that the platform has access to specialized AI capabilities for ABAP analysis and CAP generation.
+
+#### Acceptance Criteria
+
+1. WHEN the platform initializes THEN the system SHALL load MCP configuration from `.kiro/settings/mcp.json` with 5 servers: abap-analyzer, sap-cap-generator, sap-ui5-generator, github, slack
+2. WHEN MCP servers are configured THEN the system SHALL securely store connection details using environment variables
+3. WHEN an MCP server is called THEN the system SHALL use Model Context Protocol with full context (ABAP code, SAP domain knowledge, requirements)
 4. WHEN MCP responses are received THEN the system SHALL stream results in real-time to show progress in the UI
-5. WHEN MCP servers are unavailable THEN the system SHALL provide fallback behavior and clear error messages: "ABAP Analyzer MCP is offline. Resurrection paused."
-6. WHEN new MCP servers are added THEN the system SHALL allow administrators to register them via UI: "Add MCP Server" with name, endpoint, and capabilities
-7. WHEN MCP servers are tested THEN the system SHALL provide a health check endpoint that validates connectivity and response times
-8. WHEN MCP usage is tracked THEN the system SHALL log all MCP calls with request/response payloads for debugging and audit
-9. WHEN MCP costs are monitored THEN the system SHALL track token usage per resurrection and display cost estimates
-10. WHEN MCP servers are updated THEN the system SHALL support hot-reloading without restarting the CAP service
-
-### Requirement 2: Guided Onboarding Experience
-
-**User Story:** As a first-time user, I want a guided onboarding experience that walks me through the resurrection process, so that I understand how to use the platform effectively.
-
-#### Acceptance Criteria
-
-1. WHEN a user first logs in THEN the system SHALL display a welcome wizard with 3 steps: "Upload ABAP", "Analyze & Understand", "Resurrect to CAP"
-2. WHEN the wizard is shown THEN the system SHALL include video tutorials, sample ABAP files, and expected outcomes for each step
-3. WHEN a user completes onboarding THEN the system SHALL offer to start with a sample resurrection using demo ABAP code
-4. WHEN the sample resurrection completes THEN the system SHALL show the full journey: analysis → transformation → GitHub repo → BAS link
-5. WHEN a user skips onboarding THEN the system SHALL provide a "Help" button that reopens the wizard at any time
-6. WHEN a user returns THEN the system SHALL show a dashboard with "Continue where you left off" and recent resurrections
-7. WHEN tooltips are needed THEN the system SHALL provide contextual help on every major UI element
+5. WHEN MCP servers are unavailable THEN the system SHALL provide clear error messages and fallback behavior
+6. WHEN MCP health is checked THEN the system SHALL provide a dashboard showing status of all MCP servers
+7. WHEN MCP usage is tracked THEN the system SHALL log all calls for debugging and cost monitoring
+8. WHEN GitHub MCP is used THEN the system SHALL automate repo creation, file commits, issue creation, and PR management
+9. WHEN Slack MCP is used THEN the system SHALL send notifications for resurrection events (started, completed, failed, deployed)
+10. WHEN MCP servers are updated THEN the system SHALL support hot-reloading configuration without restart
 
 ### Requirement 3: ABAP Code Upload and Analysis
 
-**User Story:** As a SAP developer, I want to upload my legacy ABAP code files with clear guidance, so that the system can analyze them and provide insights about my custom code landscape.
+**User Story:** As a SAP developer, I want to upload ABAP code files and see intelligent analysis, so that I understand my custom code landscape before resurrection.
 
 #### Acceptance Criteria
 
-1. WHEN a user visits the upload page THEN the system SHALL display a Fiori-styled upload zone with drag-and-drop, file browser, and GitHub import options
-2. WHEN a user hovers over the upload zone THEN the system SHALL show accepted formats (.abap, .txt, .zip) and size limits
-3. WHEN a user uploads ABAP files THEN the system SHALL show real-time validation with green checkmarks for valid files and red errors for invalid ones
-4. WHEN parsing starts THEN the system SHALL display an animated progress indicator with current step: "Parsing syntax", "Extracting metadata", "Analyzing dependencies"
-5. WHEN parsing completes THEN the system SHALL show a success animation and automatically navigate to the Intelligence Dashboard
-6. WHEN multiple files are uploaded THEN the system SHALL show a file list with individual progress bars and estimated time remaining
-7. WHEN errors occur THEN the system SHALL provide clear error messages with suggestions: "Line 45: Invalid ABAP syntax. Try removing special characters"
-8. WHEN upload completes THEN the system SHALL send a notification: "✅ 15 ABAP objects analyzed. View insights now?"
+1. WHEN a user visits the upload page THEN the system SHALL display a drag-and-drop upload zone with file browser option
+2. WHEN a user uploads ABAP files (.abap, .txt, .zip) THEN the system SHALL validate format and show real-time validation feedback
+3. WHEN parsing starts THEN the system SHALL call ABAP Analyzer MCP to parse syntax, extract metadata, and identify dependencies
+4. WHEN parsing completes THEN the system SHALL generate AI documentation and store vector embeddings for semantic search
+5. WHEN analysis completes THEN the system SHALL automatically navigate to the Intelligence Dashboard
+6. WHEN multiple files are uploaded THEN the system SHALL process in parallel with progress tracking
+7. WHEN errors occur THEN the system SHALL provide clear error messages with line numbers and suggestions
+8. WHEN upload completes THEN the system SHALL send Slack notification: "✅ 15 ABAP objects analyzed"
 
-### Requirement 4: Interactive Intelligence Dashboard
+### Requirement 4: Intelligence Dashboard
 
-**User Story:** As a SAP architect, I want to explore my custom code landscape through an intuitive, guided dashboard, so that I can quickly understand what code exists, how it's connected, and what actions to take.
+**User Story:** As a SAP architect, I want an interactive dashboard to explore my ABAP code landscape, so that I can understand dependencies, redundancies, and fit-to-standard opportunities.
 
 #### Acceptance Criteria
 
-1. WHEN a user navigates to the Intelligence Dashboard THEN the system SHALL display a hero section with key metrics in large, colorful cards: "50 Objects", "12,500 LOC", "8 Redundancies Found", "3 Fit-to-Standard Opportunities"
-2. WHEN metrics are shown THEN the system SHALL include trend indicators (↑ 15% from last upload) and actionable buttons: "View Redundancies", "See Recommendations"
-3. WHEN a user views the dependency graph THEN the system SHALL render an interactive D3.js visualization with zoom, pan, and search capabilities
-4. WHEN a user hovers over a node THEN the system SHALL show a tooltip with object name, type, module, LOC, and quick actions: "View Details", "Start Resurrection"
-5. WHEN a user clicks on a node THEN the system SHALL open a side panel with full documentation, dependencies, dependents, and impact analysis
-6. WHEN the graph is complex THEN the system SHALL provide filter options: "Show only SD module", "Hide low-impact objects", "Highlight redundancies"
-7. WHEN a user searches for code THEN the system SHALL show a smart search bar with autocomplete and semantic suggestions
-8. WHEN search results appear THEN the system SHALL rank by relevance with highlighted keywords and preview snippets
-9. WHEN redundant code is detected THEN the system SHALL show a "Redundancy Alert" banner with similarity scores and one-click consolidation recommendations
-10. WHEN the dashboard loads THEN the system SHALL provide a guided tour: "👋 Let's explore your code landscape. Click here to see dependencies..."
+1. WHEN a user navigates to the dashboard THEN the system SHALL display key metrics: total objects, LOC, redundancies, fit-to-standard opportunities
+2. WHEN metrics are shown THEN the system SHALL include actionable buttons: "View Redundancies", "Start Resurrection"
+3. WHEN a user views the dependency graph THEN the system SHALL render an interactive D3.js visualization with zoom, pan, and filtering
+4. WHEN a user clicks on a node THEN the system SHALL show details: documentation, dependencies, dependents, impact analysis
+5. WHEN a user searches for code THEN the system SHALL perform semantic vector search and rank results by relevance
+6. WHEN redundant code is detected THEN the system SHALL show similarity scores and consolidation recommendations
+7. WHEN fit-to-standard opportunities exist THEN the system SHALL recommend SAP standard BAPIs/transactions as alternatives
+8. WHEN the dashboard loads THEN the system SHALL provide a guided tour for first-time users
+9. WHEN a user selects objects THEN the system SHALL show "Start Resurrection" button with estimated transformation time
+10. WHEN dashboard actions occur THEN the system SHALL send Slack notifications to configured channels
 
 ### Requirement 5: Conversational Q&A Interface
 
-**User Story:** As a business analyst, I want to have a natural conversation about the custom code, so that I can understand what the code does without reading ABAP syntax.
+**User Story:** As a business analyst, I want to ask questions about ABAP code in natural language, so that I can understand functionality without reading code.
 
 #### Acceptance Criteria
 
-1. WHEN a user opens the Q&A interface THEN the system SHALL display a chat-like interface with suggested starter questions: "What pricing logic exists?", "Show me all SD module functions"
-2. WHEN a user types a question THEN the system SHALL show typing indicators and use RAG to retrieve relevant code context
-3. WHEN an answer is provided THEN the system SHALL format it with markdown, code snippets, and confidence badges (🟢 High, 🟡 Medium, 🔴 Low)
-4. WHEN confidence is high THEN the system SHALL include expandable source references with "View in Dashboard" links
-5. WHEN confidence is low THEN the system SHALL say "I'm not confident about this. Here are related questions you might ask:" with 3 suggestions
-6. WHEN a user clicks on a source reference THEN the system SHALL open a modal with full ABAP code, documentation, and "Add to Resurrection" button
-7. WHEN the conversation continues THEN the system SHALL maintain context and allow follow-up questions: "Tell me more about that function"
-8. WHEN answers include technical terms THEN the system SHALL provide inline tooltips with definitions from the SAP glossary
-9. WHEN a user asks about business impact THEN the system SHALL provide insights: "This function is used by 5 other objects. Changing it affects order processing."
-10. WHEN the Q&A session is useful THEN the system SHALL offer to save the conversation as a PDF report
+1. WHEN a user opens Q&A THEN the system SHALL display a chat interface with suggested starter questions
+2. WHEN a user types a question THEN the system SHALL use RAG (vector search + OpenAI) to generate answers
+3. WHEN an answer is provided THEN the system SHALL include confidence level (🟢 High, 🟡 Medium, 🔴 Low) and source references
+4. WHEN confidence is low THEN the system SHALL suggest alternative questions
+5. WHEN a user clicks a source THEN the system SHALL show full ABAP code and documentation
+6. WHEN the conversation continues THEN the system SHALL maintain context for follow-up questions
+7. WHEN answers include technical terms THEN the system SHALL provide inline tooltips with SAP glossary definitions
+8. WHEN a Q&A session is useful THEN the system SHALL offer to export conversation as PDF
+9. WHEN Q&A is used THEN the system SHALL log questions for analytics
+10. WHEN significant insights are discovered THEN the system SHALL offer to share via Slack
 
-### Requirement 4: Fit-to-Standard Analysis
+### Requirement 6: Resurrection Wizard
 
-**User Story:** As a SAP architect, I want the system to recommend SAP standard alternatives to my custom code, so that I can reduce my custom code footprint and achieve Clean Core compliance.
-
-#### Acceptance Criteria
-
-1. WHEN custom code is analyzed THEN the system SHALL compare business logic against SAP standard BAPIs, transactions, and patterns
-2. WHEN a standard alternative exists THEN the system SHALL recommend it with confidence score and implementation guidance
-3. WHEN no standard alternative exists THEN the system SHALL mark the custom code as "required custom extension"
-4. WHEN recommendations are generated THEN the system SHALL prioritize by impact (lines of code saved, complexity reduction)
-5. WHEN a user accepts a recommendation THEN the system SHALL mark that code for standard replacement instead of modernization
-
-### Requirement 6: Smart Resurrection Wizard
-
-**User Story:** As a SAP developer, I want a guided wizard that helps me select and configure my resurrection project, so that I make informed decisions about what to modernize.
+**User Story:** As a SAP developer, I want a guided wizard to configure my resurrection project, so that I make informed decisions about what to transform.
 
 #### Acceptance Criteria
 
-1. WHEN a user clicks "Start Resurrection" THEN the system SHALL launch a multi-step wizard: "Select Objects" → "Review Dependencies" → "Configure Output" → "Name Project"
-2. WHEN selecting objects THEN the system SHALL display a smart table with filters, sorting, and AI recommendations: "⭐ Recommended: High impact, low complexity"
-3. WHEN a user selects an object THEN the system SHALL show a preview card with: LOC, complexity score, dependencies, estimated transformation time
-4. WHEN dependencies exist THEN the system SHALL auto-select them with a visual indicator: "🔗 Auto-included: 3 dependencies"
-5. WHEN conflicts are detected THEN the system SHALL show warnings: "⚠️ Z_FUNCTION_A depends on Z_FUNCTION_B which is not selected. Add it?"
-6. WHEN the user proceeds THEN the system SHALL show a dependency graph visualization of selected objects with impact analysis
-7. WHEN configuring output THEN the system SHALL offer templates: "Fiori Elements List Report", "Freestyle UI5", "API-only CAP service"
-8. WHEN naming the project THEN the system SHALL suggest names based on module and function: "resurrection-sd-pricing-logic" with validation for GitHub naming rules
-9. WHEN the wizard completes THEN the system SHALL show a summary: "Ready to resurrect 5 objects (1,200 LOC) → Estimated time: 3 minutes"
-10. WHEN the user confirms THEN the system SHALL show an animated "Resurrection in Progress" screen with live updates
+1. WHEN a user clicks "Start Resurrection" THEN the system SHALL launch a wizard: Select Objects → Review Dependencies → Configure Output → Name Project
+2. WHEN selecting objects THEN the system SHALL show a table with AI recommendations: "⭐ High impact, low complexity"
+3. WHEN a user selects an object THEN the system SHALL show preview: LOC, complexity, dependencies, estimated time
+4. WHEN dependencies exist THEN the system SHALL auto-select them with indicator: "🔗 Auto-included: 3 dependencies"
+5. WHEN the user proceeds THEN the system SHALL show dependency graph visualization of selected objects
+6. WHEN configuring output THEN the system SHALL offer templates: "Fiori Elements List Report", "Freestyle UI5", "API-only"
+7. WHEN naming the project THEN the system SHALL suggest: "resurrection-sd-pricing-logic" with GitHub naming validation
+8. WHEN the wizard completes THEN the system SHALL show summary: "Ready to resurrect 5 objects (1,200 LOC) → 3 minutes"
+9. WHEN the user confirms THEN the system SHALL show animated "Resurrection in Progress" with live MCP streaming updates
+10. WHEN wizard starts THEN the system SHALL send Slack notification: "🚀 New resurrection: sd-pricing-logic"
 
-### Requirement 7: MCP-Powered AI Transformation Engine
+### Requirement 7: MCP-Powered Resurrection Engine
 
-**User Story:** As a SAP developer, I want the system to leverage Model Context Protocol (MCP) servers for intelligent code transformation, so that I get accurate, context-aware CAP applications with Clean Core compliance.
-
-#### Acceptance Criteria
-
-1. WHEN transformation is initiated THEN the system SHALL invoke the ABAP Analyzer MCP server to parse legacy code structure, extract business logic, and identify SAP patterns
-2. WHEN ABAP parsing completes THEN the system SHALL use the MCP context to understand SAP domain knowledge (pricing procedures, authorization objects, number ranges)
-3. WHEN generating CAP backend THEN the system SHALL invoke the SAP CAP MCP server to create CDS models, service definitions, and event handlers
-4. WHEN generating UI THEN the system SHALL invoke the SAP UI5 MCP server to create Fiori Elements annotations or Freestyle UI5 components
-5. WHEN business logic is transformed THEN the system SHALL preserve all calculations, validations, and workflows exactly using MCP's code understanding
-6. WHEN MCP servers are called THEN the system SHALL use streaming responses to show real-time progress: "Analyzing ABAP structure...", "Generating CDS models..."
-7. WHEN multiple MCP servers are needed THEN the system SHALL orchestrate them in sequence: ABAP Analyzer → CAP Generator → UI5 Generator
-8. WHEN MCP context is insufficient THEN the system SHALL prompt the user for clarification: "This ABAP code uses custom table ZCUSTOM. What entity should this map to?"
-9. WHEN transformation completes THEN the system SHALL generate a complete CAP project with package.json, mta.yaml, CDS files, handlers, and UI
-10. WHEN MCP errors occur THEN the system SHALL provide detailed error messages with MCP server logs and retry options
-
-### Requirement 8: Kiro Hooks for Quality Validation
-
-**User Story:** As a quality engineer, I want automated Kiro hooks to validate transformed code quality, so that every resurrection meets standards without manual intervention.
+**User Story:** As a SAP developer, I want the platform to use MCP servers to transform ABAP into production-ready CAP applications, so that I get accurate, deployable code.
 
 #### Acceptance Criteria
 
-1. WHEN transformation completes THEN the system SHALL trigger a Kiro hook: "on-resurrection-complete" that runs automated quality checks
-2. WHEN the quality hook runs THEN the system SHALL validate: CDS syntax, CAP service structure, Clean Core compliance, and business logic completeness
-3. WHEN business logic is transformed THEN the system SHALL trigger a hook: "generate-tests" that creates unit tests for key calculations and workflows
-4. WHEN the GitHub repo is created THEN the system SHALL trigger a hook: "setup-ci-cd" that configures GitHub Actions for continuous validation
-5. WHEN quality issues are detected THEN the system SHALL trigger a hook: "quality-report" that generates a detailed report with line numbers and suggested fixes
-6. WHEN all checks pass THEN the system SHALL trigger a hook: "mark-ready-for-deployment" that updates resurrection status and notifies the user
-7. WHEN checks fail THEN the system SHALL trigger a hook: "request-review" that creates a GitHub issue with validation errors and assigns it to the user
-8. WHEN a user saves changes in BAS THEN the system SHALL trigger a hook: "validate-on-save" that runs linting and type checking
-9. WHEN hooks are configured THEN the system SHALL allow users to customize hook behavior via `.kiro/hooks/resurrection-hooks.json`
-10. WHEN hooks execute THEN the system SHALL log all hook activity in the resurrection dashboard with timestamps and outcomes
+1. WHEN resurrection starts THEN the system SHALL invoke ABAP Analyzer MCP to parse code structure and extract business logic
+2. WHEN ABAP parsing completes THEN the system SHALL invoke CAP Generator MCP to create CDS models, services, and handlers
+3. WHEN CAP generation completes THEN the system SHALL invoke UI5 Generator MCP to create Fiori Elements or Freestyle UI
+4. WHEN UI generation completes THEN the system SHALL generate complete CAP project structure with all required files
+5. WHEN generating package.json THEN the system SHALL include all CAP dependencies (@sap/cds, @sap/xssec, etc.)
+6. WHEN generating mta.yaml THEN the system SHALL include modules (CAP service, UI app, database) and resources (HDI, XSUAA, destination)
+7. WHEN generating CDS models THEN the system SHALL preserve ABAP business logic exactly (calculations, validations, workflows)
+8. WHEN MCP servers stream responses THEN the system SHALL show real-time progress: "Analyzing ABAP...", "Generating CDS models..."
+9. WHEN transformation completes THEN the system SHALL validate output: CDS syntax, CAP structure, completeness
+10. WHEN MCP errors occur THEN the system SHALL provide detailed logs and retry options
 
-### Requirement 8: SAP BTP Deployment Package Generation
+### Requirement 8: GitHub Repository Creation (Multiple Options)
 
-**User Story:** As a DevOps engineer, I want the system to generate a complete SAP BTP deployment package, so that I can deploy the modernized application without manual configuration.
-
-#### Acceptance Criteria
-
-1. WHEN a user requests deployment package THEN the system SHALL generate an MTA (Multi-Target Application) structure with mta.yaml descriptor
-2. WHEN generating mta.yaml THEN the system SHALL include all required modules (CAP service, UI5 app, database) and resources (HDI container, destination, XSUAA)
-3. WHEN database artifacts exist THEN the system SHALL generate proper db/ folder with CDS schema definitions
-4. WHEN authentication is required THEN the system SHALL configure XSUAA service with appropriate scopes and role templates
-5. WHEN the package is complete THEN the system SHALL create a downloadable .zip file containing the entire MTA project
-
-### Requirement 9: Local Testing and Preview
-
-**User Story:** As a SAP developer, I want to test the modernized application locally before deploying to BTP, so that I can verify functionality in a safe environment.
+**User Story:** As a SAP developer, I want flexible options for creating GitHub repositories for resurrections, so that I can choose between automated MCP creation or manual git push workflows.
 
 #### Acceptance Criteria
 
-1. WHEN a user requests local preview THEN the system SHALL provide instructions for running `cds watch` locally
-2. WHEN the CAP application runs locally THEN the system SHALL use SQLite for database and mock authentication
-3. WHEN a user accesses the local preview THEN the system SHALL display the Fiori UI connected to the CAP service
-4. WHEN test data is needed THEN the system SHALL generate sample CSV files in the db/data/ folder
-5. WHEN local testing completes THEN the system SHALL provide a checklist of functionality to verify before BTP deployment
+1. WHEN resurrection completes THEN the system SHALL offer two options: "Auto-create GitHub repo (MCP)" or "Export for manual git push"
+2. WHEN "Auto-create GitHub repo" is selected THEN the system SHALL use GitHub MCP to create repository: `resurrection-{project}-{timestamp}`
+3. WHEN GitHub MCP creates repo THEN the system SHALL initialize with README.md, .gitignore, LICENSE, and complete CAP project structure
+4. WHEN files are committed via MCP THEN the system SHALL use commit message: "🔄 Resurrection: ABAP to CAP transformation complete"
+5. WHEN "Export for manual git push" is selected THEN the system SHALL generate a downloadable .zip file with complete CAP project and git instructions
+6. WHEN export includes git instructions THEN the system SHALL provide README with commands: `git init`, `git add .`, `git commit`, `git remote add origin`, `git push`
+7. WHEN the repo is ready THEN the system SHALL add topics: `sap-cap`, `abap-resurrection`, `clean-core`, `sap-btp`
+8. WHEN README is generated THEN the system SHALL include: original ABAP context, transformation summary, deployment instructions, BAS setup
+9. WHEN the repo is created THEN the system SHALL generate "Open in SAP BAS" deep link: `https://bas.{region}.hana.ondemand.com/?gitClone={repo_url}`
+10. WHEN CI/CD is configured THEN the system SHALL use GitHub MCP to create `.github/workflows/ci.yml` for build, test, deploy
+11. WHEN the repo is created THEN the system SHALL send Slack notification with repo URL and BAS link
+12. WHEN multiple resurrections exist THEN the system SHALL display gallery view with all repos and their status
+13. WHEN a user provides GitHub URL THEN the system SHALL accept it and use git commands to push resurrection code
+14. WHEN manual push is used THEN the system SHALL provide step-by-step wizard with copy-paste commands
+15. WHEN a user wants to update THEN the system SHALL create a new branch or version instead of overwriting
 
-### Requirement 10: SAP BTP Deployment Instructions
+### Requirement 9: Kiro Hooks for Automation
 
-**User Story:** As a DevOps engineer, I want clear step-by-step instructions for deploying to SAP BTP, so that I can successfully deploy the modernized application to production.
-
-#### Acceptance Criteria
-
-1. WHEN a user requests deployment instructions THEN the system SHALL provide a detailed guide including prerequisites (Cloud Foundry CLI, MTA plugin, BTP account)
-2. WHEN deployment steps are shown THEN the system SHALL include exact commands: `cf login`, `mbt build`, `cf deploy mta_archives/*.mtar`
-3. WHEN BTP services are required THEN the system SHALL list all services to create (HANA HDI, XSUAA, destination) with creation commands
-4. WHEN deployment completes THEN the system SHALL provide the application URL and instructions for accessing the Fiori launchpad
-5. WHEN errors occur THEN the system SHALL provide troubleshooting guidance for common deployment issues
-
-### Requirement 11: Deployment Status Tracking
-
-**User Story:** As a project manager, I want to track the status of multiple modernization projects, so that I can monitor progress and identify blockers.
+**User Story:** As a quality engineer, I want automated hooks to validate resurrection quality, so that every CAP app meets standards without manual intervention.
 
 #### Acceptance Criteria
 
-1. WHEN multiple projects exist THEN the system SHALL display a dashboard showing status of each (uploaded, analyzed, transformed, deployed)
-2. WHEN a project status changes THEN the system SHALL update the dashboard in real-time
-3. WHEN a user clicks on a project THEN the system SHALL show detailed history including timestamps, user actions, and transformation logs
-4. WHEN errors occur THEN the system SHALL highlight failed projects with error details
-5. WHEN a project completes THEN the system SHALL show success metrics (lines of code reduced, complexity score, deployment time)
+1. WHEN resurrection starts THEN the system SHALL trigger hook: "on-resurrection-start" that sends Slack notification
+2. WHEN resurrection completes THEN the system SHALL trigger hook: "on-resurrection-complete" that runs quality validation
+3. WHEN quality validation runs THEN the system SHALL check: CDS syntax, CAP structure, Clean Core compliance, business logic preservation
+4. WHEN validation passes THEN the system SHALL trigger hook: "mark-ready-for-deployment" and send Slack success message
+5. WHEN validation fails THEN the system SHALL trigger hook: "quality-failure" that creates GitHub issue and sends Slack alert
+6. WHEN GitHub repo is created THEN the system SHALL trigger hook: "setup-ci-cd" that configures GitHub Actions
+7. WHEN a user saves in BAS THEN the system SHALL trigger hook: "validate-on-save" for linting
+8. WHEN hooks are configured THEN the system SHALL allow customization via `.kiro/hooks/resurrection-hooks.json`
+9. WHEN hooks execute THEN the system SHALL log all activity in resurrection dashboard
+10. WHEN deployment succeeds THEN the system SHALL trigger hook: "deployment-success" that sends Slack celebration and creates GitHub release
 
-### Requirement 12: Export and Documentation
+### Requirement 10: Resurrection CAP App Structure
 
-**User Story:** As a SAP architect, I want to export comprehensive documentation of the modernization process, so that I can share results with stakeholders and maintain audit trails.
-
-#### Acceptance Criteria
-
-1. WHEN a user requests export THEN the system SHALL generate a PDF report including original ABAP analysis, transformation decisions, and final CAP structure
-2. WHEN exporting code THEN the system SHALL include both the original ABAP files and the modernized CAP code in a structured .zip file
-3. WHEN generating documentation THEN the system SHALL include dependency graphs, redundancy analysis, and fit-to-standard recommendations
-4. WHEN transformation logs exist THEN the system SHALL include them in the export with timestamps and AI decision rationale
-5. WHEN the export completes THEN the system SHALL provide a download link valid for 7 days
-
-### Requirement 13: Rollback and Version Control
-
-**User Story:** As a SAP developer, I want to version control my transformations and rollback if needed, so that I can experiment safely and recover from mistakes.
+**User Story:** As a DevOps engineer, I want each resurrection to be a complete, deployable CAP application, so that I can deploy to SAP BTP without additional configuration.
 
 #### Acceptance Criteria
 
-1. WHEN a transformation completes THEN the system SHALL save a versioned snapshot including input ABAP, output CAP, and transformation parameters
-2. WHEN multiple versions exist THEN the system SHALL display a version history with timestamps and change summaries
-3. WHEN a user selects a previous version THEN the system SHALL allow downloading that version's artifacts
-4. WHEN a user wants to retry transformation THEN the system SHALL allow re-running with different AI parameters or manual adjustments
-5. WHEN versions are compared THEN the system SHALL show a diff view highlighting changes between versions
+1. WHEN a resurrection CAP app is generated THEN the system SHALL create folder structure: `db/`, `srv/`, `app/`, `mta.yaml`, `package.json`
+2. WHEN db/ folder is created THEN the system SHALL include CDS schema files with entities, associations, and annotations
+3. WHEN srv/ folder is created THEN the system SHALL include service definitions (CDS) and implementation handlers (JavaScript/TypeScript)
+4. WHEN app/ folder is created THEN the system SHALL include Fiori UI with manifest.json and UI5 components
+5. WHEN package.json is created THEN the system SHALL include all CAP dependencies and scripts: `cds watch`, `cds build`, `cds deploy`
+6. WHEN mta.yaml is created THEN the system SHALL define modules (CAP service, UI app, database) and resources (HDI container, XSUAA, destination)
+7. WHEN xs-security.json is created THEN the system SHALL define scopes and role templates for XSUAA authentication
+8. WHEN .gitignore is created THEN the system SHALL exclude node_modules, mta_archives, and generated files
+9. WHEN README.md is created THEN the system SHALL include: setup instructions, local testing (`cds watch`), BTP deployment (`mbt build && cf deploy`)
+10. WHEN the CAP app is complete THEN the system SHALL validate it can be built locally: `npm install && cds build`
 
-### Requirement 14: Spec-Driven Resurrection Planning
+### Requirement 11: SAP BAS Integration
 
-**User Story:** As a SAP architect, I want to use Kiro specs to plan complex resurrection projects, so that I can define requirements, design, and tasks before executing transformations.
-
-#### Acceptance Criteria
-
-1. WHEN a user starts a complex resurrection THEN the system SHALL offer to create a Kiro spec: "Plan this resurrection with a spec?"
-2. WHEN a spec is created THEN the system SHALL generate `.kiro/specs/resurrection-{project-name}/requirements.md` with EARS-formatted acceptance criteria
-3. WHEN requirements are defined THEN the system SHALL use AI to generate a design document with CDS models, CAP services, and UI architecture
-4. WHEN the design is approved THEN the system SHALL generate a task list with checkboxes for: "Parse ABAP", "Generate CDS", "Create UI", "Write tests", "Deploy to BTP"
-5. WHEN tasks are executed THEN the system SHALL use Kiro's task execution workflow to track progress and mark tasks complete
-6. WHEN a task involves MCP THEN the system SHALL reference the appropriate MCP server in the task description: "Use ABAP Analyzer MCP to parse Z_PRICING"
-7. WHEN a task involves hooks THEN the system SHALL configure hooks in the task: "Set up quality validation hook after transformation"
-8. WHEN the spec is complete THEN the system SHALL commit it to the GitHub resurrection repo for documentation
-9. WHEN multiple resurrections use similar patterns THEN the system SHALL offer spec templates: "SD Pricing Resurrection", "MM Procurement Resurrection"
-10. WHEN a user wants to review THEN the system SHALL provide a spec summary view showing requirements coverage, task completion, and quality metrics
-
-### Requirement 15: Batch Processing and Automation
-
-**User Story:** As a SAP architect, I want to process hundreds of ABAP programs in batch using specs and hooks, so that I can modernize large codebases efficiently with quality controls.
+**User Story:** As a SAP developer, I want to open resurrection repos directly in SAP Business Application Studio, so that I can continue development in SAP's cloud IDE.
 
 #### Acceptance Criteria
 
-1. WHEN a user uploads a folder of ABAP files THEN the system SHALL offer to create a batch resurrection spec with requirements for all files
-2. WHEN batch processing runs THEN the system SHALL execute resurrections in parallel with MCP orchestration and show real-time progress
-3. WHEN individual files fail THEN the system SHALL trigger a hook: "on-resurrection-failed" that logs errors and continues processing others
-4. WHEN batch completes THEN the system SHALL trigger a hook: "batch-summary-report" that generates a comprehensive report with success rate and savings
-5. WHEN automation is configured THEN the system SHALL allow scheduling batch jobs via API or CLI with spec-based configuration
-6. WHEN a batch resurrection uses a spec THEN the system SHALL track task completion across all files and show aggregate progress
-7. WHEN hooks are needed for batch THEN the system SHALL configure batch-level hooks: "on-batch-start", "on-batch-complete", "on-batch-error"
+1. WHEN a resurrection completes THEN the system SHALL generate BAS deep link with repo URL
+2. WHEN a user clicks "Open in BAS" THEN the system SHALL open SAP BAS and clone the repository
+3. WHEN BAS opens THEN the system SHALL detect CAP project and suggest `npm install`
+4. WHEN dependencies install THEN the system SHALL provide "Run" button for `cds watch`
+5. WHEN .vscode/extensions.json exists THEN the system SHALL recommend SAP CDS Language Support and Fiori tools
+6. WHEN RESURRECTION.md exists THEN the system SHALL display original ABAP context in BAS
+7. WHEN the user wants to deploy THEN the system SHALL provide terminal commands: `cf login`, `mbt build`, `cf deploy`
+8. WHEN multiple resurrections exist THEN the system SHALL allow opening in separate BAS dev spaces
+9. WHEN BAS workspace is configured THEN the system SHALL include launch configurations for debugging
+10. WHEN BAS integration is used THEN the system SHALL track usage analytics
 
-### Requirement 15: GitHub Resurrection Repository Creation
+### Requirement 12: Resurrection Dashboard
 
-**User Story:** As a SAP developer, I want each ABAP resurrection to automatically create a new GitHub repository, so that I can clone it into SAP Business Application Studio and continue development with full version control.
-
-#### Acceptance Criteria
-
-1. WHEN a transformation completes successfully THEN the system SHALL create a new GitHub repository with naming pattern `resurrection-{project-name}-{timestamp}`
-2. WHEN the GitHub repo is created THEN the system SHALL initialize it with the complete CAP project structure including README.md, .gitignore, and all source files
-3. WHEN the repository is initialized THEN the system SHALL commit all generated files with message "🔄 Resurrection: ABAP to CAP transformation complete"
-4. WHEN the repo is ready THEN the system SHALL provide a direct "Open in SAP BAS" link that clones the repo into Business Application Studio
-5. WHEN GitHub authentication is required THEN the system SHALL use OAuth GitHub App integration with user consent
-6. WHEN the repository is created THEN the system SHALL add topics/tags: `sap-cap`, `abap-resurrection`, `clean-core`, `sap-btp`
-7. WHEN the README is generated THEN the system SHALL include original ABAP context, transformation summary, deployment instructions, and BAS setup guide
-8. WHEN multiple resurrections exist THEN the system SHALL display a gallery view showing all GitHub repos with clone/BAS links
-9. WHEN a user wants to update a resurrection THEN the system SHALL create a new branch or new repo version instead of overwriting
-10. WHEN the repo is created THEN the system SHALL optionally configure GitHub Actions for CI/CD (build, test, deploy to BTP)
-
-### Requirement 16: SAP Business Application Studio Integration
-
-**User Story:** As a SAP developer, I want seamless integration with SAP Business Application Studio, so that I can immediately start working on resurrected code in SAP's native cloud IDE.
+**User Story:** As a project manager, I want to track all resurrection projects in a dashboard, so that I can monitor progress and deployment status.
 
 #### Acceptance Criteria
 
-1. WHEN a user clicks "Open in BAS" THEN the system SHALL generate a deep link that opens SAP Business Application Studio with the resurrection repo
-2. WHEN BAS opens THEN the system SHALL automatically clone the GitHub repository into a new dev space
-3. WHEN the project is cloned THEN the system SHALL detect it as a CAP project and suggest installing dependencies (`npm install`)
-4. WHEN dependencies are installed THEN the system SHALL provide a "Run" button that executes `cds watch` for local testing
-5. WHEN BAS is configured THEN the system SHALL include recommended extensions in `.vscode/extensions.json` (SAP CDS Language Support, SAP Fiori tools)
-6. WHEN the user wants to deploy THEN the system SHALL provide BAS terminal commands for `cf login` and `cf deploy`
-7. WHEN multiple resurrections exist THEN the system SHALL allow opening them in separate BAS dev spaces
-8. WHEN BAS workspace is opened THEN the system SHALL include a `RESURRECTION.md` file with context about the original ABAP code
+1. WHEN the resurrection dashboard opens THEN the system SHALL display all projects with status: in-progress, completed, deployed
+2. WHEN a resurrection is listed THEN the system SHALL show: GitHub repo link, BAS link, transformation date, deployment status
+3. WHEN a user searches THEN the system SHALL filter by module (SD, MM, FI), status, or date range
+4. WHEN a resurrection is selected THEN the system SHALL show metrics: LOC reduced, complexity score, test coverage
+5. WHEN GitHub repo is updated THEN the system SHALL sync status back to platform dashboard
+6. WHEN a resurrection is deployed THEN the system SHALL display live app URL and health status
+7. WHEN multiple team members work THEN the system SHALL show who created each project and contributors
+8. WHEN Slack is integrated THEN the system SHALL show recent Slack notifications for each resurrection
+9. WHEN a resurrection is archived THEN the system SHALL mark as archived but keep GitHub repo accessible
+10. WHEN dashboard loads THEN the system SHALL show aggregate metrics: total resurrections, total LOC saved, average quality score
 
-### Requirement 17: Resurrection Project Management
+### Requirement 13: Kiro Specs for Complex Resurrections
 
-**User Story:** As a project manager, I want to track all resurrection projects in a centralized dashboard, so that I can monitor the portfolio of modernized applications.
-
-#### Acceptance Criteria
-
-1. WHEN the resurrection dashboard is opened THEN the system SHALL display all resurrection projects with status (in-progress, completed, deployed)
-2. WHEN a resurrection is listed THEN the system SHALL show GitHub repo link, BAS link, original ABAP files, transformation date, and deployment status
-3. WHEN a user searches resurrections THEN the system SHALL filter by module (SD, MM, FI), status, or date range
-4. WHEN a resurrection is selected THEN the system SHALL show detailed metrics: lines of code reduced, complexity score, test coverage, deployment history
-5. WHEN GitHub repo is updated THEN the system SHALL sync status back to the platform dashboard
-6. WHEN a resurrection is deployed to BTP THEN the system SHALL display the live application URL and health status
-7. WHEN multiple team members work on resurrections THEN the system SHALL show who created each project and current contributors
-8. WHEN a resurrection is archived THEN the system SHALL mark it as archived but keep the GitHub repo accessible
-
-### Requirement 18: API and CLI Access
-
-**User Story:** As a DevOps engineer, I want to access platform functionality via API and CLI, so that I can integrate modernization into CI/CD pipelines.
+**User Story:** As a SAP architect, I want to use Kiro specs for complex resurrection projects, so that I can plan requirements, design, and tasks before transformation.
 
 #### Acceptance Criteria
 
-1. WHEN API documentation is requested THEN the system SHALL provide OpenAPI/Swagger documentation for all endpoints
-2. WHEN a user authenticates via API THEN the system SHALL use API keys or OAuth tokens for secure access
-3. WHEN CLI is installed THEN the system SHALL provide commands for upload, analyze, transform, and deploy operations
-4. WHEN CLI commands run THEN the system SHALL provide structured output (JSON) suitable for scripting
-5. WHEN API rate limits are exceeded THEN the system SHALL return appropriate HTTP 429 status with retry-after headers
-6. WHEN CLI creates a resurrection THEN the system SHALL return the GitHub repo URL and BAS link for automation
+1. WHEN a user starts a complex resurrection THEN the system SHALL offer: "Plan with a Kiro spec?"
+2. WHEN a spec is created THEN the system SHALL generate `.kiro/specs/resurrection-{project}/requirements.md` with EARS-formatted criteria
+3. WHEN requirements are defined THEN the system SHALL use AI to generate design.md with CDS models and architecture
+4. WHEN design is approved THEN the system SHALL generate tasks.md with checkboxes: Parse ABAP, Generate CDS, Create UI, Deploy
+5. WHEN tasks reference MCP THEN the system SHALL include: "Use ABAP Analyzer MCP to parse Z_PRICING"
+6. WHEN tasks reference hooks THEN the system SHALL include: "Set up quality validation hook"
+7. WHEN spec is complete THEN the system SHALL commit it to GitHub resurrection repo
+8. WHEN similar patterns exist THEN the system SHALL offer templates: "SD Pricing Resurrection", "MM Procurement Resurrection"
+9. WHEN spec is used THEN the system SHALL track task completion and show progress
+10. WHEN spec review is needed THEN the system SHALL provide summary: requirements coverage, task completion, quality metrics
+
+### Requirement 14: Batch Resurrection Processing
+
+**User Story:** As a SAP architect, I want to process multiple ABAP files in batch, so that I can modernize large codebases efficiently.
+
+#### Acceptance Criteria
+
+1. WHEN a user uploads multiple files THEN the system SHALL offer: "Create batch resurrection?"
+2. WHEN batch processing runs THEN the system SHALL execute resurrections in parallel with progress tracking
+3. WHEN individual resurrections fail THEN the system SHALL continue processing others and log errors
+4. WHEN batch completes THEN the system SHALL generate summary report: success rate, total LOC saved, failed items
+5. WHEN batch uses specs THEN the system SHALL track aggregate task completion
+6. WHEN batch runs THEN the system SHALL send Slack updates: "Batch progress: 5/10 completed"
+7. WHEN batch completes THEN the system SHALL send Slack summary with links to all created repos
+8. WHEN automation is needed THEN the system SHALL provide API/CLI for scheduling batch jobs
+9. WHEN batch errors occur THEN the system SHALL create GitHub issues for failed resurrections
+10. WHEN batch finishes THEN the system SHALL display gallery view of all created resurrection repos
+
+### Requirement 15: Local Testing and Deployment
+
+**User Story:** As a SAP developer, I want clear instructions for testing resurrections locally and deploying to BTP, so that I can verify functionality before production.
+
+#### Acceptance Criteria
+
+1. WHEN a resurrection README is generated THEN the system SHALL include local testing instructions: `npm install && cds watch`
+2. WHEN local testing is described THEN the system SHALL explain SQLite usage for database and mock authentication
+3. WHEN deployment instructions are provided THEN the system SHALL include prerequisites: Cloud Foundry CLI, MTA Build Tool, BTP account
+4. WHEN deployment steps are shown THEN the system SHALL include exact commands: `cf login`, `mbt build`, `cf deploy mta_archives/*.mtar`
+5. WHEN BTP services are needed THEN the system SHALL list creation commands: `cf create-service hana hdi-shared {app}-db`
+6. WHEN deployment completes THEN the system SHALL provide app URL: `https://{app}.cfapps.{region}.hana.ondemand.com`
+7. WHEN errors occur THEN the system SHALL provide troubleshooting guide for common issues
+8. WHEN test data is needed THEN the system SHALL generate sample CSV files in db/data/
+9. WHEN deployment succeeds THEN the system SHALL send Slack notification with live app URL
+10. WHEN health checks are needed THEN the system SHALL provide monitoring endpoints
+
