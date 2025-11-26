@@ -47,21 +47,28 @@ export async function POST(
       );
     }
 
-    // Verify ABAP objects exist
-    if (!resurrection.abapObjects || resurrection.abapObjects.length === 0) {
+    // Get ABAP code - either from abapCode field or abapObjects
+    let combinedABAPCode = '';
+    
+    if (resurrection.abapCode && resurrection.abapCode.trim().length > 0) {
+      // Use direct abapCode field (new approach)
+      combinedABAPCode = resurrection.abapCode;
+      console.log('[Start Workflow] Using abapCode field:', combinedABAPCode.length, 'characters');
+    } else if (resurrection.abapObjects && resurrection.abapObjects.length > 0) {
+      // Use abapObjects (legacy approach)
+      combinedABAPCode = resurrection.abapObjects
+        .map(obj => `* ${obj.name} (${obj.type})\n${obj.content}`)
+        .join('\n\n');
+      console.log('[Start Workflow] Using abapObjects:', resurrection.abapObjects.length, 'objects');
+    } else {
       return NextResponse.json(
         { 
-          error: 'No ABAP objects',
-          message: 'Resurrection must have at least one ABAP object'
+          error: 'No ABAP code',
+          message: 'Resurrection must have ABAP code or ABAP objects'
         },
         { status: 400 }
       );
     }
-
-    // Combine all ABAP code
-    const combinedABAPCode = resurrection.abapObjects
-      .map(obj => `* ${obj.name} (${obj.type})\n${obj.content}`)
-      .join('\n\n');
 
     // Update status to indicate workflow started
     await prisma.resurrection.update({

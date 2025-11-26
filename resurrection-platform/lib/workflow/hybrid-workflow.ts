@@ -78,8 +78,20 @@ export class HybridResurrectionWorkflow {
       // Step 4: VALIDATE with REAL cds build
       await this.stepValidate(resurrectionId, capProject);
 
-      // Step 5: DEPLOY to REAL GitHub
-      await this.stepDeploy(resurrectionId, capProject);
+      // Step 5: DEPLOY to REAL GitHub (optional - skip if no token)
+      try {
+        await this.stepDeploy(resurrectionId, capProject);
+      } catch (error) {
+        console.warn(`[HybridWorkflow] GitHub deployment failed (non-critical):`, error);
+        // Continue without GitHub - mark as completed anyway
+        await prisma.resurrection.update({
+          where: { id: resurrectionId },
+          data: {
+            githubUrl: `file://${capProject.path}`,
+            githubMethod: 'LOCAL_ONLY'
+          }
+        });
+      }
 
       // Mark as completed
       await this.updateStatus(resurrectionId, 'COMPLETED');

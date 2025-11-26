@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Select,
   SelectContent,
@@ -13,6 +15,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { 
+  Activity, 
+  CheckCircle2, 
+  Clock, 
+  XCircle, 
+  TrendingUp, 
+  Code2, 
+  Sparkles,
+  ArrowUpRight,
+  Search,
+  Filter,
+  Plus
+} from 'lucide-react';
 
 interface Resurrection {
   id: string;
