@@ -106,7 +106,10 @@ Respond in JSON format:
       await this.logStep(resurrectionId, 'ANALYZE', 'COMPLETED', duration, analysis);
 
       // Update resurrection with analysis results
-      const parsed = JSON.parse(analysis);
+      // Extract JSON from markdown code blocks if present
+      const jsonMatch = analysis.match(/```(?:json)?\s*([\s\S]*?)```/);
+      const jsonString = jsonMatch ? jsonMatch[1].trim() : analysis;
+      const parsed = JSON.parse(jsonString);
       await prisma.resurrection.update({
         where: { id: resurrectionId },
         data: {
@@ -155,7 +158,12 @@ Respond in JSON format:
       const plan = await this.callOpenAI(prompt, 'You are an expert SAP CAP architect.');
 
       const duration = Date.now() - startTime;
-      await this.logStep(resurrectionId, 'PLAN', 'COMPLETED', duration, plan);
+      
+      // Extract JSON from markdown code blocks if present
+      const jsonMatch = plan.match(/```(?:json)?\s*([\s\S]*?)```/);
+      const jsonString = jsonMatch ? jsonMatch[1].trim() : plan;
+      
+      await this.logStep(resurrectionId, 'PLAN', 'COMPLETED', duration, jsonString);
 
     } catch (error) {
       const duration = Date.now() - startTime;

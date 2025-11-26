@@ -73,8 +73,9 @@ export async function POST(
     });
 
     // Start workflow asynchronously (don't await - let it run in background)
-    const { SimplifiedResurrectionWorkflow } = await import('@/lib/workflow/simplified-workflow');
-    const workflow = new SimplifiedResurrectionWorkflow();
+    // Use HYBRID workflow (CAP CLI + GitHub API + OpenAI analysis)
+    const { HybridResurrectionWorkflow } = await import('@/lib/workflow/hybrid-workflow');
+    const workflow = new HybridResurrectionWorkflow();
     
     // Execute workflow in background
     workflow.execute(id, combinedABAPCode)

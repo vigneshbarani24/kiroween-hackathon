@@ -1,13 +1,10 @@
 /**
- * Intelligence Services
- * 
- * Export all intelligence-related services for fit-to-standard recommendations
- * and redundancy detection.
+ * Intelligence Services Integration
+ * Core value: Business logic preservation and code understanding
  */
 
-export * from './sap-standards-kb';
-export * from './pattern-matcher';
-export * from './fit-to-standard-service';
-export * from './implementation-guides';
-export * from './redundancy-detector';
-export * from './savings-calculator';
+export { DocumentationGenerator } from './documentation-generator';
+export { DependencyGraphService } from './dependency-graph';
+export { RedundancyDetector } from './redundancy-detector';
+export { VectorSearchService } from './vector-search';
+export { QAService } from './qa-service';

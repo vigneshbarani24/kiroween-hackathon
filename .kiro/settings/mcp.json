@@ -1,21 +1,24 @@
 {
   "mcpServers": {
     "abap-analyzer": {
-      "command": "python3",
-      "args": [".kiro/mcp/abap-analyzer.py"],
+      "command": "python",
+      "args": [
+        ".kiro/mcp/abap-analyzer.py"
+      ],
       "env": {
         "PYTHONUNBUFFERED": "1"
       },
       "disabled": false,
       "autoApprove": [
-        "parse_abap",
-        "detect_sap_patterns",
-        "extract_data_model"
+        "analyzeCode"
       ]
     },
     "sap-cap": {
       "command": "npx",
-      "args": ["-y", "@cap-js/mcp-server"],
+      "args": [
+        "-y",
+        "@cap-js/mcp-server"
+      ],
       "env": {
         "NODE_ENV": "production"
       },
@@ -23,12 +26,17 @@
       "autoApprove": [
         "cap_lookup_pattern",
         "cap_validate_cds",
-        "cap_get_service_template"
+        "cap_get_service_template",
+        "search_model",
+        "search_docs"
       ]
     },
     "sap-ui5": {
       "command": "npx",
-      "args": ["-y", "@ui5/mcp-server"],
+      "args": [
+        "-y",
+        "@ui5/mcp-server"
+      ],
       "env": {
         "NODE_ENV": "production"
       },
@@ -36,12 +44,15 @@
       "autoApprove": [
         "ui5_get_component",
         "ui5_lookup_control",
-        "ui5_generate_view"
+        "ui5_generate_view",
+        "get_project_info"
       ]
     },
     "github": {
       "command": "uvx",
-      "args": ["mcp-server-github"],
+      "args": [
+        "mcp-server-github"
+      ],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
       },
@@ -55,18 +66,19 @@
       ]
     },
     "slack": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "command": "uvx",
+      "args": [
+        "slack-mcp-server"
+      ],
       "env": {
-        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
-        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}"
       },
       "disabled": false,
       "autoApprove": [
-        "post_message",
-        "post_message_with_attachments",
-        "create_thread",
-        "upload_file"
+        "slack_list_channels",
+        "slack_post_message",
+        "slack_reply_to_thread",
+        "slack_add_reaction"
       ]
     }
   }

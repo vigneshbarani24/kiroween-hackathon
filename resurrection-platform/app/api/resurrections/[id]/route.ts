@@ -20,8 +20,7 @@ export async function GET(
             name: true,
             type: true,
             module: true,
-            linesOfCode: true,
-            complexity: true
+            linesOfCode: true
           }
         },
         transformationLogs: {
@@ -34,6 +33,8 @@ export async function GET(
             status: true,
             duration: true,
             errorMessage: true,
+            request: true,
+            response: true,
             createdAt: true
           }
         },
@@ -80,8 +81,8 @@ export async function GET(
         qualityScore: resurrection.qualityScore,
         abapObjects: resurrection.abapObjects,
         transformationLogs: resurrection.transformationLogs,
-        latestQualityReport: resurrection.qualityReports[0] || null,
-        recentGithubActivities: resurrection.githubActivities,
+        qualityReports: resurrection.qualityReports,
+        githubActivities: resurrection.githubActivities,
         createdAt: resurrection.createdAt,
         updatedAt: resurrection.updatedAt
       }
@@ -92,69 +93,6 @@ export async function GET(
     return NextResponse.json(
       { 
         error: 'Fetch failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
-      },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE /api/resurrections/:id - Delete resurrection
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-
-    // Check if resurrection exists
-    const resurrection = await prisma.resurrection.findUnique({
-      where: { id },
-      include: {
-        _count: {
-          select: {
-            abapObjects: true,
-            transformationLogs: true,
-            qualityReports: true,
-            hookExecutions: true,
-            slackNotifications: true,
-            githubActivities: true
-          }
-        }
-      }
-    });
-
-    if (!resurrection) {
-      return NextResponse.json(
-        { error: 'Resurrection not found' },
-        { status: 404 }
-      );
-    }
-
-    // Delete all related records (cascade delete)
-    // Note: Prisma will handle cascade deletes based on schema relationships
-    await prisma.resurrection.delete({
-      where: { id }
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: `Resurrection "${resurrection.name}" deleted successfully`,
-      deletedCounts: {
-        abapObjects: resurrection._count.abapObjects,
-        transformationLogs: resurrection._count.transformationLogs,
-        qualityReports: resurrection._count.qualityReports,
-        hookExecutions: resurrection._count.hookExecutions,
-        slackNotifications: resurrection._count.slackNotifications,
-        githubActivities: resurrection._count.githubActivities
-      }
-    }, { status: 200 });
-
-  } catch (error) {
-    console.error('Error deleting resurrection:', error);
-    return NextResponse.json(
-      { 
-        error: 'Delete failed',
         message: error instanceof Error ? error.message : 'Unknown error occurred'
       },
       { status: 500 }
