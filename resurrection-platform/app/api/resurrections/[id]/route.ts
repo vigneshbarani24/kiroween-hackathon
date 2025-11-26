@@ -23,6 +23,38 @@ export async function GET(
             linesOfCode: true
           }
         },
+        workflowSteps: {
+          orderBy: {
+            stepNumber: 'asc'
+          },
+          select: {
+            id: true,
+            stepNumber: true,
+            stepName: true,
+            status: true,
+            startedAt: true,
+            completedAt: true,
+            output: true,
+            error: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        },
+        mcpLogs: {
+          orderBy: {
+            calledAt: 'desc'
+          },
+          select: {
+            id: true,
+            serverName: true,
+            toolName: true,
+            params: true,
+            response: true,
+            error: true,
+            durationMs: true,
+            calledAt: true
+          }
+        },
         transformationLogs: {
           orderBy: {
             createdAt: 'asc'
@@ -68,6 +100,9 @@ export async function GET(
         description: resurrection.description,
         status: resurrection.status,
         module: resurrection.module,
+        abapCode: resurrection.abapCode,
+        abapAnalysis: resurrection.abapAnalysis,
+        transformationPlan: resurrection.transformationPlan,
         githubRepo: resurrection.githubRepo,
         githubUrl: resurrection.githubUrl,
         githubMethod: resurrection.githubMethod,
@@ -77,9 +112,14 @@ export async function GET(
         originalLOC: resurrection.originalLOC,
         transformedLOC: resurrection.transformedLOC,
         locSaved: resurrection.locSaved,
+        linesOfCode: resurrection.linesOfCode,
+        complexity: resurrection.complexity,
         complexityScore: resurrection.complexityScore,
         qualityScore: resurrection.qualityScore,
+        completedAt: resurrection.completedAt,
         abapObjects: resurrection.abapObjects,
+        workflowSteps: resurrection.workflowSteps,
+        mcpLogs: resurrection.mcpLogs,
         transformationLogs: resurrection.transformationLogs,
         qualityReports: resurrection.qualityReports,
         githubActivities: resurrection.githubActivities,

@@ -255,33 +255,70 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-8 space-y-8 relative">
+      {/* Spider Web Decoration */}
+      <div className="absolute top-0 right-0 w-64 h-64 opacity-10 pointer-events-none">
+        <svg viewBox="0 0 200 200" className="w-full h-full">
+          {/* Spider web */}
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#8b5cf6" strokeWidth="1" />
+          <circle cx="100" cy="100" r="60" fill="none" stroke="#8b5cf6" strokeWidth="1" />
+          <circle cx="100" cy="100" r="40" fill="none" stroke="#8b5cf6" strokeWidth="1" />
+          <circle cx="100" cy="100" r="20" fill="none" stroke="#8b5cf6" strokeWidth="1" />
+          <line x1="100" y1="100" x2="100" y2="20" stroke="#8b5cf6" strokeWidth="1" />
+          <line x1="100" y1="100" x2="156" y2="44" stroke="#8b5cf6" strokeWidth="1" />
+          <line x1="100" y1="100" x2="180" y2="100" stroke="#8b5cf6" strokeWidth="1" />
+          <line x1="100" y1="100" x2="156" y2="156" stroke="#8b5cf6" strokeWidth="1" />
+          <line x1="100" y1="100" x2="100" y2="180" stroke="#8b5cf6" strokeWidth="1" />
+          <line x1="100" y1="100" x2="44" y2="156" stroke="#8b5cf6" strokeWidth="1" />
+          <line x1="100" y1="100" x2="20" y2="100" stroke="#8b5cf6" strokeWidth="1" />
+          <line x1="100" y1="100" x2="44" y2="44" stroke="#8b5cf6" strokeWidth="1" />
+          {/* Spider */}
+          <circle cx="180" cy="40" r="4" fill="#FF6B35" />
+          <circle cx="180" cy="40" r="2" fill="#000" />
+        </svg>
+      </div>
+      
+      {/* Floating Bats */}
+      <div className="absolute top-20 left-10 text-4xl opacity-20 animate-bounce" style={{ animationDuration: '3s' }}>
+        🦇
+      </div>
+      <div className="absolute top-40 right-20 text-3xl opacity-20 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
+        🦇
+      </div>
+      
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center relative z-10">
         <div>
-          <h1 className="text-4xl font-bold text-[#FF6B35] mb-2">
+          <h1 className="text-4xl font-bold text-[#FF6B35] mb-2 flex items-center gap-3">
+            <span className="animate-pulse">🎃</span>
             Dashboard
+            <span className="animate-pulse" style={{ animationDelay: '0.5s' }}>👻</span>
           </h1>
           <p className="text-[#a78bfa] text-lg">
-            Monitor your ABAP transformations
+            Monitor your ABAP transformations from beyond the grave
           </p>
         </div>
         <Link href="/upload">
           <Button 
-            className="bg-[#FF6B35] hover:bg-[#E85A2A] text-[#F7F7FF] shadow-[0_0_20px_rgba(255,107,53,0.5)]"
+            className="bg-[#FF6B35] hover:bg-[#E85A2A] text-[#F7F7FF] shadow-[0_0_20px_rgba(255,107,53,0.5)] relative overflow-hidden group"
           >
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></span>
             <span className="mr-2">🎃</span>
             New Resurrection
           </Button>
         </Link>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid - Tombstone Style */}
       <div className="grid md:grid-cols-4 lg:grid-cols-7 gap-4">
-        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30">
+        {/* Tombstone Card Component */}
+        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 relative overflow-hidden rounded-t-[50%] rounded-b-lg">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <div className="text-6xl">🕷️</div>
+          </div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-[#a78bfa] text-xs font-medium">
-              Total
+            <CardTitle className="text-[#a78bfa] text-xs font-medium flex items-center gap-1">
+              <span>⚰️</span> Total
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -289,10 +326,11 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-green-500/50 bg-green-500/10">
+        <Card className="border-2 border-green-500/50 bg-green-500/10 relative overflow-hidden rounded-t-[50%] rounded-b-lg">
+          <div className="absolute top-0 right-0 text-2xl opacity-20">🦇</div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-green-400 text-xs font-medium">
-              Completed
+            <CardTitle className="text-green-400 text-xs font-medium flex items-center gap-1">
+              <span>✅</span> Completed
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -300,10 +338,11 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-yellow-500/50 bg-yellow-500/10">
+        <Card className="border-2 border-yellow-500/50 bg-yellow-500/10 relative overflow-hidden rounded-t-[50%] rounded-b-lg">
+          <div className="absolute top-0 right-0 text-2xl opacity-20">🕸️</div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-yellow-400 text-xs font-medium">
-              In Progress
+            <CardTitle className="text-yellow-400 text-xs font-medium flex items-center gap-1">
+              <span>⏳</span> In Progress
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -311,10 +350,11 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-red-500/50 bg-red-500/10">
+        <Card className="border-2 border-red-500/50 bg-red-500/10 relative overflow-hidden rounded-t-[50%] rounded-b-lg">
+          <div className="absolute top-0 right-0 text-2xl opacity-20">💀</div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-red-400 text-xs font-medium">
-              Failed
+            <CardTitle className="text-red-400 text-xs font-medium flex items-center gap-1">
+              <span>❌</span> Failed
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -322,10 +362,16 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30">
+        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 relative overflow-hidden rounded-t-[50%] rounded-b-lg">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <svg className="w-full h-full" viewBox="0 0 100 100">
+              <path d="M0,50 Q25,40 50,50 T100,50" stroke="#8b5cf6" fill="none" strokeWidth="0.5" opacity="0.3"/>
+              <path d="M0,60 Q25,50 50,60 T100,60" stroke="#8b5cf6" fill="none" strokeWidth="0.5" opacity="0.3"/>
+            </svg>
+          </div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-[#a78bfa] text-xs font-medium">
-              Total LOC
+            <CardTitle className="text-[#a78bfa] text-xs font-medium flex items-center gap-1">
+              <span>📊</span> Total LOC
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -335,10 +381,11 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30">
+        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 relative overflow-hidden rounded-t-[50%] rounded-b-lg">
+          <div className="absolute top-0 right-0 text-2xl opacity-20">🎃</div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-[#a78bfa] text-xs font-medium">
-              LOC Saved
+            <CardTitle className="text-[#a78bfa] text-xs font-medium flex items-center gap-1">
+              <span>💾</span> LOC Saved
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -348,10 +395,11 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30">
+        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 relative overflow-hidden rounded-t-[50%] rounded-b-lg">
+          <div className="absolute top-0 right-0 text-2xl opacity-20">👻</div>
           <CardHeader className="pb-2">
-            <CardTitle className="text-[#a78bfa] text-xs font-medium">
-              Avg Quality
+            <CardTitle className="text-[#a78bfa] text-xs font-medium flex items-center gap-1">
+              <span>⭐</span> Avg Quality
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -457,13 +505,22 @@ export default function DashboardPage() {
               {filteredResurrections.map((resurrection) => (
                 <Card 
                   key={resurrection.id}
-                  className="border border-[#5b21b6] bg-[#1a0f2e]/50 hover:border-[#8b5cf6] transition-all"
+                  className="border border-[#5b21b6] bg-[#1a0f2e]/50 hover:border-[#8b5cf6] transition-all relative overflow-hidden group"
                 >
+                  {/* Tombstone top decoration */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#8b5cf6] to-transparent opacity-50"></div>
+                  
+                  {/* Floating ghost on hover */}
+                  <div className="absolute top-2 right-2 text-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300">
+                    👻
+                  </div>
+                  
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-[#F7F7FF] font-semibold text-lg">
+                          <h3 className="text-[#F7F7FF] font-semibold text-lg flex items-center gap-2">
+                            <span className="text-xl">⚰️</span>
                             {resurrection.name}
                           </h3>
                           <Badge 
@@ -490,16 +547,38 @@ export default function DashboardPage() {
                             {resurrection.description}
                           </p>
                         )}
+                        
+                        {/* Bat-wing progress bar for quality score */}
+                        {resurrection.qualityScore && (
+                          <div className="mb-2">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-[#a78bfa] text-xs">Quality Score</span>
+                              <span className="text-[#FF6B35] text-xs font-bold">{resurrection.qualityScore}%</span>
+                            </div>
+                            <div className="relative h-2 bg-[#1a0f2e] rounded-full overflow-hidden border border-[#5b21b6]">
+                              {/* Bat-wing shaped progress */}
+                              <div 
+                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#FF6B35] to-[#8b5cf6] transition-all duration-500"
+                                style={{ 
+                                  width: `${resurrection.qualityScore}%`,
+                                  clipPath: 'polygon(0 0, 100% 0, 100% 100%, 95% 50%, 90% 100%, 85% 50%, 80% 100%, 75% 50%, 70% 100%, 65% 50%, 60% 100%, 55% 50%, 50% 100%, 45% 50%, 40% 100%, 35% 50%, 30% 100%, 25% 50%, 20% 100%, 15% 50%, 10% 100%, 5% 50%, 0 100%)'
+                                }}
+                              >
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+                              </div>
+                              {/* Bat decorations */}
+                              <div className="absolute top-0 right-0 text-xs opacity-50">🦇</div>
+                            </div>
+                          </div>
+                        )}
+                        
                         <div className="flex gap-4 text-[#a78bfa] text-sm">
-                          <span>Created: {new Date(resurrection.createdAt).toLocaleString()}</span>
+                          <span>🕰️ {new Date(resurrection.createdAt).toLocaleString()}</span>
                           {resurrection.originalLOC > 0 && (
-                            <span>• {resurrection.originalLOC.toLocaleString()} LOC</span>
+                            <span>• 📊 {resurrection.originalLOC.toLocaleString()} LOC</span>
                           )}
                           {resurrection.locSaved && resurrection.locSaved > 0 && (
-                            <span>• Saved: {resurrection.locSaved.toLocaleString()} LOC</span>
-                          )}
-                          {resurrection.qualityScore && (
-                            <span>• Quality: {resurrection.qualityScore}%</span>
+                            <span>• 💾 Saved: {resurrection.locSaved.toLocaleString()} LOC</span>
                           )}
                         </div>
                       </div>
@@ -560,62 +639,82 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Tombstone Style */}
       <div className="grid md:grid-cols-3 gap-6">
-        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 hover:border-[#8b5cf6] transition-all cursor-pointer">
+        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 hover:border-[#8b5cf6] transition-all cursor-pointer relative overflow-hidden group rounded-t-[40%] rounded-b-lg">
+          {/* Spider web corner decoration */}
+          <div className="absolute top-0 right-0 w-16 h-16 opacity-20">
+            <svg viewBox="0 0 50 50" className="w-full h-full">
+              <circle cx="40" cy="10" r="8" fill="none" stroke="#8b5cf6" strokeWidth="0.5" />
+              <circle cx="40" cy="10" r="5" fill="none" stroke="#8b5cf6" strokeWidth="0.5" />
+              <line x1="40" y1="10" x2="40" y2="2" stroke="#8b5cf6" strokeWidth="0.5" />
+              <line x1="40" y1="10" x2="48" y2="10" stroke="#8b5cf6" strokeWidth="0.5" />
+              <line x1="40" y1="10" x2="46" y2="4" stroke="#8b5cf6" strokeWidth="0.5" />
+              <line x1="40" y1="10" x2="46" y2="16" stroke="#8b5cf6" strokeWidth="0.5" />
+            </svg>
+          </div>
           <CardHeader>
-            <div className="text-4xl mb-2">📤</div>
+            <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">📤</div>
             <CardTitle className="text-[#FF6B35]">Upload ABAP</CardTitle>
           </CardHeader>
           <CardContent>
             <CardDescription className="text-[#a78bfa] mb-4">
-              Start a new resurrection by uploading ABAP files
+              Start a new resurrection by uploading ABAP files from the crypt
             </CardDescription>
             <Link href="/upload">
               <Button 
                 variant="outline"
-                className="w-full border-[#5b21b6] text-[#a78bfa]"
+                className="w-full border-[#5b21b6] text-[#a78bfa] hover:bg-[#2e1065] hover:text-[#FF6B35]"
               >
+                <span className="mr-2">🎃</span>
                 Upload Files
               </Button>
             </Link>
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 hover:border-[#8b5cf6] transition-all cursor-pointer">
+        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 hover:border-[#8b5cf6] transition-all cursor-pointer relative overflow-hidden group rounded-t-[40%] rounded-b-lg">
+          <div className="absolute top-2 left-2 text-xl opacity-20 group-hover:opacity-40 transition-opacity">
+            🦇
+          </div>
           <CardHeader>
-            <div className="text-4xl mb-2">⚰️</div>
+            <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">⚰️</div>
             <CardTitle className="text-[#FF6B35]">View All</CardTitle>
           </CardHeader>
           <CardContent>
             <CardDescription className="text-[#a78bfa] mb-4">
-              Browse all your resurrections and their status
+              Browse all your resurrections rising from the grave
             </CardDescription>
             <Link href="/resurrections">
               <Button 
                 variant="outline"
-                className="w-full border-[#5b21b6] text-[#a78bfa]"
+                className="w-full border-[#5b21b6] text-[#a78bfa] hover:bg-[#2e1065] hover:text-[#FF6B35]"
               >
+                <span className="mr-2">👻</span>
                 View Resurrections
               </Button>
             </Link>
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 hover:border-[#8b5cf6] transition-all cursor-pointer">
+        <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30 hover:border-[#8b5cf6] transition-all cursor-pointer relative overflow-hidden group rounded-t-[40%] rounded-b-lg">
+          <div className="absolute top-2 right-2 text-xl opacity-20 group-hover:opacity-40 transition-opacity">
+            🕷️
+          </div>
           <CardHeader>
-            <div className="text-4xl mb-2">📈</div>
+            <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">📈</div>
             <CardTitle className="text-[#FF6B35]">Analytics</CardTitle>
           </CardHeader>
           <CardContent>
             <CardDescription className="text-[#a78bfa] mb-4">
-              View insights and metrics across all projects
+              View insights and metrics from the spirit realm
             </CardDescription>
             <Link href="/analytics">
               <Button 
                 variant="outline"
-                className="w-full border-[#5b21b6] text-[#a78bfa]"
+                className="w-full border-[#5b21b6] text-[#a78bfa] hover:bg-[#2e1065] hover:text-[#FF6B35]"
               >
+                <span className="mr-2">🔮</span>
                 View Analytics
               </Button>
             </Link>

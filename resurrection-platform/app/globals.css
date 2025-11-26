@@ -73,6 +73,68 @@ body {
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spooky-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes ghost-float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translateY(-15px) translateX(5px);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-5px);
+    opacity: 0.9;
+  }
+  75% {
+    transform: translateY(-20px) translateX(3px);
+    opacity: 1;
+  }
+}
+
+@keyframes eerie-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 107, 53, 0.6), 0 0 50px rgba(139, 92, 246, 0.3);
+  }
+}
+
+@keyframes tombstone-rise {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
@@ -83,4 +145,68 @@ body {
 
 .animate-spin-slow {
   animation: spin-slow 3s linear infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+.animate-spooky-shake {
+  animation: spooky-shake 0.5s ease-in-out;
+}
+
+.animate-ghost-float {
+  animation: ghost-float 4s ease-in-out infinite;
+}
+
+.animate-eerie-glow {
+  animation: eerie-glow 3s ease-in-out infinite;
+}
+
+.animate-tombstone-rise {
+  animation: tombstone-rise 0.6s ease-out;
+}
+
+/* Spooky hover effects */
+.spooky-hover {
+  transition: all 0.3s ease;
+}
+
+.spooky-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.4);
+}
+
+/* Haunted border effect */
+.haunted-border {
+  position: relative;
+  border: 2px solid var(--spooky-purple-light);
+}
+
+.haunted-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(45deg, var(--pumpkin-orange), var(--spooky-purple-light), var(--pumpkin-orange));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.haunted-border:hover::before {
+  opacity: 1;
+}
+
+/* Mystical gradient text */
+.mystical-text {
+  background: linear-gradient(135deg, var(--pumpkin-orange), var(--spooky-purple-light), var(--pumpkin-orange));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
 }

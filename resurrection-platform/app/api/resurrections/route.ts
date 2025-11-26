@@ -7,38 +7,31 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, description, module, abapObjectIds, userId } = body;
+    const { name, description, module, abapCode, userId } = body;
 
     // Validation
-    if (!name || !module || !abapObjectIds || !Array.isArray(abapObjectIds) || abapObjectIds.length === 0) {
+    if (!abapCode || typeof abapCode !== 'string' || abapCode.trim().length === 0) {
       return NextResponse.json(
         { 
           error: 'Invalid request',
-          message: 'name, module, and abapObjectIds (array) are required'
+          message: 'abapCode is required and must be a non-empty string'
         },
         { status: 400 }
       );
     }
 
-    // Verify ABAP objects exist
-    const abapObjects = await prisma.aBAPObject.findMany({
-      where: {
-        id: { in: abapObjectIds }
-      }
-    });
-
-    if (abapObjects.length !== abapObjectIds.length) {
+    if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return NextResponse.json(
         { 
-          error: 'Invalid ABAP objects',
-          message: 'One or more ABAP object IDs not found'
+          error: 'Invalid request',
+          message: 'name is required and must be a non-empty string'
         },
-        { status: 404 }
+        { status: 400 }
       );
     }
 
-    // Calculate total LOC
-    const totalLOC = abapObjects.reduce((sum, obj) => sum + obj.linesOfCode, 0);
+    // Calculate lines of code
+    const linesOfCode = abapCode.split('\n').length;
 
     // Get or create default user
     let defaultUserId = userId;
@@ -61,42 +54,49 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create resurrection
+    // Create resurrection with initial workflow steps
     const resurrection = await prisma.resurrection.create({
       data: {
         name,
         description: description || null,
-        status: 'UPLOADED',
-        module,
-        originalLOC: totalLOC,
+        status: 'analyzing',
+        module: module || 'CUSTOM',
+        abapCode,
+        linesOfCode,
         userId: defaultUserId,
-        abapObjects: {
-          connect: abapObjectIds.map(id => ({ id }))
+        workflowSteps: {
+          create: [
+            { stepNumber: 1, stepName: 'ANALYZE', status: 'NOT_STARTED' },
+            { stepNumber: 2, stepName: 'PLAN', status: 'NOT_STARTED' },
+            { stepNumber: 3, stepName: 'GENERATE', status: 'NOT_STARTED' },
+            { stepNumber: 4, stepName: 'VALIDATE', status: 'NOT_STARTED' },
+            { stepNumber: 5, stepName: 'DEPLOY', status: 'NOT_STARTED' }
+          ]
         }
       },
       include: {
-        abapObjects: {
-          select: {
-            id: true,
-            name: true,
-            type: true,
-            linesOfCode: true
-          }
+        workflowSteps: {
+          orderBy: { stepNumber: 'asc' }
         }
       }
     });
 
+    // TODO: Start resurrection workflow asynchronously
+    // This will be implemented when the workflow engine is integrated
+    // For now, we just create the resurrection record
+
     return NextResponse.json({
       success: true,
       message: 'Resurrection created successfully',
+      resurrectionId: resurrection.id,
       resurrection: {
         id: resurrection.id,
         name: resurrection.name,
         description: resurrection.description,
         status: resurrection.status,
         module: resurrection.module,
-        originalLOC: resurrection.originalLOC,
-        abapObjects: resurrection.abapObjects,
+        linesOfCode: resurrection.linesOfCode,
+        workflowSteps: resurrection.workflowSteps,
         createdAt: resurrection.createdAt
       }
     }, { status: 201 });

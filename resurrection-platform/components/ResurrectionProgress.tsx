@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Workflow step types
@@ -153,106 +154,218 @@ export function ResurrectionProgress({
   const [statusMessage, setStatusMessage] = useState<string>('Initializing resurrection ritual...');
   const [elapsedTime, setElapsedTime] = useState(0);
   const [estimatedTimeRemaining, setEstimatedTimeRemaining] = useState(145); // Total estimated time in seconds
+  const [stepDurations, setStepDurations] = useState<Map<WorkflowStep, number>>(new Map());
+  const [stepStartTimes, setStepStartTimes] = useState<Map<WorkflowStep, number>>(new Map());
+  const [mcpLogs, setMcpLogs] = useState<Array<{
+    id: string;
+    serverName: string;
+    toolName: string;
+    status: 'success' | 'error';
+    timestamp: Date;
+    durationMs: number;
+  }>>([]);
+  const [showLogs, setShowLogs] = useState(false);
+  const [generatedCode, setGeneratedCode] = useState<{
+    cdsModels: Array<{ name: string; content: string }>;
+    services: Array<{ name: string; content: string }>;
+    ui5Structure: Array<{ name: string; type: string }>;
+  } | null>(null);
+  const [showCodePreview, setShowCodePreview] = useState(false);
+  const [selectedCodeTab, setSelectedCodeTab] = useState<'cds' | 'services' | 'ui5'>('cds');
 
   // Calculate progress percentage
   const currentStepIndex = WORKFLOW_STEPS.findIndex(s => s.id === currentStep);
   const progressPercentage = ((currentStepIndex + (currentStepStatus === 'COMPLETED' ? 1 : 0.5)) / WORKFLOW_STEPS.length) * 100;
 
-  // Poll for resurrection status
+  // Real-time updates using SSE
   useEffect(() => {
-    let pollInterval: NodeJS.Timeout;
+    let eventSource: EventSource | null = null;
     let timeInterval: NodeJS.Timeout;
+    let isComplete = false;
 
-    const pollStatus = async () => {
-      try {
-        const response = await fetch(`/api/resurrections/${resurrectionId}/status`);
+    const statusToStepMap: Record<string, WorkflowStep> = {
+      'ANALYZING': 'ANALYZE',
+      'PLANNING': 'PLAN',
+      'GENERATING': 'GENERATE',
+      'VALIDATING': 'VALIDATE',
+      'DEPLOYING': 'DEPLOY',
+    };
+
+    const updateStepInfo = (steps: any[], status: string) => {
+      const newStep = statusToStepMap[status];
+      if (newStep) {
+        // Track step start time
+        setStepStartTimes(prev => {
+          if (!prev.has(newStep)) {
+            const newMap = new Map(prev);
+            newMap.set(newStep, Date.now());
+            return newMap;
+          }
+          return prev;
+        });
+
+        setCurrentStep(newStep);
+        setCurrentStepStatus('IN_PROGRESS');
         
-        if (!response.ok) {
-          throw new Error('Failed to fetch resurrection status');
-        }
-
-        const data = await response.json();
-        const resurrection = data.resurrection;
+        // Update completed steps and durations
+        const completed = new Set<WorkflowStep>();
+        const durations = new Map<WorkflowStep, number>();
         
-        // Update current step based on status
-        const statusToStepMap: Record<string, WorkflowStep> = {
-          'ANALYZING': 'ANALYZE',
-          'PLANNING': 'PLAN',
-          'GENERATING': 'GENERATE',
-          'VALIDATING': 'VALIDATE',
-          'DEPLOYING': 'DEPLOY',
-        };
-
-        const newStep = statusToStepMap[resurrection.status];
-        if (newStep) {
-          setCurrentStep(newStep);
-          setCurrentStepStatus('IN_PROGRESS');
-          
-          // Update completed steps based on API response
-          const completed = new Set<WorkflowStep>();
-          for (const step of resurrection.steps) {
-            if (step.status === 'COMPLETED') {
-              completed.add(step.name as WorkflowStep);
+        for (const step of steps) {
+          if (step.status === 'COMPLETED') {
+            completed.add(step.stepName as WorkflowStep);
+            
+            // Calculate duration if we have start and end times
+            if (step.startedAt && step.completedAt) {
+              const duration = Math.floor(
+                (new Date(step.completedAt).getTime() - new Date(step.startedAt).getTime()) / 1000
+              );
+              durations.set(step.stepName as WorkflowStep, duration);
             }
           }
-          setCompletedSteps(completed);
         }
+        
+        setCompletedSteps(completed);
+        setStepDurations(durations);
 
-        // Update status message from latest log
-        if (resurrection.recentLogs && resurrection.recentLogs.length > 0) {
-          const latestLog = resurrection.recentLogs[0];
-          const stepConfig = WORKFLOW_STEPS.find(s => s.id === latestLog.step);
-          if (stepConfig) {
-            setStatusMessage(stepConfig.description);
-          }
-        } else if (newStep) {
-          const stepConfig = WORKFLOW_STEPS.find(s => s.id === newStep);
-          if (stepConfig) {
-            setStatusMessage(stepConfig.description);
-          }
+        // Update status message
+        const stepConfig = WORKFLOW_STEPS.find(s => s.id === newStep);
+        if (stepConfig) {
+          setStatusMessage(stepConfig.description);
         }
-
-        // Check if completed
-        if (resurrection.isComplete) {
-          setCurrentStepStatus('COMPLETED');
-          setCompletedSteps(new Set(WORKFLOW_STEPS.map(s => s.id)));
-          clearInterval(pollInterval);
-          clearInterval(timeInterval);
-          
-          if (onComplete) {
-            setTimeout(() => onComplete(), 2000); // Delay to show completion animation
-          }
-        }
-
-        // Check if failed
-        if (resurrection.isFailed) {
-          setCurrentStepStatus('FAILED');
-          clearInterval(pollInterval);
-          clearInterval(timeInterval);
-          
-          if (onError) {
-            const errorLog = resurrection.recentLogs?.find((log: any) => log.errorMessage);
-            onError(errorLog?.errorMessage || 'Resurrection failed');
-          }
-        }
-      } catch (error) {
-        console.error('Error polling resurrection status:', error);
       }
     };
 
-    // Start polling every 2 seconds
-    pollStatus(); // Initial poll
-    pollInterval = setInterval(pollStatus, 2000);
+    // Connect to SSE endpoint
+    try {
+      eventSource = new EventSource(`/api/resurrections/${resurrectionId}/steps?stream=true`);
+
+      eventSource.addEventListener('message', (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          
+          if (data.type === 'initial') {
+            // Initial data
+            updateStepInfo(data.steps, data.status);
+          } else if (data.type === 'update') {
+            // Real-time update
+            updateStepInfo(data.steps, data.status);
+            
+            // Check if completed
+            if (data.status === 'COMPLETED') {
+              isComplete = true;
+              setCurrentStepStatus('COMPLETED');
+              setCompletedSteps(new Set(WORKFLOW_STEPS.map(s => s.id)));
+              
+              if (onComplete) {
+                setTimeout(() => onComplete(), 2000);
+              }
+            }
+            
+            // Check if failed
+            if (data.status === 'FAILED') {
+              isComplete = true;
+              setCurrentStepStatus('FAILED');
+              
+              if (onError) {
+                onError('Resurrection failed');
+              }
+            }
+          } else if (data.type === 'complete') {
+            // Stream complete
+            eventSource?.close();
+          }
+        } catch (error) {
+          console.error('Error parsing SSE data:', error);
+        }
+      });
+
+      eventSource.addEventListener('error', (error) => {
+        console.error('SSE connection error:', error);
+        eventSource?.close();
+        
+        // Fallback to polling if SSE fails
+        if (!isComplete) {
+          console.log('Falling back to polling...');
+          // Could implement polling fallback here
+        }
+      });
+
+    } catch (error) {
+      console.error('Error setting up SSE:', error);
+    }
 
     // Update elapsed time every second
     timeInterval = setInterval(() => {
-      setElapsedTime(prev => prev + 1);
-      setEstimatedTimeRemaining(prev => Math.max(0, prev - 1));
+      if (!isComplete) {
+        setElapsedTime(prev => prev + 1);
+        setEstimatedTimeRemaining(prev => Math.max(0, prev - 1));
+      }
     }, 1000);
 
+    // Fetch MCP logs and generated code periodically
+    const fetchResurrectionData = async () => {
+      try {
+        const response = await fetch(`/api/resurrections/${resurrectionId}`);
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Update MCP logs
+          if (data.mcpLogs) {
+            setMcpLogs(data.mcpLogs.map((log: any) => ({
+              id: log.id,
+              serverName: log.serverName,
+              toolName: log.toolName,
+              status: log.error ? 'error' : 'success',
+              timestamp: new Date(log.calledAt),
+              durationMs: log.durationMs || 0,
+            })));
+          }
+
+          // Update generated code preview if available
+          if (data.generatedFiles && data.generatedFiles.length > 0) {
+            const cdsModels: Array<{ name: string; content: string }> = [];
+            const services: Array<{ name: string; content: string }> = [];
+            const ui5Structure: Array<{ name: string; type: string }> = [];
+
+            data.generatedFiles.forEach((file: any) => {
+              if (file.path.includes('/db/') && file.path.endsWith('.cds')) {
+                cdsModels.push({
+                  name: file.path.split('/').pop() || 'schema.cds',
+                  content: file.content || '// CDS model content',
+                });
+              } else if (file.path.includes('/srv/') && (file.path.endsWith('.cds') || file.path.endsWith('.js'))) {
+                services.push({
+                  name: file.path.split('/').pop() || 'service',
+                  content: file.content || '// Service content',
+                });
+              } else if (file.path.includes('/app/')) {
+                ui5Structure.push({
+                  name: file.path.split('/app/')[1] || file.path,
+                  type: file.path.endsWith('.xml') ? 'view' : 
+                        file.path.endsWith('.js') ? 'controller' : 
+                        file.path.endsWith('.json') ? 'manifest' : 'file',
+                });
+              }
+            });
+
+            if (cdsModels.length > 0 || services.length > 0 || ui5Structure.length > 0) {
+              setGeneratedCode({ cdsModels, services, ui5Structure });
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching resurrection data:', error);
+      }
+    };
+
+    fetchResurrectionData(); // Initial fetch
+    const dataInterval = setInterval(fetchResurrectionData, 3000); // Fetch every 3 seconds
+
     return () => {
-      clearInterval(pollInterval);
+      eventSource?.close();
       clearInterval(timeInterval);
+      clearInterval(dataInterval);
     };
   }, [resurrectionId, onComplete, onError]);
 
@@ -270,6 +383,14 @@ export function ResurrectionProgress({
       <FloatingGhost delay={1} />
       <FloatingGhost delay={2} />
       <FloatingGhost delay={3} />
+
+      {/* Spider web decorations in corners */}
+      <div className="absolute top-0 left-0 text-6xl opacity-20 pointer-events-none">
+        🕸️
+      </div>
+      <div className="absolute top-0 right-0 text-6xl opacity-20 pointer-events-none transform scale-x-[-1]">
+        🕸️
+      </div>
 
       {/* Fog effect */}
       <motion.div
@@ -333,7 +454,21 @@ export function ResurrectionProgress({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <div className="flex items-center gap-4">
+                    {/* Tombstone-shaped card */}
+                    <div 
+                      className={`
+                        flex items-center gap-4 p-4 rounded-t-3xl rounded-b-lg
+                        border-2 transition-all duration-300
+                        ${isCompleted 
+                          ? 'border-[#10B981] bg-gradient-to-b from-[#10B981]/10 to-[#1a0f2e] shadow-[0_0_20px_rgba(16,185,129,0.3)]' 
+                          : isCurrent
+                          ? 'border-[#FF6B35] bg-gradient-to-b from-[#FF6B35]/10 to-[#2e1065] shadow-[0_0_30px_rgba(255,107,53,0.4)]'
+                          : isFailed
+                          ? 'border-[#dc2626] bg-gradient-to-b from-[#dc2626]/10 to-[#1a0f2e] shadow-[0_0_20px_rgba(220,38,38,0.3)]'
+                          : 'border-[#5b21b6]/50 bg-gradient-to-b from-[#2e1065]/30 to-[#1a0f2e]'
+                        }
+                      `}
+                    >
                       {/* Step icon */}
                       <motion.div
                         className={`
@@ -406,17 +541,56 @@ export function ResurrectionProgress({
                         )}
                       </div>
 
-                      {/* Estimated time */}
+                      {/* Duration / Estimated time */}
                       <div className="text-right flex-shrink-0">
-                        <p className="text-sm text-[#6B7280]">
-                          ~{step.estimatedTime}s
-                        </p>
+                        {isCompleted && stepDurations.has(step.id) ? (
+                          <div>
+                            <p className="text-sm text-[#10B981] font-semibold">
+                              {stepDurations.get(step.id)}s
+                            </p>
+                            <p className="text-xs text-[#6B7280]">
+                              (est. {step.estimatedTime}s)
+                            </p>
+                          </div>
+                        ) : isCurrent && stepStartTimes.has(step.id) ? (
+                          <div>
+                            <p className="text-sm text-[#FF6B35] font-semibold animate-pulse">
+                              {Math.floor((Date.now() - stepStartTimes.get(step.id)!) / 1000)}s
+                            </p>
+                            <p className="text-xs text-[#6B7280]">
+                              (est. {step.estimatedTime}s)
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-[#6B7280]">
+                            ~{step.estimatedTime}s
+                          </p>
+                        )}
                       </div>
+
+                      {/* Small tombstone marker at top */}
+                      {isCurrent && (
+                        <motion.div
+                          className="absolute -top-2 left-1/2 transform -translate-x-1/2 text-2xl"
+                          animate={{
+                            y: [-5, 5, -5],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                          }}
+                        >
+                          ⚰️
+                        </motion.div>
+                      )}
                     </div>
 
-                    {/* Connector line */}
+                    {/* Connector line - spider web style */}
                     {index < WORKFLOW_STEPS.length - 1 && (
-                      <div className="ml-8 h-8 w-0.5 bg-[#5b21b6] my-2" />
+                      <div className="ml-8 h-8 w-0.5 bg-gradient-to-b from-[#5b21b6] to-[#5b21b6]/30 my-2 relative">
+                        <div className="absolute top-1/2 left-0 w-4 h-0.5 bg-[#5b21b6]/30" />
+                      </div>
                     )}
                   </motion.div>
                 );
@@ -451,6 +625,234 @@ export function ResurrectionProgress({
             </div>
           </CardContent>
         </Card>
+
+        {/* Generated Code Preview */}
+        {generatedCode && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mb-8"
+          >
+            <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-[#FF6B35] text-xl flex items-center gap-2">
+                    <span></span> Generated Code Preview
+                  </CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowCodePreview(!showCodePreview)}
+                    className="border-[#5b21b6] text-[#a78bfa] hover:bg-[#2e1065]/50"
+                  >
+                    {showCodePreview ? 'Hide Preview' : 'Show Preview'}
+                  </Button>
+                </div>
+                <CardDescription className="text-[#a78bfa]">
+                  CDS models, services, and UI5 application structure
+                </CardDescription>
+              </CardHeader>
+              {showCodePreview && (
+                <CardContent>
+                  {/* Tab Navigation */}
+                  <div className="flex gap-2 mb-4 border-b border-[#5b21b6] pb-2">
+                    <button
+                      onClick={() => setSelectedCodeTab('cds')}
+                      className={`
+                        px-4 py-2 rounded-t-lg transition-all
+                        ${selectedCodeTab === 'cds'
+                          ? 'bg-[#FF6B35] text-[#F7F7FF]'
+                          : 'bg-[#1a0f2e] text-[#a78bfa] hover:bg-[#2e1065]'
+                        }
+                      `}
+                    >
+                      CDS Models ({generatedCode.cdsModels.length})
+                    </button>
+                    <button
+                      onClick={() => setSelectedCodeTab('services')}
+                      className={`
+                        px-4 py-2 rounded-t-lg transition-all
+                        ${selectedCodeTab === 'services'
+                          ? 'bg-[#FF6B35] text-[#F7F7FF]'
+                          : 'bg-[#1a0f2e] text-[#a78bfa] hover:bg-[#2e1065]'
+                        }
+                      `}
+                    >
+                      Services ({generatedCode.services.length})
+                    </button>
+                    <button
+                      onClick={() => setSelectedCodeTab('ui5')}
+                      className={`
+                        px-4 py-2 rounded-t-lg transition-all
+                        ${selectedCodeTab === 'ui5'
+                          ? 'bg-[#FF6B35] text-[#F7F7FF]'
+                          : 'bg-[#1a0f2e] text-[#a78bfa] hover:bg-[#2e1065]'
+                        }
+                      `}
+                    >
+                      UI5 App ({generatedCode.ui5Structure.length})
+                    </button>
+                  </div>
+
+                  {/* Tab Content */}
+                  <div className="max-h-96 overflow-y-auto">
+                    {selectedCodeTab === 'cds' && (
+                      <div className="space-y-4">
+                        {generatedCode.cdsModels.length > 0 ? (
+                          generatedCode.cdsModels.map((model, index) => (
+                            <div key={index} className="bg-[#1a0f2e] border border-[#5b21b6] rounded-lg p-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-lg">📄</span>
+                                <h4 className="text-[#F7F7FF] font-semibold">{model.name}</h4>
+                              </div>
+                              <pre className="text-xs text-[#a78bfa] overflow-x-auto bg-[#0a0a0f] p-3 rounded border border-[#5b21b6]/30">
+                                <code>{model.content.slice(0, 500)}{model.content.length > 500 ? '...' : ''}</code>
+                              </pre>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-[#6B7280] text-center py-8">
+                            CDS models will appear here once generated...
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {selectedCodeTab === 'services' && (
+                      <div className="space-y-4">
+                        {generatedCode.services.length > 0 ? (
+                          generatedCode.services.map((service, index) => (
+                            <div key={index} className="bg-[#1a0f2e] border border-[#5b21b6] rounded-lg p-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-lg">⚙️</span>
+                                <h4 className="text-[#F7F7FF] font-semibold">{service.name}</h4>
+                              </div>
+                              <pre className="text-xs text-[#a78bfa] overflow-x-auto bg-[#0a0a0f] p-3 rounded border border-[#5b21b6]/30">
+                                <code>{service.content.slice(0, 500)}{service.content.length > 500 ? '...' : ''}</code>
+                              </pre>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-[#6B7280] text-center py-8">
+                            Service definitions will appear here once generated...
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {selectedCodeTab === 'ui5' && (
+                      <div className="space-y-2">
+                        {generatedCode.ui5Structure.length > 0 ? (
+                          generatedCode.ui5Structure.map((file, index) => (
+                            <div key={index} className="bg-[#1a0f2e] border border-[#5b21b6] rounded-lg p-3 flex items-center gap-3">
+                              <span className="text-2xl">
+                                {file.type === 'view' ? '👁️' : 
+                                 file.type === 'controller' ? '🎮' : 
+                                 file.type === 'manifest' ? '📋' : '📄'}
+                              </span>
+                              <div className="flex-1">
+                                <p className="text-[#F7F7FF] font-mono text-sm">{file.name}</p>
+                                <Badge 
+                                  variant="outline" 
+                                  className="border-[#8b5cf6] text-[#a78bfa] text-xs mt-1"
+                                >
+                                  {file.type}
+                                </Badge>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-[#6B7280] text-center py-8">
+                            UI5 application structure will appear here once generated...
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          </motion.div>
+        )}
+
+        {/* MCP Call Logs */}
+        {mcpLogs.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mb-8"
+          >
+            <Card className="border-2 border-[#5b21b6] bg-[#2e1065]/30">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-[#FF6B35] text-xl flex items-center gap-2">
+                    <span>🔧</span>
+                    MCP Server Activity
+                  </CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowLogs(!showLogs)}
+                    className="border-[#5b21b6] text-[#a78bfa] hover:bg-[#2e1065]/50"
+                  >
+                    {showLogs ? 'Hide Logs' : 'Show Logs'}
+                  </Button>
+                </div>
+                <CardDescription className="text-[#a78bfa]">
+                  Real-time MCP server calls and responses
+                </CardDescription>
+              </CardHeader>
+              {showLogs && (
+                <CardContent>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {mcpLogs.slice().reverse().map((log) => (
+                      <motion.div
+                        key={log.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className={`
+                          p-3 rounded-lg border flex items-start gap-3
+                          ${log.status === 'success' 
+                            ? 'bg-[#1a0f2e] border-[#10B981]/30' 
+                            : 'bg-[#1a0f2e] border-[#dc2626]/30'
+                          }
+                        `}
+                      >
+                        <span className="text-2xl flex-shrink-0">
+                          {log.status === 'success' ? '✅' : '❌'}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Badge 
+                              variant="outline" 
+                              className="border-[#8b5cf6] text-[#a78bfa] text-xs"
+                            >
+                              {log.serverName}
+                            </Badge>
+                            <span className="text-sm text-[#F7F7FF] font-mono">
+                              {log.toolName}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-xs text-[#6B7280]">
+                            <span>
+                              {log.timestamp.toLocaleTimeString()}
+                            </span>
+                            <span>•</span>
+                            <span>
+                              {log.durationMs}ms
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          </motion.div>
+        )}
 
         {/* Fun facts / tips */}
         <motion.div

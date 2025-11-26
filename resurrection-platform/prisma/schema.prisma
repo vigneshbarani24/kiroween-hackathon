@@ -55,8 +55,11 @@ model Resurrection {
   id                   String                  @id @default(uuid())
   name                 String
   description          String?
-  status               String                  // UPLOADED, ANALYZING, ANALYZED, TRANSFORMING, TRANSFORMED, DEPLOYED, FAILED
+  status               String                  // analyzing, planning, generating, validating, deploying, completed, failed
   module               String
+  abapCode             String?                 @db.Text
+  abapAnalysis         Json?
+  transformationPlan   Json?
   
   // GitHub integration
   githubRepo           String?
@@ -74,12 +77,17 @@ model Resurrection {
   locSaved             Int?
   complexityScore      Float?
   qualityScore         Float?
+  linesOfCode          Int?
+  complexity           Int?
+  completedAt          DateTime?
   
   // Relationships
   userId               String
   user                 User                    @relation(fields: [userId], references: [id])
   abapObjects          ABAPObject[]
   transformationLogs   TransformationLog[]
+  workflowSteps        WorkflowStep[]
+  mcpLogs              MCPLog[]
   qualityReports       QualityReport[]
   hookExecutions       HookExecution[]
   slackNotifications   SlackNotification[]
@@ -109,6 +117,44 @@ model TransformationLog {
   createdAt      DateTime     @default(now())
   
   @@index([resurrectionId])
+}
+
+model WorkflowStep {
+  id             String       @id @default(uuid())
+  resurrectionId String
+  resurrection   Resurrection @relation(fields: [resurrectionId], references: [id], onDelete: Cascade)
+  
+  stepNumber     Int          // 1-5
+  stepName       String       // ANALYZE, PLAN, GENERATE, VALIDATE, DEPLOY
+  status         String       // NOT_STARTED, IN_PROGRESS, COMPLETED, FAILED
+  startedAt      DateTime?
+  completedAt    DateTime?
+  output         Json?
+  error          String?      @db.Text
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@index([resurrectionId])
+  @@index([status])
+}
+
+model MCPLog {
+  id             String       @id @default(uuid())
+  resurrectionId String?
+  resurrection   Resurrection? @relation(fields: [resurrectionId], references: [id], onDelete: Cascade)
+  
+  serverName     String       // abap-analyzer, sap-cap, sap-ui5, github, slack
+  toolName       String       // analyzeCode, createRepository, etc.
+  params         Json?
+  response       Json?
+  error          String?      @db.Text
+  durationMs     Int?
+  calledAt       DateTime     @default(now())
+  
+  @@index([resurrectionId])
+  @@index([serverName])
+  @@index([calledAt])
 }
 
 model QualityReport {

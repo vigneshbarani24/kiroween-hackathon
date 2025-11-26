@@ -26,7 +26,7 @@ export default function Home() {
               <Link href="/docs">
                 <Button variant="ghost">Documentation</Button>
               </Link>
-              <Link href="/upload">
+              <Link href="/resurrections/new">
                 <Button className="bg-blue-600 hover:bg-blue-700">
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -57,7 +57,7 @@ export default function Home() {
           </p>
           
           <div className="flex gap-4 justify-center">
-            <Link href="/upload">
+            <Link href="/resurrections/new">
               <Button 
                 size="lg"
                 className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-6"
@@ -241,7 +241,7 @@ export default function Home() {
             <p className="text-xl text-[#a78bfa] mb-8">
               Join the modernization revolution. Transform legacy code into Clean Core applications.
             </p>
-            <Link href="/upload">
+            <Link href="/resurrections/new">
               <Button 
                 size="lg"
                 className="bg-[#FF6B35] hover:bg-[#E85A2A] text-[#F7F7FF] text-xl px-12 py-8 shadow-[0_0_30px_rgba(255,107,53,0.5)]"

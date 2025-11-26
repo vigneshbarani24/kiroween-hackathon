@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils';
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: '📊' },
   { name: 'Resurrections', href: '/resurrections', icon: '⚰️' },
-  { name: 'Upload ABAP', href: '/upload', icon: '📤' },
+  { name: 'New Resurrection', href: '/resurrections/new', icon: '🎃' },
   { name: 'Intelligence', href: '/intelligence', icon: '🔮' },
-  { name: 'Analytics', href: '/analytics', icon: '📈' },
-  { name: 'Settings', href: '/settings', icon: '⚙️' },
+  { name: 'Hooks', href: '/hooks', icon: '🪝' },
+  { name: 'MCP Logs', href: '/mcp-logs', icon: '📝' },
 ];
 
 export function AppSidebar() {
