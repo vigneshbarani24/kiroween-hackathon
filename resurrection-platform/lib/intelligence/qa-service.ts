@@ -8,7 +8,7 @@
  */
 
 import OpenAI from 'openai';
-import { VectorSearchService } from './vectorSearch';
+import { VectorSearchService } from './vector-search';
 
 interface QAResponse {
   question: string;
@@ -99,7 +99,8 @@ ${match.metadata.documentation}
       };
     } catch (error) {
       console.error('Error answering question:', error);
-      throw new Error(`Failed to answer question: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to answer question: ${errorMessage}`);
     }
   }
   
@@ -153,9 +154,10 @@ ${question}
         await new Promise(resolve => setTimeout(resolve, 1000));
       } catch (error) {
         console.error(`Failed to answer: ${question}`, error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
         results.push({
           question,
-          answer: `Error: ${error.message}`,
+          answer: `Error: ${errorMessage}`,
           sources: [],
           confidence: 'low'
         });

@@ -1,0 +1,28 @@
+namespace resurrection.db;
+
+using { cuid, managed } from '@sap/cds/common';
+
+CDS
+entity VBAK {
+  key vbeln : String(10);  // Sales Document Number
+  erdat : Date;            // Created On
+  auart : String(4);       // Sales Document Type
+  kunnr : String(10);      // Sold-to Party
+  netwr : Decimal(15,2);   // Net Value
+  vkorg : String(4);       // Sales Organization
+  vdatu : Date;            // Requested Delivery Date
+}
+
+entity VBAP {
+  key vbeln : String(10);  // Sales Document Number
+  key posnr : String(6);   // Sales Document Item
+  matnr : String(18);      // Material Number
+  arktx : String(40);      // Short Text
+  netwr : Decimal(15,2);   // Net Value
+  lfimg : Decimal(13,3);   // Delivered Quantity in Sales Units
+  vrkme : String(3);       // Sales Unit
+}
+
+// Business logic preserved from ABAP:
+// Filter sales orders of type 'OR'
+// Categorize sales orders based on net value

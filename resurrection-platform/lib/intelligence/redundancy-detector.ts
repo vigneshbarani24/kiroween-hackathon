@@ -11,46 +11,59 @@
 
 import OpenAI from 'openai';
 
-interface ABAPFile {
+export interface ABAPObject {
   id: string;
   name: string;
   content: string;
   type: string;
   module: string;
   linesOfCode: number;
+  metadata?: Record<string, any>;
 }
 
-interface Redundancy {
-  file1: ABAPFile;
-  file2: ABAPFile;
+export interface Redundancy {
+  file1: ABAPObject;
+  file2: ABAPObject;
   similarity: number;
   recommendation: string;
   potentialSavings: {
     linesOfCode: number;
-    effort: string;
+    effort: 'Low' | 'Medium' | 'High';
   };
 }
 
-interface RedundancyCluster {
-  files: ABAPFile[];
+export interface RedundancyCluster {
+  files: ABAPObject[];
   averageSimilarity: number;
   recommendation: string;
+}
+
+export interface RedundancyStatistics {
+  totalRedundancies: number;
+  highSimilarity: number;
+  mediumSimilarity: number;
+  totalPotentialSavings: number;
+  byModule: Record<string, number>;
+  byType: Record<string, number>;
 }
 
 export class RedundancyDetector {
   private openai: OpenAI;
   private similarityThreshold = 0.85;
   
-  constructor() {
+  constructor(threshold?: number) {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY!
     });
+    if (threshold !== undefined) {
+      this.similarityThreshold = threshold;
+    }
   }
   
   /**
    * Find all duplicate and similar code
    */
-  async findRedundancies(files: ABAPFile[]): Promise<Redundancy[]> {
+  async findRedundancies(files: ABAPObject[]): Promise<Redundancy[]> {
     console.log(`🔍 Analyzing ${files.length} files for redundancies...`);
     
     const redundancies: Redundancy[] = [];
@@ -95,9 +108,9 @@ export class RedundancyDetector {
    * Generate embeddings for all files
    */
   private async generateEmbeddings(
-    files: ABAPFile[]
-  ): Promise<Array<{ file: ABAPFile; embedding: number[] }>> {
-    const results: Array<{ file: ABAPFile; embedding: number[] }> = [];
+    files: ABAPObject[]
+  ): Promise<Array<{ file: ABAPObject; embedding: number[] }>> {
+    const results: Array<{ file: ABAPObject; embedding: number[] }> = [];
     
     // Process in batches to avoid rate limits
     const batchSize = 10;
@@ -149,8 +162,8 @@ export class RedundancyDetector {
    * Generate consolidation recommendation
    */
   private async generateRecommendation(
-    file1: ABAPFile,
-    file2: ABAPFile,
+    file1: ABAPObject,
+    file2: ABAPObject,
     similarity: number
   ): Promise<string> {
     const prompt = `
@@ -189,9 +202,9 @@ Keep it under 100 words.
   /**
    * Calculate potential savings from consolidation
    */
-  private calculateSavings(file1: ABAPFile, file2: ABAPFile): {
+  private calculateSavings(file1: ABAPObject, file2: ABAPObject): {
     linesOfCode: number;
-    effort: string;
+    effort: 'Low' | 'Medium' | 'High';
   } {
     // Estimate: can save ~60% of smaller file's LOC
     const smallerLOC = Math.min(file1.linesOfCode, file2.linesOfCode);
@@ -199,7 +212,7 @@ Keep it under 100 words.
     
     // Estimate effort based on total LOC
     const totalLOC = file1.linesOfCode + file2.linesOfCode;
-    let effort = 'Low';
+    let effort: 'Low' | 'Medium' | 'High' = 'Low';
     if (totalLOC > 500) effort = 'High';
     else if (totalLOC > 200) effort = 'Medium';
     
@@ -212,7 +225,7 @@ Keep it under 100 words.
   /**
    * Find clusters of similar files
    */
-  async findClusters(files: ABAPFile[]): Promise<RedundancyCluster[]> {
+  async findClusters(files: ABAPObject[]): Promise<RedundancyCluster[]> {
     const redundancies = await this.findRedundancies(files);
     
     // Build clusters using simple grouping
@@ -253,14 +266,7 @@ Keep it under 100 words.
   /**
    * Get redundancy statistics
    */
-  getStatistics(redundancies: Redundancy[]): {
-    totalRedundancies: number;
-    highSimilarity: number;
-    mediumSimilarity: number;
-    totalPotentialSavings: number;
-    byModule: Record<string, number>;
-    byType: Record<string, number>;
-  } {
+  getStatistics(redundancies: Redundancy[]): RedundancyStatistics {
     const high = redundancies.filter(r => r.similarity >= 0.95).length;
     const medium = redundancies.filter(r => r.similarity >= 0.85 && r.similarity < 0.95).length;
     

@@ -19,14 +19,15 @@ const hookManager = new HookManager(mcpOrchestrator);
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { deploymentUrl, status } = await request.json();
 
     // Get resurrection
     const resurrection = await prisma.resurrection.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!resurrection) {
@@ -38,7 +39,7 @@ export async function POST(
 
     // Update resurrection with deployment info
     await prisma.resurrection.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         deploymentUrl,
         deploymentStatus: status
@@ -48,7 +49,7 @@ export async function POST(
     // Trigger appropriate hook based on deployment status
     if (status === 'SUCCESS') {
       await hookManager.trigger('deployment.succeeded', {
-        resurrectionId: params.id,
+        resurrectionId: id,
         resurrection: {
           ...resurrection,
           deploymentUrl
@@ -61,7 +62,7 @@ export async function POST(
       });
     } else if (status === 'FAILED') {
       await hookManager.trigger('deployment.failed', {
-        resurrectionId: params.id,
+        resurrectionId: id,
         resurrection,
         deployment: {
           status: 'FAILED',

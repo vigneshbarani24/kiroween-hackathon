@@ -13,7 +13,7 @@ export interface FitToStandardRecommendation {
   abapObjectId: string;
   abapObjectName: string;
   standardAlternative: string;
-  standardType: 'BAPI' | 'TRANSACTION' | 'PATTERN' | 'API';
+  standardType: 'BAPI' | 'TRANSACTION' | 'PATTERN' | 'API' | 'TABLE';
   confidence: number;
   description: string;
   benefits: string[];

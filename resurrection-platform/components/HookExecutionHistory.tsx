@@ -82,7 +82,7 @@ export function HookExecutionHistory({ resurrectionId }: HookExecutionHistoryPro
 
   if (loading) {
     return (
-      <Card variant="tombstone">
+      <Card>
         <CardContent className="p-8 text-center">
           <span className="text-4xl animate-pulse">👻</span>
           <p className="mt-2 text-ghost-white/70">Loading hook history...</p>
@@ -93,7 +93,7 @@ export function HookExecutionHistory({ resurrectionId }: HookExecutionHistoryPro
 
   if (executions.length === 0) {
     return (
-      <Card variant="tombstone">
+      <Card>
         <CardContent className="p-8 text-center">
           <span className="text-6xl">🪦</span>
           <p className="mt-4 text-ghost-white/70">
@@ -114,7 +114,6 @@ export function HookExecutionHistory({ resurrectionId }: HookExecutionHistoryPro
         {executions.map((execution) => (
           <Card
             key={execution.id}
-            variant="tombstone"
             className="hover:shadow-purple-glow transition-shadow"
           >
             <CardHeader className="pb-3">

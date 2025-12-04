@@ -263,7 +263,7 @@ Generate Node.js service code with:
           cleanCoreCompliant: true,
           businessLogicPreserved: true,
           testCoverage: 80,
-          issues: null,
+          issues: undefined,
           recommendations: [
             'Consider adding more unit tests',
             'Review error handling patterns',

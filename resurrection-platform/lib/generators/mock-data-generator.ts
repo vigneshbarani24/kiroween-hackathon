@@ -4,7 +4,7 @@
  * Generates realistic CSV data for db/data/ folder using MCP + AI
  */
 
-import { CDSEntity, MockDataConfig, MockDataRecord, CSVFiles } from './types';
+import { CDSEntity, CDSField, MockDataConfig, MockDataRecord, CSVFiles } from './types';
 
 export class MockDataGenerator {
   private llmService: any;

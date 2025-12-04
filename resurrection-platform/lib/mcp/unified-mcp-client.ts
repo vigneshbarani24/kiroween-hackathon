@@ -230,33 +230,33 @@ export class UnifiedMCPClient {
 
       // Initialize orchestrator with all servers
       const orchestratorConfig: MCPOrchestratorConfig = {
-        servers: {
-          ...mcpConfig,
-          'knowledge-mcp': {
+        servers: [
+          ...Object.values(mcpConfig),
+          {
+            name: 'knowledge-mcp',
             command: 'npx',
-            args: ['ts-node', 'lib/mcp/servers/knowledge-mcp.ts'],
-            env: { ...process.env },
-            autoApprove: []
+            args: ['tsx', 'lib/mcp/servers/knowledge-mcp.ts'],
+            env: { ...process.env }
           },
-          'database-mcp': {
+          {
+            name: 'database-mcp',
             command: 'npx',
-            args: ['ts-node', 'lib/mcp/servers/database-mcp.ts'],
-            env: { ...process.env },
-            autoApprove: []
+            args: ['tsx', 'lib/mcp/servers/database-mcp.ts'],
+            env: { ...process.env }
           },
-          'playwright-mcp': {
+          {
+            name: 'playwright-mcp',
             command: 'npx',
-            args: ['ts-node', 'lib/mcp/servers/playwright-mcp.ts'],
-            env: { ...process.env },
-            autoApprove: []
+            args: ['tsx', 'lib/mcp/servers/playwright-mcp.ts'],
+            env: { ...process.env }
           },
-          'odata-bridge-mcp': {
+          {
+            name: 'odata-bridge-mcp',
             command: 'npx',
-            args: ['ts-node', 'lib/mcp/servers/odata-bridge-mcp.ts'],
-            env: { ...process.env },
-            autoApprove: []
+            args: ['tsx', 'lib/mcp/servers/odata-bridge-mcp.ts'],
+            env: { ...process.env }
           }
-        },
+        ],
         autoConnect: this.config.autoConnect,
         healthCheckInterval: this.config.healthCheckInterval
       };
@@ -320,41 +320,41 @@ export class UnifiedMCPClient {
   /**
    * Load MCP configuration from .kiro/settings/mcp.json
    */
-  private async loadMCPConfig(): Promise<any[]> {
+  private async loadMCPConfig(): Promise<Record<string, any>> {
     // In a real implementation, this would read from .kiro/settings/mcp.json
-    // For now, return the configuration directly
-    return [
-      {
+    // For now, return the configuration directly as a map
+    return {
+      'abap-analyzer': {
         name: 'abap-analyzer',
         command: 'python',
         args: ['.kiro/mcp/abap-analyzer.py'],
         env: { PYTHONUNBUFFERED: '1' }
       },
-      {
+      'sap-cap': {
         name: 'sap-cap',
         command: 'npx',
         args: ['-y', '@cap-js/mcp-server'],
         env: { NODE_ENV: 'production' }
       },
-      {
+      'sap-ui5': {
         name: 'sap-ui5',
         command: 'npx',
         args: ['-y', '@ui5/mcp-server'],
         env: { NODE_ENV: 'production' }
       },
-      {
+      'github': {
         name: 'github',
         command: 'uvx',
         args: ['mcp-server-github'],
         env: { GITHUB_PERSONAL_ACCESS_TOKEN: this.config.githubToken || '' }
       },
-      {
+      'slack': {
         name: 'slack',
         command: 'uvx',
         args: ['slack-mcp-server'],
         env: { SLACK_BOT_TOKEN: this.config.slackBotToken || '' }
       }
-    ];
+    };
   }
 
   /**

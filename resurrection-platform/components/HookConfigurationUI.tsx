@@ -145,7 +145,7 @@ export function HookConfigurationUI() {
         </div>
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="spectral" onClick={() => setSelectedHook(null)}>
+            <Button variant="default" onClick={() => setSelectedHook(null)}>
               <span className="mr-2">✨</span>
               Create Hook
             </Button>
@@ -177,7 +177,6 @@ export function HookConfigurationUI() {
         {hooks.map((hook) => (
           <Card
             key={hook.id}
-            variant="tombstone"
             className="relative overflow-hidden hover:shadow-purple-glow transition-shadow"
           >
             <CardHeader>
@@ -246,7 +245,7 @@ export function HookConfigurationUI() {
       </div>
 
       {hooks.length === 0 && (
-        <Card variant="tombstone" className="p-8 text-center">
+        <Card className="p-8 text-center">
           <span className="text-6xl">🪦</span>
           <p className="mt-4 text-ghost-white/70">
             No hooks configured yet. Create your first hook to automate your resurrection workflow!
@@ -336,7 +335,7 @@ function HookForm({ hook, onSave, onCancel }: HookFormProps) {
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" variant="spectral">
+        <Button type="submit" variant="default">
           <span className="mr-2">💾</span>
           Save Hook
         </Button>

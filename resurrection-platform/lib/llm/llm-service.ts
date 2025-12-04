@@ -207,7 +207,7 @@ Generate the transformation plan now:`;
   /**
    * Call OpenAI API with the transformation prompt
    */
-  private async callOpenAI(prompt: string): Promise<string> {
+  public async callOpenAI(prompt: string): Promise<string> {
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {

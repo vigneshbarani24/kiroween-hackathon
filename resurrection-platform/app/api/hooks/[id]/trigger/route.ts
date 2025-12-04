@@ -10,16 +10,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { HookManager } from '@/lib/hooks/hook-manager';
 import { MCPOrchestrator } from '@/lib/mcp/orchestrator';
 
-const mcpOrchestrator = new MCPOrchestrator();
+const mcpOrchestrator = new MCPOrchestrator({
+  servers: []
+});
 const hookManager = new HookManager(mcpOrchestrator);
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const context = await request.json();
-    const hook = await hookManager.getHook(params.id);
+    const hook = await hookManager.getHook(id);
 
     if (!hook) {
       return NextResponse.json(

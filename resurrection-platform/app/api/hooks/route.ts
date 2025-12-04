@@ -11,7 +11,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { HookManager } from '@/lib/hooks/hook-manager';
 import { MCPOrchestrator } from '@/lib/mcp/orchestrator';
 
-const mcpOrchestrator = new MCPOrchestrator();
+const mcpOrchestrator = new MCPOrchestrator({
+  servers: []
+});
 const hookManager = new HookManager(mcpOrchestrator);
 
 export async function GET(request: NextRequest) {

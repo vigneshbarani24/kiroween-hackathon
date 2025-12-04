@@ -12,15 +12,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { HookManager } from '@/lib/hooks/hook-manager';
 import { MCPOrchestrator } from '@/lib/mcp/orchestrator';
 
-const mcpOrchestrator = new MCPOrchestrator();
+const mcpOrchestrator = new MCPOrchestrator({
+  servers: []
+});
 const hookManager = new HookManager(mcpOrchestrator);
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const hook = await hookManager.getHook(params.id);
+    const { id } = await params;
+    const hook = await hookManager.getHook(id);
 
     if (!hook) {
       return NextResponse.json(
@@ -41,11 +44,12 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const updates = await request.json();
-    const existingHook = await hookManager.getHook(params.id);
+    const existingHook = await hookManager.getHook(id);
 
     if (!existingHook) {
       return NextResponse.json(
@@ -69,10 +73,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await hookManager.deleteHook(params.id);
+    const { id } = await params;
+    await hookManager.deleteHook(id);
 
     return NextResponse.json({ success: true });
   } catch (error) {

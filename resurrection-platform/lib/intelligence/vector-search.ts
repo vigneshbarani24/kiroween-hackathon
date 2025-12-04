@@ -144,7 +144,7 @@ export class VectorSearchService {
       return results.matches.map(match => ({
         id: match.id,
         score: match.score || 0,
-        metadata: match.metadata as IndexMetadata
+        metadata: match.metadata as unknown as IndexMetadata
       }));
     } catch (error) {
       console.error('Error searching:', error);
@@ -187,7 +187,7 @@ export class VectorSearchService {
       return results.matches.map(match => ({
         id: match.id,
         score: match.score || 0,
-        metadata: match.metadata as IndexMetadata
+        metadata: match.metadata as unknown as IndexMetadata
       }));
     } catch (error) {
       console.error('Error searching with filter:', error);

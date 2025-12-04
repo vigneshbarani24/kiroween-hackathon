@@ -33,7 +33,12 @@ export class KiroSpecGenerator {
   private llmService: LLMService;
 
   constructor() {
-    this.llmService = new LLMService();
+    this.llmService = new LLMService({
+      apiKey: process.env.OPENAI_API_KEY || '',
+      model: 'gpt-4-turbo-preview',
+      temperature: 0.3,
+      maxTokens: 4000
+    });
   }
 
   /**
@@ -108,10 +113,7 @@ IMPORTANT:
 
 Generate the complete requirements document now:`;
 
-    const response = await this.llmService.generateText(prompt, {
-      temperature: 0.3,
-      maxTokens: 3000,
-    });
+    const response = await this.llmService.callOpenAI(prompt);
 
     return response;
   }
@@ -203,10 +205,7 @@ IMPORTANT:
 
 Generate the complete design document now:`;
 
-    const response = await this.llmService.generateText(prompt, {
-      temperature: 0.3,
-      maxTokens: 4000,
-    });
+    const response = await this.llmService.callOpenAI(prompt);
 
     return response;
   }
@@ -291,10 +290,7 @@ IMPORTANT:
 
 Generate the complete tasks document now:`;
 
-    const response = await this.llmService.generateText(prompt, {
-      temperature: 0.3,
-      maxTokens: 3000,
-    });
+    const response = await this.llmService.callOpenAI(prompt);
 
     return response;
   }

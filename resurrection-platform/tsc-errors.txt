@@ -1,0 +1,22 @@
+﻿lib/specs/kiro-spec-generator.ts(36,23): error TS2554: Expected 1 arguments, but got 0.
+lib/specs/kiro-spec-generator.ts(111,44): error TS2339: Property 'generateText' does not exist on type 'LLMService'.
+lib/specs/kiro-spec-generator.ts(206,44): error TS2339: Property 'generateText' does not exist on type 'LLMService'.
+lib/specs/kiro-spec-generator.ts(294,44): error TS2339: Property 'generateText' does not exist on type 'LLMService'.
+lib/workflow/hybrid-workflow.ts(149,11): error TS2322: Type '{ [key: string]: string | undefined; NODE_ENV: "development" | "production" | "test"; TZ?: string | undefined; }' is not assignable to type 'Record<string, string>'.
+  'string' index signatures are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+lib/workflow/hybrid-workflow.ts(162,11): error TS2322: Type '{ [key: string]: string | undefined; NODE_ENV: "development" | "production" | "test"; TZ?: string | undefined; }' is not assignable to type 'Record<string, string>'.
+  'string' index signatures are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+lib/workflow/hybrid-workflow.ts(287,11): error TS2322: Type 'CAPDocsSearchResult' is not assignable to type '{ results: never[]; }'.
+  Types of property 'results' are incompatible.
+    Type '{ title: string; content: string; url?: string | undefined; relevance: number; }[]' is not assignable to type 'never[]'.
+      Type '{ title: string; content: string; url?: string | undefined; relevance: number; }' is not assignable to type 'never'.
+lib/workflow/hybrid-workflow.ts(650,30): error TS2339: Property 'client' does not exist on type 'UnifiedMCPClient'.
+lib/workflow/hybrid-workflow.ts(663,30): error TS2339: Property 'client' does not exist on type 'UnifiedMCPClient'.
+lib/workflow/resurrection-workflow.ts(292,11): error TS2322: Type 'string[]' is not assignable to type 'string'.
+lib/workflow/resurrection-workflow.ts(294,33): error TS2339: Property 'tables' does not exist on type 'AnalysisResult'.
+lib/workflow/resurrection-workflow.ts(298,33): error TS2339: Property 'patterns' does not exist on type 'AnalysisResult'.
+lib/workflow/simplified-workflow.ts(266,11): error TS2322: Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.

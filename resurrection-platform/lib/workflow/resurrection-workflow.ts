@@ -286,16 +286,16 @@ export class ResurrectionWorkflow extends EventEmitter {
         objects: [{
           name: projectName,
           type: 'PROGRAM',
-          module: 'CUSTOM',
+          module: quickAnalysis.metadata.module,
           linesOfCode: abapCode.split('\n').length,
-          complexity: 5,
-          businessLogic: quickAnalysis.businessLogic,
+          complexity: quickAnalysis.metadata.complexity,
+          businessLogic: quickAnalysis.businessLogic.join(', '),
           dependencies: quickAnalysis.dependencies,
-          tables: quickAnalysis.tables
+          tables: quickAnalysis.metadata.tables || []
         }],
         totalLOC: abapCode.split('\n').length,
-        module: 'CUSTOM',
-        patterns: quickAnalysis.patterns
+        module: quickAnalysis.metadata.module,
+        patterns: quickAnalysis.metadata.patterns || []
       };
 
       // Generate spec documents
