@@ -36,9 +36,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         > */}
-          <ErrorBoundary>
+          {/* <ErrorBoundary> */}
             {children}
-          </ErrorBoundary>
+          {/* </ErrorBoundary> */}
           {/* <Toaster 
             position="top-right"
             toastOptions={{
