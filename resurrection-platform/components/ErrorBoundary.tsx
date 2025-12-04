@@ -102,18 +102,6 @@ export class ErrorBoundary extends Component<Props, State> {
                 </p>
               </div>
 
-              {/* Stack Trace (Development Only) */}
-              {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
-                <details className="bg-[#1a0f2e] border-2 border-[#5b21b6] rounded-lg p-4">
-                  <summary className="text-[#a78bfa] cursor-pointer hover:text-[#8b5cf6] mb-2">
-                    🔍 Component Stack (Dev Only)
-                  </summary>
-                  <pre className="text-[#F7F7FF] font-mono text-xs overflow-auto max-h-64 mt-2">
-                    {this.state.errorInfo.componentStack}
-                  </pre>
-                </details>
-              )}
-
               {/* Action Buttons */}
               <div className="flex gap-4 justify-center pt-4">
                 <Button
@@ -131,15 +119,6 @@ export class ErrorBoundary extends Component<Props, State> {
                 >
                   <span className="mr-2">🔄</span>
                   Reload Page
-                </Button>
-                
-                <Button
-                  onClick={() => window.location.href = '/'}
-                  variant="outline"
-                  className="border-2 border-[#5b21b6] text-[#a78bfa] hover:bg-[#2e1065]/50"
-                >
-                  <span className="mr-2">🏠</span>
-                  Return Home
                 </Button>
               </div>
 
