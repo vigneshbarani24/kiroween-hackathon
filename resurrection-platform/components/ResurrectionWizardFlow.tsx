@@ -88,46 +88,39 @@ export function ResurrectionWizardFlow() {
     }
 
     setAnalyzing(true);
-    const toastId = halloweenToast.loading('🔮 Analyzing ABAP', 'Parsing ancient code...');
+    const toastId = halloweenToast.loading('🔮 Analyzing ABAP', 'Summoning MCP Servers for deep analysis...');
 
     try {
-      // Upload files first
-      const uploadedIds: string[] = [];
+      // 1. Read file content
+      console.log('[Wizard] Reading files for analysis...');
+      let fullCode = '';
       
       for (const fileData of validFiles) {
-        const formData = new FormData();
-        formData.append('file', fileData.file);
-
-        const response = await fetch('/api/abap/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to upload ${fileData.name}`);
-        }
-
-        const result = await response.json();
-        uploadedIds.push(result.object.id);
+        const text = await fileData.file.text();
+        fullCode += `* File: ${fileData.name}\n${text}\n\n`;
       }
 
-      // Mock analysis for now (will be replaced with real ABAP Analyzer MCP)
-      // In production, this would call the ABAP Analyzer MCP
-      const mockAnalysis: ABAPAnalysis = {
-        businessLogic: [
-          'Pricing calculation logic',
-          'Credit limit validation',
-          'Order processing workflow',
-        ],
-        tables: ['VBAK', 'VBAP', 'KNA1', 'MARA'],
-        dependencies: ['BAPI_SALESORDER_CREATE', 'Z_PRICING_CALC'],
-        patterns: ['Pricing Procedure', 'Authorization Check', 'Batch Processing'],
-        complexity: 7,
-        linesOfCode: validFiles.reduce((sum, f) => sum + Math.floor(f.size / 50), 0),
-        module: 'SD',
-      };
+      if (!fullCode.trim()) {
+        throw new Error('Files appear to be empty');
+      }
 
-      setAnalysis(mockAnalysis);
+      // 2. Call Analysis API
+      console.log('[Wizard] Sending to /api/abap/analyze...');
+      const response = await fetch('/api/abap/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: fullCode }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Analysis failed');
+      }
+
+      const result = await response.json();
+      console.log('[Wizard] Analysis result:', result);
+
+      setAnalysis(result.analysis);
       
       // Auto-generate project name from first file
       const firstName = validFiles[0].name.replace(/\.[^/.]+$/, '').toLowerCase();
@@ -137,7 +130,7 @@ export function ResurrectionWizardFlow() {
         description: `Resurrected from ${validFiles.length} ABAP file${validFiles.length !== 1 ? 's' : ''}`,
       }));
 
-      halloweenToast.success('✨ Analysis Complete', 'ABAP code has been parsed');
+      halloweenToast.success('✨ Analysis Complete', 'MCP Servers have spoken!');
       setCurrentStep('review');
     } catch (error) {
       console.error('Analysis failed:', error);

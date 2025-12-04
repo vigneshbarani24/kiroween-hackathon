@@ -1,0 +1,142 @@
+REPORT zmm_open_po_report NO STANDARD PAGE HEADING.
+
+TABLES: ekko, ekpo.
+
+TYPES: BEGIN OF ty_open_po,
+         ebeln TYPE ekko-ebeln,
+         bukrs TYPE ekko-bukrs,
+         ekorg TYPE ekko-ekorg,
+         ekgrp TYPE ekko-ekgrp,
+         lifnr TYPE ekko-lifnr,
+         bedat TYPE ekko-bedat,
+         ebelp TYPE ekpo-ebelp,
+         matnr TYPE ekpo-matnr,
+         werks TYPE ekpo-werks,
+         menge TYPE ekpo-menge,
+         wemng TYPE ekpo-wemng,
+         open_qty TYPE ekpo-menge,
+         netpr TYPE ekpo-netpr,
+         peinh TYPE ekpo-peinh,
+         loekz TYPE ekpo-loekz,
+       END OF ty_open_po.
+
+DATA: gt_open_po TYPE STANDARD TABLE OF ty_open_po,
+      gs_open_po TYPE ty_open_po.
+
+* Selection screen
+SELECT-OPTIONS: s_ebeln FOR ekko-ebeln,
+                s_bukrs FOR ekko-bukrs,
+                s_ekorg FOR ekko-ekorg,
+                s_ekgrp FOR ekko-ekgrp,
+                s_lifnr FOR ekko-lifnr,
+                s_werks FOR ekpo-werks,
+                s_bedat FOR ekko-bedat.
+
+START-OF-SELECTION.
+
+  SELECT a~ebeln a~bukrs a~ekorg a~ekgrp a~lifnr a~bedat
+         b~ebelp b~matnr b~werks b~menge b~wemng
+         b~netpr b~peinh b~loekz
+    FROM ekko AS a
+    INNER JOIN ekpo AS b
+      ON a~ebeln = b~ebeln
+    INTO TABLE @DATA(lt_po_raw)
+    WHERE a~ebeln IN @s_ebeln
+      AND a~bukrs IN @s_bukrs
+      AND a~ekorg IN @s_ekorg
+      AND a~ekgrp IN @s_ekgrp
+      AND a~lifnr IN @s_lifnr
+      AND a~bedat IN @s_bedat
+      AND b~werks IN @s_werks
+      AND b~loekz = space        "item not deleted
+      AND b~eliks = space        "item not finally delivered
+      AND b~elikz = space.       "item not fully delivered
+
+  LOOP AT lt_po_raw ASSIGNING FIELD-SYMBOL(<ls_raw>).
+
+    CLEAR gs_open_po.
+
+    gs_open_po-ebeln = <ls_raw>-ebeln.
+    gs_open_po-bukrs = <ls_raw>-bukrs.
+    gs_open_po-ekorg = <ls_raw>-ekorg.
+    gs_open_po-ekgrp = <ls_raw>-ekgrp.
+    gs_open_po-lifnr = <ls_raw>-lifnr.
+    gs_open_po-bedat = <ls_raw>-bedat.
+    gs_open_po-ebelp = <ls_raw>-ebelp.
+    gs_open_po-matnr = <ls_raw>-matnr.
+    gs_open_po-werks = <ls_raw>-werks.
+    gs_open_po-menge = <ls_raw>-menge.
+    gs_open_po-wemng = <ls_raw>-wemng.
+
+    gs_open_po-open_qty = <ls_raw>-menge - <ls_raw>-wemng.
+
+    gs_open_po-netpr = <ls_raw>-netpr.
+    gs_open_po-peinh = <ls_raw>-peinh.
+    gs_open_po-loekz = <ls_raw>-loekz.
+
+    IF gs_open_po-open_qty > 0.
+      APPEND gs_open_po TO gt_open_po.
+    ENDIF.
+
+  ENDLOOP.
+
+END-OF-SELECTION.
+
+  PERFORM display_list.
+
+*&---------------------------------------------------------------------*
+*&      Form  DISPLAY_LIST
+*&---------------------------------------------------------------------*
+FORM display_list.
+
+  WRITE: / 'Open Purchase Orders Report'.
+
+  ULINE.
+
+  WRITE: / sy-vline,
+           (10) 'PO Number',
+           sy-vline,
+           (5)  'Item',
+           sy-vline,
+           (10) 'Vendor',
+           sy-vline,
+           (10) 'Plant',
+           sy-vline,
+           (18) 'Material',
+           sy-vline,
+           (10) 'PO Qty',
+           sy-vline,
+           (10) 'GR Qty',
+           sy-vline,
+           (10) 'Open Qty',
+           sy-vline,
+           (10) 'Net Price',
+           sy-vline.
+
+  ULINE.
+
+  LOOP AT gt_open_po INTO gs_open_po.
+
+    WRITE: / sy-vline,
+             gs_open_po-ebeln UNDER 'PO Number',
+             sy-vline,
+             gs_open_po-ebelp UNDER 'Item',
+             sy-vline,
+             gs_open_po-lifnr UNDER 'Vendor',
+             sy-vline,
+             gs_open_po-werks UNDER 'Plant',
+             sy-vline,
+             gs_open_po-matnr UNDER 'Material',
+             sy-vline,
+             gs_open_po-menge UNDER 'PO Qty',
+             sy-vline,
+             gs_open_po-wemng UNDER 'GR Qty',
+             sy-vline,
+             gs_open_po-open_qty UNDER 'Open Qty',
+             sy-vline,
+             gs_open_po-netpr UNDER 'Net Price',
+             sy-vline.
+
+  ENDLOOP.
+
+ENDFORM.

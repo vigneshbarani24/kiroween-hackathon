@@ -230,7 +230,33 @@ export class UnifiedMCPClient {
 
       // Initialize orchestrator with all servers
       const orchestratorConfig: MCPOrchestratorConfig = {
-        servers: mcpConfig,
+        servers: {
+          ...mcpConfig,
+          'knowledge-mcp': {
+            command: 'npx',
+            args: ['ts-node', 'lib/mcp/servers/knowledge-mcp.ts'],
+            env: { ...process.env },
+            autoApprove: []
+          },
+          'database-mcp': {
+            command: 'npx',
+            args: ['ts-node', 'lib/mcp/servers/database-mcp.ts'],
+            env: { ...process.env },
+            autoApprove: []
+          },
+          'playwright-mcp': {
+            command: 'npx',
+            args: ['ts-node', 'lib/mcp/servers/playwright-mcp.ts'],
+            env: { ...process.env },
+            autoApprove: []
+          },
+          'odata-bridge-mcp': {
+            command: 'npx',
+            args: ['ts-node', 'lib/mcp/servers/odata-bridge-mcp.ts'],
+            env: { ...process.env },
+            autoApprove: []
+          }
+        },
         autoConnect: this.config.autoConnect,
         healthCheckInterval: this.config.healthCheckInterval
       };
@@ -507,6 +533,11 @@ export class UnifiedMCPClient {
     try {
       const results = await this.capClient.searchDocs(query);
       
+      if (!results || !Array.isArray(results)) {
+        console.warn('[UnifiedMCPClient] No results returned from CAP docs search');
+        return { results: [] };
+      }
+
       return {
         results: results.map(r => ({
           title: r.title,

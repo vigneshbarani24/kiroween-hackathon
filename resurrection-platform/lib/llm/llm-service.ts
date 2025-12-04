@@ -447,6 +447,65 @@ Generate the transformation plan now:`;
 6. **Deployment**: Package as MTA for SAP BTP deployment
 7. **Testing**: Write unit tests for business logic, integration tests for services`;
   }
+  /**
+   * Analyze ABAP code using LLM (Fallback when MCP fails)
+   */
+  async analyzeABAPWithLLM(code: string): Promise<any> {
+    console.log('[LLMService] Analyzing ABAP code with LLM (Fallback)...');
+
+    const prompt = `
+You are an expert SAP ABAP Analyzer. Analyze the following ABAP code and extract key information.
+
+CODE:
+${code.substring(0, 10000)} // Limit context
+
+Return a JSON object with this EXACT structure:
+{
+  "businessLogic": ["string", "string"],
+  "tables": ["string", "string"],
+  "dependencies": ["string", "string"],
+  "patterns": ["string", "string"],
+  "complexity": number (1-10),
+  "module": "string" (e.g. SD, MM, FI)
+}
+`;
+
+    try {
+      const response = await this.callOpenAI(prompt);
+      
+      // Extract JSON from response
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON found in LLM response');
+      }
+      
+      const result = JSON.parse(jsonMatch[0]);
+      
+      return {
+        businessLogic: result.businessLogic || [],
+        tables: result.tables || [],
+        dependencies: result.dependencies || [],
+        patterns: result.patterns || [],
+        complexity: result.complexity || 5,
+        linesOfCode: code.split('\n').length,
+        module: result.module || 'CUSTOM',
+        capDocs: 0
+      };
+    } catch (error) {
+      console.error('[LLMService] LLM analysis failed:', error);
+      // Return basic fallback
+      return {
+        businessLogic: ['Analysis failed'],
+        tables: [],
+        dependencies: [],
+        patterns: [],
+        complexity: 1,
+        linesOfCode: code.split('\n').length,
+        module: 'UNKNOWN',
+        capDocs: 0
+      };
+    }
+  }
 }
 
 /**
