@@ -1,7 +1,7 @@
-# SAP Nova AI Alternative - Implementation Roadmap
+# SAP Legacy AI Alternative - Implementation Roadmap
 
 ## 🎯 Goal
-Build a complete open-source alternative to SAP Nova AI with all three pillars.
+Build a complete open-source alternative to SAP Legacy AI with all three pillars.
 
 ---
 
@@ -164,7 +164,7 @@ pages/
 - ✅ Full documentation
 
 **Time:** 10-14 days
-**Impact:** Production-ready SAP Nova AI alternative
+**Impact:** Production-ready SAP Legacy AI alternative
 
 ---
 
@@ -225,7 +225,7 @@ pages/
 - Build team
 - Complete all features
 - Launch open source
-- Compete with SAP Nova AI
+- Compete with SAP Legacy AI
 
 ---
 

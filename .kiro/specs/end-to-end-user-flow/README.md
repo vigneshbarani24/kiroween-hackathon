@@ -1,8 +1,8 @@
-# SAP Nova AI Alternative - Resurrection Platform
+# SAP Legacy AI Alternative - Resurrection Platform
 
 ## 🎯 Project Overview
 
-This spec defines a complete **open-source alternative to SAP Nova AI** - a modern web application that analyzes legacy ABAP code and generates production-ready SAP CAP applications called "resurrections".
+This spec defines a complete **open-source alternative to SAP Legacy AI** - a modern web application that analyzes legacy ABAP code and generates production-ready SAP CAP applications called "resurrections".
 
 **Hackathon Category:** Resurrection  
 **Theme:** Bringing legacy ABAP code back to life as modern, cloud-native applications
@@ -183,7 +183,7 @@ This spec defines a complete **open-source alternative to SAP Nova AI** - a mode
 ✅ WCAG 2.1 AA accessibility  
 
 ### Business Impact
-✅ Open source alternative to SAP Nova AI  
+✅ Open source alternative to SAP Legacy AI  
 ✅ Free/affordable for SAP customers  
 ✅ Production-ready CAP applications  
 ✅ Accelerates Clean Core adoption  
@@ -199,7 +199,7 @@ This spec defines a complete **open-source alternative to SAP Nova AI** - a mode
 ## 🏆 Why This Matters
 
 ### The Problem
-SAP customers have decades of legacy ABAP code. SAP Nova AI offers a solution, but it's:
+SAP customers have decades of legacy ABAP code. SAP Legacy AI offers a solution, but it's:
 - ❌ Closed source (black box)
 - ❌ Expensive (enterprise licensing)
 - ❌ Vendor lock-in
@@ -246,7 +246,7 @@ Examples:
 ### Documentation
 - [Vibe Coding Journey](../../../RESURRECTION_VIBE_CODING_JOURNEY.md) - Complete development story
 - [SAP Domain Knowledge](../../steering/sap-domain-knowledge.md) - SAP expertise for Kiro
-- [SAP Nova AI Knowledge](../../steering/sap-nova-ai-knowledge.md) - Understanding the competition
+- [SAP Legacy AI Knowledge](../../steering/sap-nova-ai-knowledge.md) - Understanding the competition
 
 ### External Links
 - [SAP CAP Documentation](https://cap.cloud.sap/)

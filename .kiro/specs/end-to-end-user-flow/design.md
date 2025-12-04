@@ -1,8 +1,8 @@
-# Design Document: SAP Nova AI Alternative - Resurrection Platform
+# Design Document: SAP Legacy AI Alternative - Resurrection Platform
 
 ## Overview
 
-This design document outlines the technical architecture for the SAP Nova AI Alternative platform - a modern web application that analyzes legacy ABAP code and generates production-ready SAP CAP applications called "resurrections". The platform leverages MCP servers for intelligent transformation, GitHub for version control, and Slack for team collaboration.
+This design document outlines the technical architecture for the SAP Legacy AI Alternative platform - a modern web application that analyzes legacy ABAP code and generates production-ready SAP CAP applications called "resurrections". The platform leverages MCP servers for intelligent transformation, GitHub for version control, and Slack for team collaboration.
 
 ### Key Design Principles
 

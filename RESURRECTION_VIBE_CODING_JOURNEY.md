@@ -1,6 +1,6 @@
 # 🔄 Resurrection: The Vibe Coding Journey
 
-## SAP Nova AI Alternative - Open Source ABAP Modernization Platform
+## SAP Legacy AI Alternative - Open Source ABAP Modernization Platform
 
 **Hackathon Category:** Resurrection  
 **Team:** Solo Developer + Kiro AI  
@@ -12,7 +12,7 @@
 ## 🎯 The Vision
 
 **The Problem:**
-SAP customers have decades of legacy ABAP code locked in their systems. SAP Nova AI offers a proprietary solution, but it's:
+SAP customers have decades of legacy ABAP code locked in their systems. SAP Legacy AI offers a proprietary solution, but it's:
 - ❌ Closed source (black box)
 - ❌ Expensive (enterprise licensing)
 - ❌ Vendor lock-in
@@ -78,7 +78,7 @@ resurrection-sd-pricing-20241123/
 
 ### Morning: The Spark ⚡
 **The Realization:**
-- SAP Nova AI is powerful but proprietary
+- SAP Legacy AI is powerful but proprietary
 - Kiro AI + MCP servers can do the same thing
 - Open source democratizes SAP modernization
 
@@ -813,7 +813,7 @@ describe('End-to-End Resurrection Flow', () => {
 
 ### For SAP Customers
 **Before:**
-- Locked into proprietary SAP Nova AI
+- Locked into proprietary SAP Legacy AI
 - Expensive licensing
 - Black box transformation
 - Limited customization
@@ -906,7 +906,7 @@ describe('End-to-End Resurrection Flow', () => {
 - **Slack** - Team collaboration
 
 **Inspired By:**
-- SAP Nova AI (the proprietary solution we're democratizing)
+- SAP Legacy AI (the proprietary solution we're democratizing)
 - SAP Clean Core principles
 - Open source community
 - SAP developers worldwide

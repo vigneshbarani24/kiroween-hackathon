@@ -1,6 +1,6 @@
 # 🏆 Hackathon Submission: Resurrection Platform
 
-## SAP Nova AI Alternative - Open Source ABAP Modernization
+## SAP Legacy AI Alternative - Open Source ABAP Modernization
 
 **Category:** Resurrection  
 **Submission Date:** November 23, 2024  
@@ -12,7 +12,7 @@
 ## 📋 Executive Summary
 
 ### The Challenge
-SAP customers worldwide struggle with decades of legacy ABAP code. SAP Nova AI offers a proprietary solution, but it's expensive, closed-source, and creates vendor lock-in.
+SAP customers worldwide struggle with decades of legacy ABAP code. SAP Legacy AI offers a proprietary solution, but it's expensive, closed-source, and creates vendor lock-in.
 
 ### Our Solution
 **Resurrection Platform** - An open-source alternative that analyzes legacy ABAP code and generates production-ready SAP CAP applications. Each transformation is a "resurrection" - bringing legacy code back to life as a modern, cloud-native application.
@@ -221,7 +221,7 @@ resurrection-sd-pricing-20241123/
 
 ### For SAP Customers
 **Before:**
-- Locked into proprietary SAP Nova AI
+- Locked into proprietary SAP Legacy AI
 - Expensive licensing ($$$)
 - Black box transformation
 - Limited customization
@@ -243,7 +243,7 @@ resurrection-sd-pricing-20241123/
 - ⚡ Democratizes SAP modernization
 
 ### Competitive Advantage
-| Feature | SAP Nova AI | Resurrection Platform |
+| Feature | SAP Legacy AI | Resurrection Platform |
 |---------|-------------|----------------------|
 | **Cost** | Enterprise licensing | Free (open source) |
 | **Source Code** | Closed (black box) | Open (full transparency) |
@@ -460,7 +460,7 @@ Not just a prototype - a fully specified, production-ready platform with:
 ## 🏆 Hackathon Judging Criteria
 
 ### Innovation (10/10)
-✅ First open-source alternative to SAP Nova AI  
+✅ First open-source alternative to SAP Legacy AI  
 ✅ MCP-powered architecture (cutting edge)  
 ✅ GitHub automation for every resurrection  
 ✅ Real-time streaming from AI servers  
@@ -501,7 +501,7 @@ Not just a prototype - a fully specified, production-ready platform with:
 
 ## 💡 Key Differentiators
 
-### vs SAP Nova AI
+### vs SAP Legacy AI
 1. **Open Source** - Full transparency vs black box
 2. **Free** - No licensing costs
 3. **Customizable** - Modify anything
@@ -530,7 +530,7 @@ Not just a prototype - a fully specified, production-ready platform with:
 - Slack (collaboration)
 
 **Inspired By:**
-- SAP Nova AI (the solution we're democratizing)
+- SAP Legacy AI (the solution we're democratizing)
 - SAP Clean Core principles
 - Open source community
 - SAP developers worldwide

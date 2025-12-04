@@ -791,7 +791,7 @@ find /backups -name "resurrection-*.sql.gz" -mtime +30 -delete
 
 ## Conclusion
 
-The Resurrection Platform is a **production-ready SaaS application** that can be deployed and scaled to serve thousands of users. With proper configuration, monitoring, and support, it can become a successful commercial product competing with SAP Nova AI.
+The Resurrection Platform is a **production-ready SaaS application** that can be deployed and scaled to serve thousands of users. With proper configuration, monitoring, and support, it can become a successful commercial product competing with SAP Legacy AI.
 
 **Next Steps**:
 1. Deploy to Vercel or AWS

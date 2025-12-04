@@ -297,7 +297,7 @@ FitToStandardRecommendation {
 
 ## Competitive Advantage
 
-### vs SAP Nova AI (Proprietary)
+### vs SAP Legacy AI (Proprietary)
 
 **Our Advantages:**
 - ✅ Open source (full transparency)
@@ -307,7 +307,7 @@ FitToStandardRecommendation {
 - ✅ Community-driven
 - ✅ Already proven (working demo)
 
-**SAP Nova AI:**
+**SAP Legacy AI:**
 - ❌ Closed source (black box)
 - ❌ Expensive (enterprise licensing)
 - ❌ Vendor lock-in

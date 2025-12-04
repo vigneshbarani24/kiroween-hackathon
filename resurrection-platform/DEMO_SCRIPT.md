@@ -1,7 +1,7 @@
 # 🎃 Resurrection Platform - Demo Script
 
 ## Overview
-This demo showcases the complete end-to-end ABAP-to-CAP transformation workflow of the Resurrection Platform - an open-source alternative to SAP Nova AI.
+This demo showcases the complete end-to-end ABAP-to-CAP transformation workflow of the Resurrection Platform - an open-source alternative to SAP Legacy AI.
 
 **Demo Duration**: 5-7 minutes  
 **Audience**: SAP developers, architects, decision-makers  
@@ -40,7 +40,7 @@ export GITHUB_TOKEN="your-github-token"
 ### Part 1: Introduction (30 seconds)
 
 **Script**:
-> "Welcome to the Resurrection Platform - an open-source alternative to SAP Nova AI. 
+> "Welcome to the Resurrection Platform - an open-source alternative to SAP Legacy AI. 
 > Today, I'll show you how we transform legacy ABAP code into modern SAP CAP applications 
 > in under 5 minutes, completely automated."
 
@@ -234,10 +234,10 @@ export GITHUB_TOKEN="your-github-token"
 
 ## Demo Talking Points
 
-### Key Differentiators vs SAP Nova AI
+### Key Differentiators vs SAP Legacy AI
 
 1. **Open Source**
-   - "Unlike SAP Nova AI, this is 100% open source"
+   - "Unlike SAP Legacy AI, this is 100% open source"
    - "Full transparency - you can see and modify every line of code"
    - "No vendor lock-in, no black box AI"
 
@@ -320,7 +320,7 @@ export GITHUB_TOKEN="your-github-token"
 ### Q: What about SAP standard alternatives?
 **A**: The platform includes fit-to-standard analysis (post-MVP feature) that recommends SAP standard BAPIs and transactions as alternatives to custom code.
 
-### Q: How does this compare to SAP Nova AI?
+### Q: How does this compare to SAP Legacy AI?
 **A**: 
 - **Cost**: Free vs expensive enterprise licensing
 - **Transparency**: Open source vs black box
@@ -384,7 +384,7 @@ export GITHUB_TOKEN="your-github-token"
 4. **Discuss customization**: How to add custom MCP servers
 
 ### For Business Audience:
-1. **Share ROI calculator**: Cost savings vs SAP Nova AI
+1. **Share ROI calculator**: Cost savings vs SAP Legacy AI
 2. **Provide case studies**: Example transformations
 3. **Discuss licensing**: Open source vs commercial support
 4. **Schedule POC**: Pilot with their ABAP code

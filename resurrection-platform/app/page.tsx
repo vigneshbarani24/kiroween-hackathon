@@ -42,7 +42,7 @@ export default function Home() {
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium mb-6">
             <Sparkles className="h-4 w-4" />
-            Open Source Alternative to SAP Nova AI
+            Open Source Alternative to SAP Legacy AI
           </div>
           
           <h1 className="text-6xl font-bold text-slate-900 mb-6 tracking-tight">

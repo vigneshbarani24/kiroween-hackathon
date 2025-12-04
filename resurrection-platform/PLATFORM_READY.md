@@ -186,9 +186,9 @@ vercel
 
 ## 🆚 Competitive Advantage
 
-### vs SAP Nova AI
+### vs SAP Legacy AI
 
-| Feature | Resurrection Platform | SAP Nova AI |
+| Feature | Resurrection Platform | SAP Legacy AI |
 |---------|----------------------|-------------|
 | **Cost** | Free / $49/mo | Enterprise ($$$$) |
 | **Open Source** | ✅ Yes | ❌ No |
@@ -316,7 +316,7 @@ vercel
    - Customizable
 
 3. **Cost-Effective**
-   - 90% cheaper than SAP Nova AI
+   - 90% cheaper than SAP Legacy AI
    - Free tier available
    - Affordable pro tier
    - No hidden costs

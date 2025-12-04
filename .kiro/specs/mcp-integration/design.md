@@ -1194,7 +1194,7 @@ NEXTAUTH_SECRET=***
 2. Create Demo Video
    - Show full workflow
    - Highlight features
-   - Compare to SAP Nova AI
+   - Compare to SAP Legacy AI
 
 3. Launch
    - GitHub repository public
@@ -1255,7 +1255,7 @@ A comprehensive design for a fully MCP-powered ABAP-to-CAP transformation platfo
 - Transparent and customizable
 
 **Competitive Advantage:**
-- Open alternative to SAP Nova AI
+- Open alternative to SAP Legacy AI
 - Uses same SAP MCP servers (CAP, UI5)
 - Community-driven development
 - No vendor lock-in

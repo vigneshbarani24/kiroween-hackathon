@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Resurrection Platform - SAP Nova AI Alternative",
+  title: "Resurrection Platform - SAP Legacy AI Alternative",
   description: "Transform haunted legacy ABAP into modern SAP CAP applications",
 };
 

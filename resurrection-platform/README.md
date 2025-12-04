@@ -1,4 +1,4 @@
-# 🎃 Resurrection Platform - SAP Nova AI Alternative
+# 🎃 Resurrection Platform - SAP Legacy AI Alternative
 
 > Transform haunted legacy ABAP into modern SAP CAP applications. Bring your legacy systems back from the dead!
 
@@ -9,7 +9,7 @@
 
 ## 🌟 Overview
 
-The Resurrection Platform is an open-source alternative to SAP Nova AI that intelligently analyzes legacy ABAP code and generates production-ready SAP CAP applications. Each "resurrection" is a complete, deployable CAP project with its own GitHub repository.
+The Resurrection Platform is an open-source alternative to SAP Legacy AI that intelligently analyzes legacy ABAP code and generates production-ready SAP CAP applications. Each "resurrection" is a complete, deployable CAP project with its own GitHub repository.
 
 ### Key Features
 
@@ -479,7 +479,7 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 - Built with [Next.js](https://nextjs.org/)
 - UI components from [Shadcn/ui](https://ui.shadcn.com/)
 - MCP protocol by [Anthropic](https://www.anthropic.com/)
-- Inspired by SAP Nova AI
+- Inspired by SAP Legacy AI
 
 ## 📞 Support
 

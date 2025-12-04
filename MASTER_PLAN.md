@@ -1,8 +1,8 @@
-# 🎯 Master Plan: SAP Nova AI Alternative
+# 🎯 Master Plan: SAP Legacy AI Alternative
 
 ## 🚀 The Vision
 
-Build an **open-source alternative to SAP Nova AI** using Kiro, featuring:
+Build an **open-source alternative to SAP Legacy AI** using Kiro, featuring:
 1. **Custom Code Intelligence** - Documentation + Q&A + Search
 2. **AI Build** - ABAP → SAP CAP → Fiori (already 80% done!)
 
@@ -409,7 +409,7 @@ Build an **open-source alternative to SAP Nova AI** using Kiro, featuring:
 
 ## 💡 Key Differentiators
 
-### vs SAP Nova AI:
+### vs SAP Legacy AI:
 - ✅ Open source (vs proprietary)
 - ✅ $15 demo (vs enterprise licensing)
 - ✅ Full transparency (vs black box)
@@ -497,7 +497,7 @@ Build an **open-source alternative to SAP Nova AI** using Kiro, featuring:
 - Comprehensive documentation
 
 **What We're Building:**
-- Open-source SAP Nova AI alternative
+- Open-source SAP Legacy AI alternative
 - Custom Code Intelligence
 - AI Build transformation
 - Complete modernization platform

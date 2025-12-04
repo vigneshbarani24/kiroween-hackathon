@@ -95,11 +95,11 @@ Created `.kiro/settings/mcp.json` with 3 servers:
 
 ---
 
-## 🎨 Phase 3: SAP Nova AI Alternative
+## 🎨 Phase 3: SAP Legacy AI Alternative
 
-### User Request: "Need this as well inside" (SAP Nova AI features)
+### User Request: "Need this as well inside" (SAP Legacy AI features)
 
-**Context:** User shared SAP Nova AI capabilities:
+**Context:** User shared SAP Legacy AI capabilities:
 - Custom Code Intelligence
 - AI Fit-to-Standard
 - AI Build
@@ -107,10 +107,10 @@ Created `.kiro/settings/mcp.json` with 3 servers:
 ### What Kiro Did:
 
 #### Step 1: Strategic Analysis
-Recognized opportunity to build **open-source alternative** to SAP's proprietary Nova AI platform.
+Recognized opportunity to build **open-source alternative** to SAP's proprietary Legacy AI platform.
 
 #### Step 2: Created Complete Spec
-Built comprehensive spec for Nova AI alternative:
+Built comprehensive spec for Legacy AI alternative:
 
 **Three Pillars:**
 1. **Custom Code Intelligence** - Documentation + Q&A
@@ -118,7 +118,7 @@ Built comprehensive spec for Nova AI alternative:
 3. **AI Build** - Transform & modernize (already 80% built!)
 
 #### Step 3: Competitive Positioning
-**vs SAP Nova AI:**
+**vs SAP Legacy AI:**
 - ✅ Open source (vs proprietary)
 - ✅ Already 30% built
 - ✅ Kiro-powered (best AI)
@@ -126,8 +126,8 @@ Built comprehensive spec for Nova AI alternative:
 - ✅ Full transparency (vs black box)
 
 ### Files Created:
-- `.kiro/specs/sap-nova-ai-alternative.md` - Complete Nova AI alternative spec
-- `.kiro/steering/sap-nova-ai-knowledge.md` - Deep Nova AI knowledge
+- `.kiro/specs/sap-nova-ai-alternative.md` - Complete Legacy AI alternative spec
+- `.kiro/steering/sap-nova-ai-knowledge.md` - Deep Legacy AI knowledge
 - `.kiro/NOVA_AI_ROADMAP.md` - Implementation roadmap
 
 **Key Insight:** Not just building a demo - building a real competitor to SAP's platform!
@@ -204,13 +204,13 @@ Plus React components:
 
 ### Specifications (Specs)
 1. `.kiro/specs/abap-modernization.md` - ABAP transformation spec
-2. `.kiro/specs/sap-nova-ai-alternative.md` - Nova AI alternative
+2. `.kiro/specs/sap-nova-ai-alternative.md` - Legacy AI alternative
 3. `.kiro/specs/nova-ai-complete-implementation.md` - Complete platform
 4. `.kiro/specs/custom-code-intelligence-implementation.md` - Intelligence implementation
 
 ### Steering Documents
 1. `.kiro/steering/sap-domain-knowledge.md` - 40 years SAP expertise
-2. `.kiro/steering/sap-nova-ai-knowledge.md` - Nova AI knowledge
+2. `.kiro/steering/sap-nova-ai-knowledge.md` - Legacy AI knowledge
 
 ### Hooks
 1. `.kiro/hooks/validate-transformation.sh` - Quality validation
@@ -247,9 +247,9 @@ Plus React components:
 **Kiro Recommended:** Add official SAP CAP + UI5 MCPs
 **Result:** Full-stack coverage (15 tools total)
 
-### Decision 2: Build Nova AI Alternative
+### Decision 2: Build Legacy AI Alternative
 **Instead of:** Just ABAP transformation
-**Kiro Recommended:** Build complete Nova AI competitor
+**Kiro Recommended:** Build complete Legacy AI competitor
 **Result:** Bigger vision, real market opportunity
 
 ### Decision 3: Focus on Intelligence + Build
@@ -287,13 +287,13 @@ Plus React components:
 **1. Specs ✅**
 - 4 comprehensive specs created
 - ABAP transformation
-- Nova AI alternative
+- Legacy AI alternative
 - Complete implementation plans
 
 **2. Steering ✅**
 - 2 steering documents
 - SAP domain knowledge (40 years)
-- Nova AI knowledge
+- Legacy AI knowledge
 
 **3. Hooks ✅**
 - 2 automated hooks
@@ -365,9 +365,9 @@ Plus React components:
 **User:** "I want to add sap mcp servers"
 **Kiro:** *Researches* "Add @ui5/mcp-server for full-stack coverage"
 
-### Conversation 3: Nova AI Alternative
-**User:** "Need this as well inside" (Nova AI features)
-**Kiro:** "Let's build an open-source alternative to SAP Nova AI!"
+### Conversation 3: Legacy AI Alternative
+**User:** "Need this as well inside" (Legacy AI features)
+**Kiro:** "Let's build an open-source alternative to SAP Legacy AI!"
 
 ### Conversation 4: Scope Decision
 **User:** "Lets do custom code intelligence. not the AI fit to standard"
@@ -399,7 +399,7 @@ Plus React components:
 - Add AI Fit-to-Standard
 - Launch open source
 - Build community
-- Compete with SAP Nova AI
+- Compete with SAP Legacy AI
 
 ---
 
@@ -427,7 +427,7 @@ Plus React components:
 **4. Iterative Refinement**
 - Started with 2 MCP servers
 - Enhanced to 3 servers
-- Expanded from ABAP transform to Nova AI alternative
+- Expanded from ABAP transform to Legacy AI alternative
 - Scoped to achievable hackathon project
 
 **5. Real-World Focus**
@@ -447,7 +447,7 @@ Plus React components:
 - Hackathon-ready but not exceptional
 
 ### After:
-- Complete SAP Nova AI alternative planned
+- Complete SAP Legacy AI alternative planned
 - 3 MCP servers (15 tools)
 - Comprehensive documentation
 - Production-ready implementation plans
@@ -591,7 +591,7 @@ Plus React components:
 **Steering:**
 - 2 steering documents
 - SAP domain knowledge
-- Nova AI knowledge
+- Legacy AI knowledge
 
 **MCP:**
 - 3 servers configured
@@ -629,7 +629,7 @@ Plus React components:
 
 ### 1. Strategic Vision
 - Started with feature audit
-- Expanded to Nova AI alternative
+- Expanded to Legacy AI alternative
 - Scoped to achievable goals
 - Built production-ready code
 
@@ -641,7 +641,7 @@ Plus React components:
 
 ### 3. Kiro's Value Add
 - **Strategic Thinking:** Recommended triple MCP strategy
-- **Market Insight:** Identified Nova AI opportunity
+- **Market Insight:** Identified Legacy AI opportunity
 - **Technical Excellence:** Production-ready implementations
 - **Cost Optimization:** <$15 for complete demo
 - **Developer Experience:** Clear docs, tests, examples
@@ -662,8 +662,8 @@ Plus React components:
 2. **"I want to add sap mcp servers"**
    → Kiro researched and added 3rd MCP server (UI5)
 
-3. **"Need this as well inside" (Nova AI)**
-   → Kiro created complete Nova AI alternative spec
+3. **"Need this as well inside" (Legacy AI)**
+   → Kiro created complete Legacy AI alternative spec
 
 4. **"Lets do custom code intelligence"**
    → Kiro created 5-day implementation plan
@@ -717,7 +717,7 @@ Plus React components:
 - Add AI Fit-to-Standard
 - Launch open source
 - Build community
-- Compete with SAP Nova AI
+- Compete with SAP Legacy AI
 - Raise funding
 - Build team
 
@@ -742,7 +742,7 @@ Plus React components:
 
 **3. Strategic Business Thinking**
 - $200B+ market opportunity
-- Open source alternative to SAP Nova AI
+- Open source alternative to SAP Legacy AI
 - Clear competitive advantages
 - Realistic cost structure
 
@@ -766,7 +766,7 @@ Plus React components:
 - 2-3 years manual effort
 
 **The Solution:**
-- Kiro helped us build an open-source alternative to SAP Nova AI
+- Kiro helped us build an open-source alternative to SAP Legacy AI
 - All 5 Kiro features used at expert level
 - 3 MCP servers (most comprehensive)
 - Day 1 already working

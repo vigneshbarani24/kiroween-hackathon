@@ -1,8 +1,8 @@
-# Requirements Document: SAP Nova AI Alternative - Resurrection Platform
+# Requirements Document: SAP Legacy AI Alternative - Resurrection Platform
 
 ## Introduction
 
-This document defines the SAP Nova AI Alternative platform - an intelligent web application that analyzes legacy ABAP code and generates production-ready SAP CAP applications called "resurrections". Each resurrection is a complete, deployable CAP project with its own GitHub repository.
+This document defines the SAP Legacy AI Alternative platform - an intelligent web application that analyzes legacy ABAP code and generates production-ready SAP CAP applications called "resurrections". Each resurrection is a complete, deployable CAP project with its own GitHub repository.
 
 **Architecture:**
 - **The Platform**: Modern web application (Next.js/Node.js/React) with intelligence capabilities
@@ -11,7 +11,7 @@ This document defines the SAP Nova AI Alternative platform - an intelligent web 
 
 ## Glossary
 
-- **Resurrection Platform**: The SAP Nova AI Alternative web application - the intelligence engine (primary system)
+- **Resurrection Platform**: The SAP Legacy AI Alternative web application - the intelligence engine (primary system)
 - **Platform**: Short name for Resurrection Platform
 - **Resurrection**: A complete ABAP-to-CAP transformation resulting in a deployable CAP application
 - **Resurrection CAP App**: The generated SAP CAP project (CDS, services, UI, MTA) stored in GitHub

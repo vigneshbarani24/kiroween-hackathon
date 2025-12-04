@@ -1,4 +1,4 @@
-# Implementation Plan: SAP Nova AI Alternative - Resurrection Platform (MVP)
+# Implementation Plan: SAP Legacy AI Alternative - Resurrection Platform (MVP)
 
 ## Overview
 

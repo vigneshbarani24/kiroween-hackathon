@@ -378,9 +378,9 @@ GITHUB_SECRET="..."
 
 ## 🎯 Competitive Advantage
 
-### vs SAP Nova AI
+### vs SAP Legacy AI
 
-| Feature | Resurrection Platform | SAP Nova AI |
+| Feature | Resurrection Platform | SAP Legacy AI |
 |---------|----------------------|-------------|
 | **Cost** | Free / $49/mo | Enterprise pricing ($$$$) |
 | **Open Source** | ✅ Yes | ❌ No |
@@ -396,7 +396,7 @@ GITHUB_SECRET="..."
 ### Key Differentiators
 
 1. **Open Source** - Full transparency, no vendor lock-in
-2. **Cost-Effective** - 90% cheaper than SAP Nova AI
+2. **Cost-Effective** - 90% cheaper than SAP Legacy AI
 3. **Customizable** - Add your own MCP servers and logic
 4. **Fast** - Same transformation speed as SAP
 5. **Modern Stack** - Next.js, TypeScript, Prisma
@@ -505,7 +505,7 @@ GITHUB_SECRET="..."
 - Model Context Protocol
 
 **Inspired by**:
-- SAP Nova AI
+- SAP Legacy AI
 - SAP Clean Core principles
 - Open source community
 - Halloween 🎃
@@ -532,7 +532,7 @@ We've built a production-ready SaaS application that:
 - ✅ Generates production-ready CAP applications
 - ✅ Creates GitHub repositories automatically
 - ✅ Provides a stellar user experience
-- ✅ Costs 90% less than SAP Nova AI
+- ✅ Costs 90% less than SAP Legacy AI
 - ✅ Is 100% open source
 
 **This is just the beginning. Let's resurrect the SAP ecosystem together! 🚀**
