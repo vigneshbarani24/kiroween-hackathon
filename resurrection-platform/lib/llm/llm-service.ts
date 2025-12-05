@@ -468,6 +468,13 @@ Return a JSON object with this EXACT structure:
   "complexity": number (1-10),
   "module": "string" (e.g. SD, MM, FI)
 }
+
+IMPORTANT RULES:
+- "tables": Must be ONLY table names (e.g., "VBAP", "KONV") WITHOUT descriptions or comments
+- Table names must be valid CDS identifiers: uppercase letters, numbers, and underscores only
+- NO parentheses, NO special characters, NO spaces in table names
+- Example CORRECT: ["VBAP", "KONV", "KNA1"]
+- Example WRONG: ["VBAP (Sales Document)", "KONV (Conditions)"]
 `;
 
     try {
