@@ -33,10 +33,10 @@ export async function POST(
       spec,
       specPath: `.kiro/specs/resurrection-${projectName}`,
     });
-  } catch (error) {
-    console.error('Error generating spec:', error);
+  } catch (err) {
+    console.error('Error generating spec:', err);
     return NextResponse.json(
-      { error: 'Failed to generate spec', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to generate spec', details: err instanceof Error ? err.message : 'Unknown error' },
       { status: 500 }
     );
   }
@@ -91,10 +91,10 @@ export async function GET(
       },
       specPath: `.kiro/specs/resurrection-${projectName}`,
     });
-  } catch (error) {
-    console.error('Error reading spec:', error);
+  } catch (err) {
+    console.error('Error reading spec:', err);
     return NextResponse.json(
-      { error: 'Failed to read spec', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to read spec', details: err instanceof Error ? err.message : 'Unknown error' },
       { status: 500 }
     );
   }

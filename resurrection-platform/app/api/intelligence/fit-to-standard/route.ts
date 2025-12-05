@@ -111,10 +111,10 @@ ENDFUNCTION.`,
       recommendations
     });
     
-  } catch (error) {
-    console.error('Fit-to-standard error:', error);
+  } catch (err) {
+    console.error('Fit-to-standard error:', err);
     return NextResponse.json(
-      { error: 'Failed to generate recommendations', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to generate recommendations', details: err instanceof Error ? err.message : 'Unknown error' },
       { status: 500 }
     );
   }
@@ -170,10 +170,10 @@ export async function POST(request: NextRequest) {
       recommendations
     });
     
-  } catch (error) {
-    console.error('Fit-to-standard error:', error);
+  } catch (err) {
+    console.error('Fit-to-standard error:', err);
     return NextResponse.json(
-      { error: 'Failed to generate recommendations', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to generate recommendations', details: err instanceof Error ? err.message : 'Unknown error' },
       { status: 500 }
     );
   }

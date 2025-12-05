@@ -111,8 +111,8 @@ export async function POST(
       }
     }, { status: 202 }); // 202 Accepted - processing started
 
-  } catch (error) {
-    console.error('Error starting resurrection workflow:', error);
+  } catch (err) {
+    console.error('Error starting resurrection workflow:', err);
     
     // Update resurrection status to FAILED
     try {
@@ -131,7 +131,7 @@ export async function POST(
     return NextResponse.json(
       { 
         error: 'Workflow start failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: err instanceof Error ? err.message : 'Unknown error occurred'
       },
       { status: 500 }
     );

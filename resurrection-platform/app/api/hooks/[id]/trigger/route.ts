@@ -38,8 +38,8 @@ export async function POST(
       success: true,
       results
     });
-  } catch (error) {
-    console.error('[API] Failed to trigger hook:', error);
+  } catch (err) {
+    console.error('[API] Failed to trigger hook:', err);
     return NextResponse.json(
       { error: 'Failed to trigger hook' },
       { status: 500 }

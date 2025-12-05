@@ -156,12 +156,12 @@ export async function GET(
       }
     });
 
-  } catch (error) {
-    console.error('Error exporting resurrection:', error);
+  } catch (err) {
+    console.error('Error exporting resurrection:', err);
     return NextResponse.json(
       { 
         error: 'Export failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: err instanceof Error ? err.message : 'Unknown error occurred'
       },
       { status: 500 }
     );

@@ -159,12 +159,12 @@ export async function GET(
       }
     }, { status: 200 });
 
-  } catch (error) {
-    console.error('Error fetching resurrection status:', error);
+  } catch (err) {
+    console.error('Error fetching resurrection status:', err);
     return NextResponse.json(
       { 
         error: 'Status fetch failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: err instanceof Error ? err.message : 'Unknown error occurred'
       },
       { status: 500 }
     );

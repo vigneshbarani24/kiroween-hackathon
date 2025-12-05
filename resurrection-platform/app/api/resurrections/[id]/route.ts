@@ -128,12 +128,12 @@ export async function GET(
       }
     }, { status: 200 });
 
-  } catch (error) {
-    console.error('Error fetching resurrection:', error);
+  } catch (err) {
+    console.error('Error fetching resurrection:', err);
     return NextResponse.json(
       { 
         error: 'Fetch failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: err instanceof Error ? err.message : 'Unknown error occurred'
       },
       { status: 500 }
     );

@@ -126,12 +126,12 @@ export async function POST(request: NextRequest) {
       }
     }, { status: 200 });
 
-  } catch (error) {
-    console.error('Error uploading ABAP file:', error);
+  } catch (err) {
+    console.error('Error uploading ABAP file:', err);
     return NextResponse.json(
       { 
         error: 'Upload failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: err instanceof Error ? err.message : 'Unknown error occurred'
       },
       { status: 500 }
     );

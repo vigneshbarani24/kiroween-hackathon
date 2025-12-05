@@ -55,10 +55,10 @@ export async function POST(req: NextRequest) {
     }
     */
 
-  } catch (error) {
-    console.error('[API] Analysis failed completely:', error);
+  } catch (err) {
+    console.error('[API] Analysis failed completely:', err);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Analysis failed' },
+      { error: err instanceof Error ? err.message : 'Analysis failed' },
       { status: 500 }
     );
   } finally {

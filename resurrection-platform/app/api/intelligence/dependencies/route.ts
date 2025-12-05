@@ -62,13 +62,13 @@ export async function GET() {
       }
     });
 
-  } catch (error) {
-    console.error('Error fetching dependencies:', error);
+  } catch (err) {
+    console.error('Error fetching dependencies:', err);
     return NextResponse.json(
       {
         success: false,
         error: 'Failed to fetch dependencies',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: err instanceof Error ? err.message : 'Unknown error'
       },
       { status: 500 }
     );

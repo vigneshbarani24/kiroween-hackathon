@@ -76,8 +76,8 @@ export async function POST(
       deploymentUrl,
       status
     });
-  } catch (error) {
-    console.error('[API] Failed to update deployment status:', error);
+  } catch (err) {
+    console.error('[API] Failed to update deployment status:', err);
     return NextResponse.json(
       { error: 'Failed to update deployment status' },
       { status: 500 }

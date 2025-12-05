@@ -137,12 +137,12 @@ export async function POST(request: NextRequest) {
       message: `Found ${redundancies.length} redundancies with ${statistics.totalPotentialSavings} LOC potential savings`
     });
     
-  } catch (error) {
-    console.error('❌ Error detecting redundancies:', error);
+  } catch (err) {
+    console.error('❌ Error detecting redundancies:', err);
     return NextResponse.json(
       { 
         error: 'Failed to detect redundancies',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: err instanceof Error ? err.message : 'Unknown error'
       },
       { status: 500 }
     );
@@ -188,12 +188,12 @@ export async function GET(request: NextRequest) {
       message: `Found ${abapObjects.length} ABAP objects for user ${userId}`
     });
     
-  } catch (error) {
-    console.error('❌ Error fetching ABAP objects:', error);
+  } catch (err) {
+    console.error('❌ Error fetching ABAP objects:', err);
     return NextResponse.json(
       { 
         error: 'Failed to fetch ABAP objects',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: err instanceof Error ? err.message : 'Unknown error'
       },
       { status: 500 }
     );

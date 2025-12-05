@@ -31,12 +31,12 @@ export async function GET(request: NextRequest) {
     if (!mcpClient.isInitialized()) {
       try {
         await mcpClient.initializeConnections();
-      } catch (error) {
-        console.error('[MCP Health] Failed to initialize MCP client:', error);
+      } catch (err) {
+        console.error('[MCP Health] Failed to initialize MCP client:', err);
         return NextResponse.json({
           success: false,
           error: 'Failed to initialize MCP connections',
-          message: error instanceof Error ? error.message : 'Unknown error',
+          message: err instanceof Error ? err.message : 'Unknown error',
           servers: {
             abapAnalyzer: { connected: false, status: 'DISCONNECTED', error: 'Initialization failed' },
             sapCAP: { connected: false, status: 'DISCONNECTED', error: 'Initialization failed' },
@@ -116,12 +116,12 @@ export async function GET(request: NextRequest) {
       status: healthStatus.allHealthy ? 200 : 503 
     });
 
-  } catch (error) {
-    console.error('[MCP Health] Health check failed:', error);
+  } catch (err) {
+    console.error('[MCP Health] Health check failed:', err);
     return NextResponse.json({
       success: false,
       error: 'Health check failed',
-      message: error instanceof Error ? error.message : 'Unknown error occurred',
+      message: err instanceof Error ? err.message : 'Unknown error occurred',
       servers: {
         abapAnalyzer: { connected: false, status: 'UNKNOWN', error: 'Health check failed' },
         sapCAP: { connected: false, status: 'UNKNOWN', error: 'Health check failed' },

@@ -140,12 +140,12 @@ export async function POST(request: NextRequest) {
       }
     }, { status: 201 });
 
-  } catch (error) {
-    console.error('Error creating resurrection:', error);
+  } catch (err) {
+    console.error('Error creating resurrection:', err);
     return NextResponse.json(
-      { 
+      {
         error: 'Creation failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: err instanceof Error ? err.message : 'Unknown error occurred'
       },
       { status: 500 }
     );
@@ -213,12 +213,12 @@ export async function GET(request: NextRequest) {
       }))
     }, { status: 200 });
 
-  } catch (error) {
-    console.error('Error fetching resurrections:', error);
+  } catch (err) {
+    console.error('Error fetching resurrections:', err);
     return NextResponse.json(
-      { 
+      {
         error: 'Fetch failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: err instanceof Error ? err.message : 'Unknown error occurred'
       },
       { status: 500 }
     );

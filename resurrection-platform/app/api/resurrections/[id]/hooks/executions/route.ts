@@ -30,8 +30,8 @@ export async function GET(
       executions,
       count: executions.length
     });
-  } catch (error) {
-    console.error('[API] Failed to get hook executions:', error);
+  } catch (err) {
+    console.error('[API] Failed to get hook executions:', err);
     return NextResponse.json(
       { error: 'Failed to get hook executions' },
       { status: 500 }

@@ -54,14 +54,14 @@ export async function GET(request: NextRequest) {
       count: logs.length,
       filter
     });
-  } catch (error) {
-    console.error('[API] Error fetching MCP logs:', error);
+  } catch (err) {
+    console.error('[API] Error fetching MCP logs:', err);
     
     return NextResponse.json(
       {
         success: false,
         error: 'Failed to fetch MCP logs',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: err instanceof Error ? err.message : 'Unknown error'
       },
       { status: 500 }
     );

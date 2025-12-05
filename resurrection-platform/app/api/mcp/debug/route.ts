@@ -20,14 +20,14 @@ export async function GET() {
         ? 'Debug mode is enabled - full request/response payloads are being logged'
         : 'Debug mode is disabled - payloads are truncated for performance'
     });
-  } catch (error) {
-    console.error('[API] Error getting debug mode status:', error);
+  } catch (err) {
+    console.error('[API] Error getting debug mode status:', err);
     
     return NextResponse.json(
       {
         success: false,
         error: 'Failed to get debug mode status',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: err instanceof Error ? err.message : 'Unknown error'
       },
       { status: 500 }
     );
@@ -59,14 +59,14 @@ export async function POST(request: NextRequest) {
         ? 'Debug mode enabled - full request/response payloads will be logged'
         : 'Debug mode disabled - payloads will be truncated for performance'
     });
-  } catch (error) {
-    console.error('[API] Error toggling debug mode:', error);
+  } catch (err) {
+    console.error('[API] Error toggling debug mode:', err);
     
     return NextResponse.json(
       {
         success: false,
         error: 'Failed to toggle debug mode',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: err instanceof Error ? err.message : 'Unknown error'
       },
       { status: 500 }
     );

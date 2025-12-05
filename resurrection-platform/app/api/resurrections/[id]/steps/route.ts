@@ -73,8 +73,8 @@ export async function GET(
                   );
                   controller.close();
                 }
-              } catch (error) {
-                console.error('Error polling workflow steps:', error);
+              } catch (err) {
+                console.error('Error polling workflow steps:', err);
                 clearInterval(pollInterval);
                 controller.error(error);
               }
@@ -86,8 +86,8 @@ export async function GET(
               controller.close();
             });
 
-          } catch (error) {
-            console.error('Error starting SSE stream:', error);
+          } catch (err) {
+            console.error('Error starting SSE stream:', err);
             controller.error(error);
           }
         }
@@ -127,12 +127,12 @@ export async function GET(
       steps
     }, { status: 200 });
 
-  } catch (error) {
-    console.error('Error fetching workflow steps:', error);
+  } catch (err) {
+    console.error('Error fetching workflow steps:', err);
     return NextResponse.json(
       { 
         error: 'Fetch failed',
-        message: error instanceof Error ? error.message : 'Unknown error occurred'
+        message: err instanceof Error ? err.message : 'Unknown error occurred'
       },
       { status: 500 }
     );

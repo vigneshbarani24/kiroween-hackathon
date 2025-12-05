@@ -57,14 +57,14 @@ export async function GET(
       count: logs.length,
       filter
     });
-  } catch (error) {
-    console.error('[API] Error fetching resurrection MCP logs:', error);
+  } catch (err) {
+    console.error('[API] Error fetching resurrection MCP logs:', err);
     
     return NextResponse.json(
       {
         success: false,
         error: 'Failed to fetch resurrection MCP logs',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: err instanceof Error ? err.message : 'Unknown error'
       },
       { status: 500 }
     );

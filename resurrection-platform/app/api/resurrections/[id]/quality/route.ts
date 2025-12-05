@@ -23,8 +23,8 @@ export async function GET(
     }
 
     return NextResponse.json(qualityReport);
-  } catch (error) {
-    console.error('Error fetching quality report:', error);
+  } catch (err) {
+    console.error('Error fetching quality report:', err);
     return NextResponse.json(
       { error: 'Failed to fetch quality report' },
       { status: 500 }

@@ -24,8 +24,8 @@ export async function GET(request: NextRequest) {
       hooks,
       count: hooks.length
     });
-  } catch (error) {
-    console.error('[API] Failed to get hooks:', error);
+  } catch (err) {
+    console.error('[API] Failed to get hooks:', err);
     return NextResponse.json(
       { error: 'Failed to get hooks' },
       { status: 500 }
@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
     await hookManager.upsertHook(hook);
 
     return NextResponse.json(hook, { status: 201 });
-  } catch (error) {
-    console.error('[API] Failed to create hook:', error);
+  } catch (err) {
+    console.error('[API] Failed to create hook:', err);
     return NextResponse.json(
       { error: 'Failed to create hook' },
       { status: 500 }
@@ -68,8 +68,8 @@ export async function PUT(request: NextRequest) {
     await hookManager.upsertHook(hook);
 
     return NextResponse.json(hook);
-  } catch (error) {
-    console.error('[API] Failed to update hook:', error);
+  } catch (err) {
+    console.error('[API] Failed to update hook:', err);
     return NextResponse.json(
       { error: 'Failed to update hook' },
       { status: 500 }

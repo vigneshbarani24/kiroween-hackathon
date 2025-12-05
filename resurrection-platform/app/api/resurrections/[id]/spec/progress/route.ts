@@ -66,10 +66,10 @@ export async function GET(
         specPath: `.kiro/specs/resurrection-${projectName}`,
       },
     });
-  } catch (error) {
-    console.error('Error reading spec progress:', error);
+  } catch (err) {
+    console.error('Error reading spec progress:', err);
     return NextResponse.json(
-      { error: 'Failed to read spec progress', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to read spec progress', details: err instanceof Error ? err.message : 'Unknown error' },
       { status: 500 }
     );
   }

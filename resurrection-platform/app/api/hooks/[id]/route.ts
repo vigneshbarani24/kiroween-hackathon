@@ -33,8 +33,8 @@ export async function GET(
     }
 
     return NextResponse.json(hook);
-  } catch (error) {
-    console.error('[API] Failed to get hook:', error);
+  } catch (err) {
+    console.error('[API] Failed to get hook:', err);
     return NextResponse.json(
       { error: 'Failed to get hook' },
       { status: 500 }
@@ -62,8 +62,8 @@ export async function PATCH(
     await hookManager.upsertHook(updatedHook);
 
     return NextResponse.json(updatedHook);
-  } catch (error) {
-    console.error('[API] Failed to update hook:', error);
+  } catch (err) {
+    console.error('[API] Failed to update hook:', err);
     return NextResponse.json(
       { error: 'Failed to update hook' },
       { status: 500 }
@@ -80,8 +80,8 @@ export async function DELETE(
     await hookManager.deleteHook(id);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('[API] Failed to delete hook:', error);
+  } catch (err) {
+    console.error('[API] Failed to delete hook:', err);
     return NextResponse.json(
       { error: 'Failed to delete hook' },
       { status: 500 }

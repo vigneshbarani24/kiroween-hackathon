@@ -44,7 +44,7 @@ export async function GET() {
     try {
       const redundancyRecords = await prisma.redundancy.count();
       redundancies = redundancyRecords;
-    } catch (error) {
+    } catch (err) {
       // Redundancy table might not exist yet
       console.log('Redundancy table not available:', error);
     }
@@ -54,7 +54,7 @@ export async function GET() {
     try {
       const fitToStandardRecords = await prisma.fitToStandardRecommendation.count();
       fitToStandardOpportunities = fitToStandardRecords;
-    } catch (error) {
+    } catch (err) {
       // FitToStandardRecommendation table might not exist yet
       console.log('FitToStandardRecommendation table not available:', error);
     }
@@ -73,13 +73,13 @@ export async function GET() {
       metrics 
     });
 
-  } catch (error) {
-    console.error('Error fetching intelligence metrics:', error);
+  } catch (err) {
+    console.error('Error fetching intelligence metrics:', err);
     return NextResponse.json(
       { 
         success: false,
         error: 'Failed to fetch intelligence metrics',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: err instanceof Error ? err.message : 'Unknown error'
       },
       { status: 500 }
     );
