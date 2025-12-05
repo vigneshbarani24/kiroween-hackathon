@@ -6,7 +6,7 @@ import { ResurrectionProgress } from '@/components/ResurrectionProgress';
 export default function ResurrectionProgressPage() {
   const params = useParams();
   const router = useRouter();
-  const resurrectionId = params.id as string;
+  const resurrectionId = params?.id as string;
 
   const handleComplete = () => {
     // Redirect to results page when complete

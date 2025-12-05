@@ -55,7 +55,7 @@ const STATUS_CONFIG = {
 export default function ResurrectionResultsPage() {
   const params = useParams();
   const router = useRouter();
-  const resurrectionId = params.id as string;
+  const resurrectionId = params?.id as string;
 
   const [resurrection, setResurrection] = useState<Resurrection | null>(null);
   const [qualityReport, setQualityReport] = useState<QualityReport | null>(null);
