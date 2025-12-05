@@ -976,7 +976,16 @@ For each table, generate realistic field definitions with:
 - Descriptive comments
 - Appropriate data types (String, Decimal, Date, Time, etc.)
 
-Return ONLY valid CDS syntax, no explanations.
+CRITICAL RULES - SAP CAP CDS Syntax (NOT ABAP CDS):
+- Generate ONLY entity definitions
+- NO namespace declarations (will be added automatically)
+- NO @AbapCatalog annotations (that's ABAP CDS, not CAP!)
+- NO ABAP-specific syntax
+- NO @Semantics annotations
+- Use CAP CDS types: String, Integer, Decimal, Date, Time, Boolean, UUID
+- Use // for comments, not /** */
+
+Return ONLY valid CAP CDS entity definitions, no explanations.
 
 Example format:
 entity VBAK {
@@ -984,16 +993,36 @@ entity VBAK {
   erdat : Date;           // Created On
   kunnr : String(10);     // Sold-to Party
   netwr : Decimal(15,2);  // Net Value
+}
+
+entity VBAP {
+  key vbeln : String(10);  // Sales Document Number
+  key posnr : String(6);   // Item Number
+  matnr : String(18);      // Material Number
 }`;
 
       const response = await this.callAI(resurrectionId, prompt);
       let cleanResponse = response.replace(/```cds\n?/g, '').replace(/```\n?/g, '').trim();
-      
+
       // Remove "CDS" or "cds" if it appears at the start (common AI artifact)
       if (cleanResponse.match(/^(CDS|cds)\s*\n/i)) {
         cleanResponse = cleanResponse.replace(/^(CDS|cds)\s*\n/i, '');
       }
-      
+
+      // Remove any namespace declarations (ABAP CDS artifact)
+      cleanResponse = cleanResponse.replace(/^namespace\s+[\w.]+\s*;\s*\n?/gm, '');
+
+      // Remove ABAP-specific annotations
+      cleanResponse = cleanResponse.replace(/@AbapCatalog\.[^\n]+\n?/g, '');
+      cleanResponse = cleanResponse.replace(/@Semantics\.[^\n]+\n?/g, '');
+      cleanResponse = cleanResponse.replace(/@ObjectModel\.[^\n]+\n?/g, '');
+
+      // Remove any 'using' statements (will be added at top)
+      cleanResponse = cleanResponse.replace(/^using\s+\{[^}]+\}\s+from\s+[^\n]+;\s*\n?/gm, '');
+
+      // Trim any extra whitespace
+      cleanResponse = cleanResponse.trim();
+
       // Wrap in namespace
       return `namespace resurrection.db;
 
